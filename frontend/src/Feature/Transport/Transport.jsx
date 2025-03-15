@@ -1,12 +1,16 @@
 import React from 'react';
+import TransBegin from './TransBegin';
+import BasicRide from './BasicRide';
+
 
 function Transport() {
   return (
-    <div>
-      <div className='mt-20'></div>
-      <h1>Welcome to the Transport Page</h1>
-    </div>
+    <>
+    <TransBegin />
+    <BasicRide />
+    </>
+    
   );
 }
-
+;
 export default Transport;

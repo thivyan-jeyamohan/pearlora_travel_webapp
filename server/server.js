@@ -1,33 +1,22 @@
 import express from "express";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";
-
-// Import Routes
-import userRoutes from "./routes/userRoutes.js";
-//import destinationRoutes from "./routes/destinationRoutes.js";
-import transportRoutes from "./routes/transportRoutes.js";
-//import hotelRoutes from "./routes/hotelRoutes.js";
-//import eventRoutes from "./routes/eventRoutes.js";
-//import financeRoutes from "./routes/financeRoutes.js";
+import rideBookingRoute from "./routes/BasicRideBookingRoute.js";
 
 dotenv.config();
 const app = express();
 
-// Middleware
-app.use(express.json()); // Parse JSON
-app.use(cors()); // Enable CORS
+app.use(cors());
+app.use(express.json());
 
-// Database Connection
-connectDB();
+// Connecting MongoDB
+mongoose
+  .connect(`${process.env.MONGO_URI}pearlora`)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.log(err));
 
-// Define Routes
-app.use("/api/users", userRoutes);
-//app.use("/api/destinations", destinationRoutes);
-app.use("/api/transport", transportRoutes);
-//app.use("/api/hotels", hotelRoutes);
-//app.use("/api/events", eventRoutes);
-//app.use("/api/finance", financeRoutes);
+app.use("/api/rides", rideBookingRoute);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
