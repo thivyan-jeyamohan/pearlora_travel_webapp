@@ -1,82 +1,65 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react";
+
+const rows = 5;
+const cols = 5;
+const totalSeats = 100;
+const leftSeats = 50;
+const rightSeats = 100;
 
 const SeatBooking = () => {
-  const [searchParams] = useSearchParams();
-  const flightId = searchParams.get("flightId"); // Get flightId from URL
-  const [seats, setSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [confirmedSeats, setConfirmedSeats] = useState([]);
 
-  useEffect(() => {
-    if (!flightId) return;
+  const toggleSeat = (seat) => {
+    setSelectedSeats((prevSelected) =>
+      prevSelected.includes(seat)
+        ? prevSelected.filter((s) => s !== seat)
+        : [...prevSelected, seat]
+    );
+  };
 
-    const fetchSeats = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/seats?flightId=${flightId}`);
-        setSeats(response.data);
-      } catch (error) {
-        console.error("Error fetching seats:", error);
-      }
-    };
+  const confirmSeats = () => {
+    setConfirmedSeats([...confirmedSeats, ...selectedSeats]);
+    setSelectedSeats([]);
+  };
 
-    fetchSeats();
-  }, [flightId]);
-
-  // Handle seat selection
-  const toggleSeatSelection = (seatNumber) => {
-    if (selectedSeats.includes(seatNumber)) {
-      setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
-    } else {
-      setSelectedSeats([...selectedSeats, seatNumber]);
-    }
+  const renderSeats = (start, end, side) => {
+    return (
+      <div className="grid grid-cols-5 gap-2"> 
+        {Array.from({ length: end - start + 1 }, (_, i) => {
+          const seatNumber = start + i;
+          const isSelected = selectedSeats.includes(seatNumber);
+          const isConfirmed = confirmedSeats.includes(seatNumber);
+          return (
+            <button
+              key={seatNumber}
+              className={`w-10 h-10 rounded text-white text-sm flex items-center justify-center 
+                ${isConfirmed ? "bg-green-500" : isSelected ? "bg-purple-500" : "bg-blue-300 hover:bg-purple-300"}`}
+              onClick={() => !isConfirmed && toggleSeat(seatNumber)}
+            >
+              {side}{seatNumber}
+            </button>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
-    <div className="p-6 mt-20">
-      <h2 className="text-2xl font-bold text-center">Select Your Seats</h2>
-
-      <div className="grid grid-cols-6 gap-3 mt-6 justify-center">
-        {seats.map((seat) => (
-          <div
-            key={seat.number}
-            className={`p-4 border rounded-lg text-center font-bold cursor-pointer
-              ${seat.status === "booked" ? "bg-red-500 text-white" : ""}
-              ${selectedSeats.includes(seat.number) ? "bg-purple-500 text-white" : ""}
-              ${seat.status === "available" ? "bg-blue-300" : ""}`}
-            onClick={() => {
-              if (seat.status !== "booked") {
-                toggleSeatSelection(seat.number);
-              }
-            }}
-          >
-            {seat.number}
-          </div>
-        ))}
+    <div className="flex flex-col items-center p-5 mt-20">
+      <h2 className="text-xl font-bold mb-4">AirTaxi Seat Booking</h2>
+      <div className="flex gap-8">
+        <div>{renderSeats(1, leftSeats, "L")}</div>
+        <div className="w-10"></div> {/* Middle space */}
+        <div>{renderSeats(leftSeats + 1, totalSeats, "R")}</div>
       </div>
-
-      <div className="mt-6 text-center">
-        <button
-          className="bg-green-500 text-white font-bold px-6 py-2 rounded-lg"
-          onClick={async () => {
-            if (selectedSeats.length === 0) return alert("No seats selected!");
-
-            try {
-              await axios.post("http://localhost:5000/api/book-seat", {
-                flightId,
-                seats: selectedSeats,
-              });
-
-              alert("Seats booked successfully!");
-              window.location.reload(); // Refresh to update seat colors
-            } catch (error) {
-              console.error("Error booking seats:", error);
-            }
-          }}
-        >
-          Confirm Booking
-        </button>
-      </div>
+      <button 
+        className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" 
+        onClick={confirmSeats} 
+        disabled={selectedSeats.length === 0}
+      >
+        Confirm Selection
+      </button>
     </div>
   );
 };

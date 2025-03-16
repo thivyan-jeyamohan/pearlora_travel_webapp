@@ -3,6 +3,7 @@ import { LoadScript, Autocomplete } from "@react-google-maps/api";
 import axios from "axios";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyCH4lsu_OdnUIyGdYX-yz5qQIZLS7KvFdI";
+const LIBRARIES = ["places"]; // ✅ Declared outside the component
 
 const BasicRide = () => {
   const [pickupLocation, setPickupLocation] = useState("");
@@ -71,7 +72,7 @@ const BasicRide = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <label className="block font-semibold mb-2">Pickup Location</label>
-          <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+          <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={LIBRARIES}>
             <Autocomplete onLoad={setAutocomplete} onPlaceChanged={handlePlaceSelect}>
               <input
                 type="text"

@@ -1,6 +1,6 @@
 
 import mongoose from "mongoose";
-import SeatModel from "../../SeatSelection/SeatModel.js"; // Import the history model
+
 
 const airTaxiTravelSchema = new mongoose.Schema({
   airtaxiName: { type: String, required: true },

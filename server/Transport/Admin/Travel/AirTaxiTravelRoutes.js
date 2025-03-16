@@ -6,7 +6,7 @@ import {
   getTravelById,
   updateTravel,
   deleteTravel,
-} from "../Controllers/AirTaxiTravelController.js";
+} from "./AirTaxiTravelController.js";
 
 const router = express.Router();
 

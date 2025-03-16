@@ -69,12 +69,12 @@ const TravelList = ({ filters }) => {
 
             {/* Book Button */}
             <div className="flex justify-center mt-5">
-              <button
-                onClick={() => navigate(`/transport/express-ride/seat-booking?flightId=${travel._id}`)}
-                className="bg-purple-300 text-purple-950 rounded-4xl font-bold px-10 py-2"
-              >
-                BOOK
-              </button>
+            <Link to={`/transport/express-ride/seat-booking/${travel._id}`}>
+  <button className="bg-purple-300 text-purple-950 rounded-4xl font-bold px-10 py-2">
+    BOOK
+  </button>
+</Link>
+
             </div>
           </div>
         ))

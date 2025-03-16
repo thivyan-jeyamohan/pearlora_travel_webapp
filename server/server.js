@@ -2,9 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import rideBookingRoute from "./routes/BasicRideBookingRoute.js";
-import airTaxiTravelRoutes from "./Transport/Admin/routes/AirTaxiTravelRoutes.js";
-import authRoutes from "./User/routes/authRoutes.js";
+import rideBookingRoute from "./Transport/User/BasicRide/BasicRideBookingRoute.js";
+import airTaxiTravelRoutes from "./Transport/Admin/Travel/AirTaxiTravelRoutes.js";
+import authRoutes from "./User/User.js";
+
 
 
 
@@ -23,6 +24,7 @@ mongoose
 
 app.use("/api/rides", rideBookingRoute);
 app.use("/api/travels", airTaxiTravelRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;

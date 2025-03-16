@@ -32,6 +32,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/transport/express-ride/seat-booking" element={<SeatBooking />} />
+        <Route path="/transport/express-ride/seat-booking/:flightId" element={<SeatBooking />} />
         
         
       </Routes>

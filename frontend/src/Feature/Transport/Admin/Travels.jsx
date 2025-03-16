@@ -9,7 +9,7 @@ const AddTravelForm = () => {
     departure_datetime: "",
     destination_datetime: "",
     ticket_price: "",
-    seats: "",
+    seats: 100,
   });
 
   const handleChange = (e) => {
@@ -47,7 +47,7 @@ const AddTravelForm = () => {
         departure_datetime: "",
         destination_datetime: "",
         ticket_price: "",
-        seats: "",
+        seats: 100,
       });
     } catch (error) {
       console.error("Error adding travel:", error);
@@ -215,15 +215,17 @@ const AddTravelForm = () => {
           className="w-full p-3 border rounded"
           required
         />
-        <input
-          type="number"
-          name="seats"
-          placeholder="Seats"
-          value={formData.seats}
-          onChange={handleChange}
-          className="w-full p-3 border rounded"
-          required
-        />
+       <input
+    type="number"
+    name="seats"
+    placeholder="Seats"
+    value={formData.seats} // Always 50
+    onChange={() => {}} // Prevent changes
+    className="w-full p-3 border rounded"
+    required
+  />
+ 
+
         <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">
           Add Travel
         </button>

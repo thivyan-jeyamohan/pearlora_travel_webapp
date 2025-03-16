@@ -1,4 +1,4 @@
-import AirTaxiTravel from "../models/AirTaxiTravel.js";
+import AirTaxiTravel from "./AirTaxiTravel.js";
 
 // Add a new travel entry
 export const addTravel = async (req, res) => {
