@@ -1,8 +1,11 @@
 import React from 'react';
 import travelerImage from '../../assets/transBanner.png';
+import { Link } from 'react-router-dom';
 
 function TransBegin() {
   return (
+    <>
+    
     <div className="bg-gray-30 text-gray-900 ">
       <div className="container mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row items-center px-6 h-110 " style={{ backgroundImage: `url(${travelerImage})` }}>
@@ -27,6 +30,32 @@ function TransBegin() {
         
       </div>
     </div>
+
+    <div>
+      <h1 className="text-4xl font-bold text-center">Book Your Ride – Fast, Easy & Reliable</h1>
+      <p className="text-lg text-center">Choose your vehicle, select your dates, and start your journey hassle-free.</p>
+      <div className="flex justify-center gap-6">
+        <button
+          className="bg-gradient-to-r from-purple-950 to-purple-800 text-white font-bold text-lg px-10 py-3 rounded-4xl"
+          style={{ fontFamily: 'Poppins, sans-serif' }}
+        >
+          Basic Ride
+        </button>
+        <Link to="/express-ride">
+          <button
+            className="bg-gradient-to-r from-purple-950 to-purple-800 text-white font-bold text-lg px-10 py-3 rounded-4xl"
+            style={{ fontFamily: 'Poppins, sans-serif' }}
+          >
+            Express Ride
+          </button>
+        </Link>
+        
+      </div>
+
+      
+    </div>
+    
+    </>
   );
 }
 

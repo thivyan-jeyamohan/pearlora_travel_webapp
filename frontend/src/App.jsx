@@ -6,6 +6,12 @@ import Event from "./Feature/Event/Event";
 import Financial from "./Feature/Financial/Financial";
 import Hotel from "./Feature/Hotel/Hotel";
 import Header from "./components/header";
+import ExpressRide from "./Feature/Transport/Express/ExpressRide";
+import Dashboard from "./Feature/Transport/Admin/Dashboard";
+import Signup from "./User/Signup";
+import Login from "./User/Login";
+import SeatBooking from "./Feature/Transport/Express/SeatBooking";
+
 
 
 
@@ -21,6 +27,13 @@ function App() {
         <Route path="/transport" element={<Transport />} />
         <Route path="/Financial" element={<Financial />} />
         <Route path="/hotel" element={<Hotel />} />
+        <Route path="/express-ride" element={<ExpressRide/>} />
+        <Route path="/transport-dashboard" element={<Dashboard />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/transport/express-ride/seat-booking" element={<SeatBooking />} />
+        
+        
       </Routes>
     </BrowserRouter>
   );

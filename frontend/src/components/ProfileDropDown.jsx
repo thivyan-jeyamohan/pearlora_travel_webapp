@@ -33,7 +33,7 @@ function ProfileDropdown() {
                     {open && (
                         <div className="absolute right-0 mt-2 w-48 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-md shadow-lg z-50">
                             <Link 
-                                to="/dashboard" 
+                                to="/transport-dashboard" 
                                 onClick={closeDropdown} 
                                 className="block py-2 px-4 text-white hover:bg-purple-700 font-poppins"
                             >
@@ -47,7 +47,7 @@ function ProfileDropdown() {
                                 Financial
                             </Link>
                             <Link 
-                                to="/destination" 
+                                to="/signup" 
                                 onClick={closeDropdown} 
                                 className="block py-2 px-4 text-white hover:bg-purple-700 font-poppins"
                             >
