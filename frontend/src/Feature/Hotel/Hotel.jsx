@@ -4,7 +4,9 @@ function Hotel() {
   return (
     <div>
       <div className='mt-20'></div>
-      <h1>Welcome to the Destination Page</h1>
+      <div className="intro">
+        <img src="./images/intro.png">intro_Pic</img>
+      </div>
     </div>
   );
 }

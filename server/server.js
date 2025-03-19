@@ -7,7 +7,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 //import destinationRoutes from "./routes/destinationRoutes.js";
 import transportRoutes from "./routes/transportRoutes.js";
-//import hotelRoutes from "./routes/hotelRoutes.js";
+import hotelRoutes from "./routes/hotelRoutes.js";
 //import eventRoutes from "./routes/eventRoutes.js";
 //import financeRoutes from "./routes/financeRoutes.js";
 
@@ -25,7 +25,7 @@ connectDB();
 app.use("/api/users", userRoutes);
 //app.use("/api/destinations", destinationRoutes);
 app.use("/api/transport", transportRoutes);
-//app.use("/api/hotels", hotelRoutes);
+app.use("/api/hotels", hotelRoutes);
 //app.use("/api/events", eventRoutes);
 //app.use("/api/finance", financeRoutes);
 
