@@ -5,8 +5,7 @@ import cors from "cors";
 import rideBookingRoute from "./Transport/User/BasicRide/BasicRideBookingRoute.js";
 import airTaxiTravelRoutes from "./Transport/Admin/Travel/AirTaxiTravelRoutes.js";
 import authRoutes from "./User/User.js";
-
-
+import airSeatRoutes from "./Transport/AirSeat/AirSeatRoutes.js";
 
 
 dotenv.config();
@@ -24,7 +23,7 @@ mongoose
 
 app.use("/api/rides", rideBookingRoute);
 app.use("/api/travels", airTaxiTravelRoutes);
-
+app.use("/api/airseats", airSeatRoutes);
 
 
 const PORT = process.env.PORT || 5000;

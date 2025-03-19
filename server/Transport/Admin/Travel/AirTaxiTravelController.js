@@ -1,21 +1,19 @@
 import AirTaxiTravel from "./AirTaxiTravel.js";
+import AirSeat from "../../AirSeat/AirSeat.js"; // Import the AirSeat model
 
-// Add a new travel entry
 export const addTravel = async (req, res) => {
   try {
     const { airtaxiName, departure, departure_datetime, destination, destination_datetime, ticket_price, seats } = req.body;
 
-    // Convert departure_datetime and destination_datetime to Date objects
+    // Validate departure and destination times
     const now = new Date();
     const departureTime = new Date(departure_datetime);
     const destinationTime = new Date(destination_datetime);
 
-    // Check if departure time is at least 2 hours from now
     if (departureTime - now < 2 * 60 * 60 * 1000) {
       return res.status(400).json({ error: "Departure time must be at least 2 hours from now." });
     }
 
-    // Check if destination time is after departure time
     if (destinationTime <= departureTime) {
       return res.status(400).json({ error: "Destination time must be later than departure time." });
     }
@@ -31,14 +29,33 @@ export const addTravel = async (req, res) => {
       seats,
     });
 
-    await newTravel.save();
-    res.status(201).json({ message: "Travel added successfully", travel: newTravel });
+    const savedTravel = await newTravel.save();
 
+    // Create a new AirSeat entry with 100 seats
+    const seatsArray = Array.from({ length: 100 }, (_, i) => `Seat ${i + 1}`);
+    const newAirSeat = new AirSeat({
+      travelId: savedTravel._id,
+      airtaxiName: savedTravel.airtaxiName,
+      departure: savedTravel.departure,
+      departure_datetime: savedTravel.departure_datetime,
+      destination: savedTravel.destination,
+      destination_datetime: savedTravel.destination_datetime,
+      ticket_price: savedTravel.ticket_price,
+      seats: seatsArray, // All 100 seats
+      bookedSeats: [], // Initially, no seats are booked
+      nonSelectableSeats: [], // No non-selectable seats initially
+    });
+
+    await newAirSeat.save();
+
+    res.status(201).json({ message: "Travel added successfully", travel: savedTravel });
   } catch (error) {
     console.error("Error adding travel:", error);
     res.status(500).json({ error: "Failed to add travel" });
   }
 };
+
+// Other controller methods (getAllTravels, getTravelById, updateTravel, deleteTravel) remain unchanged
 
 // Get all travels
 export const getAllTravels = async (req, res) => {

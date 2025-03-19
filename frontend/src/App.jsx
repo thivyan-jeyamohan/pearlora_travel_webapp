@@ -11,6 +11,7 @@ import Dashboard from "./Feature/Transport/Admin/Dashboard";
 import Signup from "./User/Signup";
 import Login from "./User/Login";
 import SeatBooking from "./Feature/Transport/Express/SeatBooking";
+import TransportDashboard from "./Feature/Transport/Dashboard/Dashboard";
 
 
 
@@ -32,7 +33,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/transport/express-ride/seat-booking" element={<SeatBooking />} />
-        <Route path="/transport/express-ride/seat-booking/:flightId" element={<SeatBooking />} />
+        <Route path="/transport/express-ride/seat-booking/:travelId" element={<SeatBooking />} />
+        <Route path="/transport-admin-dashboard" element={<TransportDashboard />} />
         
         
       </Routes>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { FaPlane } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-const TravelList = ({ filters }) => {
+const FlightTravels = ({ filters }) => {
   const [travels, setTravels] = useState([]);
   const navigate = useNavigate();
 
@@ -88,4 +88,4 @@ const TravelList = ({ filters }) => {
   );
 };
 
-export default TravelList;
+export default FlightTravels;
