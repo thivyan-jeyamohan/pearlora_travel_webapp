@@ -94,11 +94,9 @@ const FlightTravels = () => {
               TICKET FEE : {travel.ticket_price} LKR
             </div>
             <div className="flex justify-center mt-5 space-x-2">
-              <Link to={`/transport/express-ride/seat-booking/${travel._id}`}>
-                <button className="bg-purple-300 text-purple-950 rounded-xl font-bold px-6 py-2">BOOK</button>
-              </Link>
-              <button onClick={() => handleEdit(travel)} className="bg-blue-400 text-white rounded-xl font-bold px-6 py-2">EDIT</button>
-              <button onClick={() => handleDelete(travel._id)} className="bg-red-400 text-white rounded-xl font-bold px-6 py-2">DELETE</button>
+              
+              <button onClick={() => handleEdit(travel)} className="bg-violet-800 text-white rounded-xl font-bold px-6 py-2">EDIT</button>
+              <button onClick={() => handleDelete(travel._id)} className="bg-violet-950 text-white rounded-xl font-bold px-6 py-2">DELETE</button>
             </div>
 
             {editingTravel === travel._id && (

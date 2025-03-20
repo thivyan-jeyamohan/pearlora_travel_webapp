@@ -7,6 +7,8 @@ import { MdGpsFixed } from "react-icons/md";
 import { BiSolidHelpCircle } from "react-icons/bi";
 import FlightTravels from "./FlightTravels";
 import FlightBooking from "./FlightBooking";
+import AirTravel from "./AirTravel";
+import flightravelimg from "../../../assets/AirplaneFlightMap.png";
 
 export default function TransportDashboard() {
     const [activeTab, setActiveTab] = useState("Dashboard");
@@ -18,7 +20,7 @@ export default function TransportDashboard() {
 
 
   return (
-    <div className="flex h-screen bg-gray-100 mt-20 font-inter font-medium ">
+    <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
         <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
@@ -81,11 +83,19 @@ export default function TransportDashboard() {
             <hr className="border-t border-gray-300 " />
 
         </nav>
+        <img src={flightravelimg}/>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 ml-64 bg-white">
+      <div className="flex-1 p-6 mt-7 ml-64 bg-white w-fit h-fit">
         
+      {
+          activeTab === "Dashboard" && (
+            <div className=" p-6 rounded-lg shadow-lg">
+            <AirTravel/>
+        </div>
+          )
+        }
 
         {/* Flight Booking Widget */}
         {
