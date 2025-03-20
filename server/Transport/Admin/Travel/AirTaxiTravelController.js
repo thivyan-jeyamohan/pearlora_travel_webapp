@@ -1,5 +1,6 @@
 import AirTaxiTravel from "./AirTaxiTravel.js";
 import AirSeat from "../../AirSeat/AirSeat.js"; // Import the AirSeat model
+import mongoose from "mongoose";
 
 export const addTravel = async (req, res) => {
   try {
@@ -78,11 +79,26 @@ export const getTravelById = async (req, res) => {
   }
 };
 
-// Update travel details
+// Update travel details and synchronize with AirSeat
 export const updateTravel = async (req, res) => {
   try {
     const updatedTravel = await AirTaxiTravel.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedTravel) return res.status(404).json({ error: "Travel not found" });
+
+    // Update corresponding AirSeat entry
+    await AirSeat.findOneAndUpdate(
+      { travelId: updatedTravel._id },
+      {
+        airtaxiName: updatedTravel.airtaxiName,
+        departure: updatedTravel.departure,
+        departure_datetime: updatedTravel.departure_datetime,
+        destination: updatedTravel.destination,
+        destination_datetime: updatedTravel.destination_datetime,
+        ticket_price: updatedTravel.ticket_price,
+      },
+      { new: true }
+    );
+
     res.status(200).json({ message: "Travel updated successfully", travel: updatedTravel });
   } catch (error) {
     res.status(500).json({ error: "Failed to update travel" });
@@ -92,10 +108,27 @@ export const updateTravel = async (req, res) => {
 // Delete travel
 export const deleteTravel = async (req, res) => {
   try {
+    console.log("DELETE request received for ID:", req.params.id);
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      console.log("Invalid ID format");
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
     const deletedTravel = await AirTaxiTravel.findByIdAndDelete(req.params.id);
-    if (!deletedTravel) return res.status(404).json({ error: "Travel not found" });
+    if (!deletedTravel) {
+      console.log("Travel not found in DB");
+      return res.status(404).json({ error: "Travel not found" });
+    }
+
+    // Delete corresponding AirSeat entry
+    await AirSeat.findOneAndDelete({ travelId: deletedTravel._id });
+
+    console.log("Deleted Successfully:", deletedTravel);
     res.status(200).json({ message: "Travel deleted successfully" });
   } catch (error) {
+    console.error("Error deleting travel:", error);
     res.status(500).json({ error: "Failed to delete travel" });
   }
 };
+

@@ -6,9 +6,11 @@ import { IoBookmarks } from "react-icons/io5";
 import { MdGpsFixed } from "react-icons/md";
 import { BiSolidHelpCircle } from "react-icons/bi";
 import FlightTravels from "./FlightTravels";
+import FlightBooking from "./FlightBooking";
 
 export default function TransportDashboard() {
-    const [activeTab, setActiveTab] = useState(null);
+    const [activeTab, setActiveTab] = useState("Dashboard");
+    
 
     const handleClick = (tab) => {
         setActiveTab(tab)
@@ -18,7 +20,7 @@ export default function TransportDashboard() {
   return (
     <div className="flex h-screen bg-gray-100 mt-20 font-inter font-medium ">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
+      <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
         <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
           
           <h1 className="text-1xl font-bold">TRANSPORT ADMIN</h1>
@@ -82,13 +84,26 @@ export default function TransportDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 ml-64 bg-white">
         
 
         {/* Flight Booking Widget */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <FlightTravels />
+        {
+          activeTab === "flightTravel" && (
+            <div className=" p-6 rounded-lg shadow-lg">
+            <FlightTravels />
         </div>
+          )
+        }
+
+        {
+          activeTab === "FlightBooking" && (
+            <div className=" p-6 rounded-lg shadow-lg">
+            <FlightBooking />
+        </div>
+          )
+        }
+        
       </div>
     </div>
   );

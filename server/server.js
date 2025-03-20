@@ -22,7 +22,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/rides", rideBookingRoute);
-app.use("/api/travels", airTaxiTravelRoutes);
+app.use("/api/airtaxitravels", airTaxiTravelRoutes);
 app.use("/api/airseats", airSeatRoutes);
 
 

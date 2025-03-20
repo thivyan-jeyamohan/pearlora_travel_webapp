@@ -1,5 +1,5 @@
 import Home from "./Pages/Home";
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Transport from "./Feature/Transport/Transport";
 import Destination from "./Feature/Destination/Destination";
 import Event from "./Feature/Event/Event";
@@ -12,15 +12,33 @@ import Signup from "./User/Signup";
 import Login from "./User/Login";
 import SeatBooking from "./Feature/Transport/Express/SeatBooking";
 import TransportDashboard from "./Feature/Transport/Dashboard/Dashboard";
+import SeatBook from "./Feature/Transport/Dashboard/SeatBook";
 
 
 
 
 
 function App() {
+
+  const hideHeaderRoutes = [
+    "/login",
+    "/signup",
+    "/transport-admin-seatbook/:travelId",
+  ];
+
+  const shouldHideHeader = hideHeaderRoutes.some((route) =>
+    location.pathname.startsWith(route.replace(":travelId", ""))
+  );
+
+
+
   return (
     <BrowserRouter>
-      <div className='fixed top-0 left-0 w-full shadow-lg z-50'><Header /></div>
+      {!shouldHideHeader && (
+        <div className="fixed top-0 left-0 w-full shadow-lg z-50">
+          <Header />
+        </div>
+      )}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/destination" element={<Destination />} />
@@ -35,6 +53,8 @@ function App() {
         <Route path="/transport/express-ride/seat-booking" element={<SeatBooking />} />
         <Route path="/transport/express-ride/seat-booking/:travelId" element={<SeatBooking />} />
         <Route path="/transport-admin-dashboard" element={<TransportDashboard />} />
+        <Route path="/transport-admin-seatbook" element={<SeatBook/>} />
+        <Route path="/transport-admin-seatbook/:travelId" element={<SeatBook />} />
         
         
       </Routes>
