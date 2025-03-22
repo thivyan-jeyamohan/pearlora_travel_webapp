@@ -6,6 +6,7 @@ import Event from "./Feature/Event/Event";
 import Financial from "./Feature/Financial/Financial";
 import Hotel from "./Feature/Hotel/Hotel";
 import Header from "./components/header";
+// import ManagerDashboard from "./Feature/Hotel/ManagerDashboard";
 
 
 function App() {
