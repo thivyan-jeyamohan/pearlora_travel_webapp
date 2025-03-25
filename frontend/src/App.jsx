@@ -7,6 +7,10 @@ import Financial from "./Feature/Financial/Financial";
 import Hotel from "./Feature/Hotel/Hotel";
 import Header from "./components/header";
 import Kandy from "./Feature/Destination/TourCardSlider/Kandy";
+import BookingForm from "./Feature/Destination/TourCardSlider/BookingForm";
+import DestinationList from "./Feature/Destination/TourCardSlider/DestinationList";
+
+
 
 
 function App() {
@@ -17,6 +21,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/destination" element={<Destination />} />
         <Route path="/tours/kandy" element={<Kandy />} /> {/* Route for Kandy Page */}
+        <Route path="/booking/form" element={<BookingForm />} /> {/* Route for Kandy Page */}
+        <Route path="/admin/form" element={<DestinationList />} /> {/* Route for Kandy Page */}
+        
+        
        
         <Route path="/event" element={<Event />} />
         <Route path="/transport" element={<Transport />} />

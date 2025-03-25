@@ -24,8 +24,8 @@ import Dambulla_Cave_Temple from "../image/Dambulla Cave Temple.jpg";
 // Sample tour data
 const tours = [
   { id: 1, title: "Kandy", description: "Explore the cultural heart of Sri Lanka.", location: "Sri Lanka", days: "5 Days", people: "1-5 People", oldPrice: "$3,100", newPrice: "$2,500", image: kandy, link: "/tours/kandy" },
-  { id: 2, title: "Polonnaruwa", description: "Discover ancient ruins and history.", location: "Sri Lanka", days: "4 Days", people: "1-5 People", oldPrice: "$2,900", newPrice: "$2,400", image: polonnaruwa, link: "/tours/polonnaruwa" },
-  { id: 3, title: "Yala National Park", description: "Experience wildlife and nature.", location: "Sri Lanka", days: "3 Days", people: "1-5 People", oldPrice: "$3,500", newPrice: "$2,800", image: yala, link: "/tours/yala" },
+  { id: 2, title: "Polonnaruwa", description: "Discover ancient ruins and history.", location: "Sri Lanka", days: "4 Days", people: "1-5 People", oldPrice: "$2,900", newPrice: "$2,400", image: polonnaruwa, link: "/booking/form" },
+  { id: 3, title: "Yala National Park", description: "Experience wildlife and nature.", location: "Sri Lanka", days: "3 Days", people: "1-5 People", oldPrice: "$3,500", newPrice: "$2,800", image: yala, link: "/admin/form" },
   { id: 4, title: "Galle", description: "Explore the colonial charm of Galle.", location: "Sri Lanka", days: "3 Days", people: "1-5 People", oldPrice: "$3,000", newPrice: "$2,600", image: galle, link: "/tours/galle" },
   { id: 5, title: "Nuwareliya", description: "Enjoy the scenic beauty of the hills.", location: "Sri Lanka", days: "3 Days", people: "1-5 People", oldPrice: "$3,000", newPrice: "$2,600", image: Nuwareliya, link: "/tours/nuwareliya" },
   { id: 6, title: "Anuradhapura", description: "Explore the ancient city of Anuradhapura.", location: "Sri Lanka", days: "3 Days", people: "1-5 People", oldPrice: "$3,000", newPrice: "$2,600", image: Anuradhapura, link: "/tours/anuradhapura" },
