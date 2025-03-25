@@ -6,6 +6,7 @@ import Event from "./Feature/Event/Event";
 import Financial from "./Feature/Financial/Financial";
 import Hotel from "./Feature/Hotel/Hotel";
 import Header from "./components/header";
+import Kandy from "./Feature/Destination/TourCardSlider/Kandy";
 
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/destination" element={<Destination />} />
+        <Route path="/tours/kandy" element={<Kandy />} /> {/* Route for Kandy Page */}
+       
         <Route path="/event" element={<Event />} />
         <Route path="/transport" element={<Transport />} />
         <Route path="/Financial" element={<Financial />} />
