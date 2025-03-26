@@ -11,14 +11,7 @@ const roomSchema = new mongoose.Schema({
         required: true
     },
     isBooked: { type: Boolean, default: false },  
-    bookings: [
-        {
-            checkInDate: { type: Date, required: true },
-            checkOutDate: { type: Date, required: true },
-            userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            totalPrice: Number,
-        },
-    ],
+    bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "HotelBooking" }],
 });
 
 const Room = mongoose.model("Room", roomSchema);

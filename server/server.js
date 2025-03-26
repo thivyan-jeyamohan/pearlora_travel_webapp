@@ -10,8 +10,6 @@ import bookingRoutes from "./routes/bookingRoute.js";
 dotenv.config();
 
 const app = express();
-app.use(express.json());  // To parse incoming JSON requests
-
 
 // Middleware
 app.use(cors()); 

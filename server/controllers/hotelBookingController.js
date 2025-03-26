@@ -1,14 +1,12 @@
 import Booking from "../models/HotelBooking.js";
 import Room from "../models/Room.js";
-import User from "../models/User.js";
-
 
 export const bookRoom = async (req, res) => {
     try {
         const { userId, roomIds, checkInDate, checkOutDate, totalPrice } = req.body;
 
         // Validate input
-        if (!userId || !roomIds || !checkInDate || !checkOutDate || !Array.isArray(roomIds) || roomIds.length === 0) {
+        if (!userId || !roomIds || !checkInDate || !checkOutDate || !totalPrice || !Array.isArray(roomIds) || roomIds.length === 0) {
             return res.status(400).json({ message: "All fields are required, and roomIds must be a non-empty array" });
         }
 
@@ -16,11 +14,6 @@ export const bookRoom = async (req, res) => {
         const checkIn = new Date(checkInDate);
         const checkOut = new Date(checkOutDate);
 
-        // Check if user exists
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
 
         // Check if all rooms exist
         const rooms = await Room.find({ _id: { $in: roomIds } });
@@ -41,26 +34,25 @@ export const bookRoom = async (req, res) => {
         }
 
         // Create bookings for each room
-        const newBookings = await Booking.create(
-            roomIds.map(roomId => ({
+        const newBookings = await Promise.all(roomIds.map(async roomId => {
+            const newBooking = new Booking({
                 userId,
                 roomId,
                 checkInDate,
                 checkOutDate,
                 totalPrice,
-            }))
-        );
+            });
+            await newBooking.save();
 
-        // Update room bookings in MongoDB
-        await Room.updateMany(
-            { _id: { $in: roomIds } },
-            {
-                $push: {
-                    bookings: { checkInDate, checkOutDate, userId, totalPrice }
-                },
-                $set: { isBooked: true }
-            }
-        );
+            // Update room bookings in MongoDB
+            await Room.findByIdAndUpdate(roomId, {
+                $push: { bookings: newBooking._id },
+                isBooked: true // Set isBooked to true
+            });
+
+            return newBooking;
+        }));
+
 
         res.status(201).json({ message: "Rooms booked successfully", bookings: newBookings });
 
@@ -70,45 +62,57 @@ export const bookRoom = async (req, res) => {
     }
 };
 
+// change this code laterly
 
 
 export const getAllBookings = async (req, res) => {
     try {
-        const bookings = await Booking.find()
-            .populate("userId", "firstName lastName email") // Show user details
-            .populate("roomId", "roomNumber roomCategory price"); // Show room details
-        
+        const bookings = await Booking.find();
+
         res.status(200).json(bookings);
     } catch (error) {
+        console.error("Error retrieving bookings:", error);
         res.status(500).json({ message: "Error retrieving bookings", error: error.message });
     }
 };
 
-/**
- * @desc Cancel a booking
- * @route DELETE /api/bookings/:id
- * @access Public
- */
+
+
 export const cancelBooking = async (req, res) => {
     try {
         const bookingId = req.params.id;
 
-        // Find the booking
+        // 1. Find the booking by its ID
         const booking = await Booking.findById(bookingId);
         if (!booking) {
             return res.status(404).json({ message: "Booking not found" });
         }
 
-        // Remove booking from the room
+        // 2. Remove the booking ID from the corresponding room's 'bookings' array
         await Room.updateOne(
-            { _id: booking.roomId },
-            { $pull: { bookings: { _id: booking._id } } }
+            { _id: booking.roomId }, // Find the room by its ID
+            { $pull: { bookings: bookingId } } // Remove the bookingId from the array
         );
 
-        // Delete booking
+        // 3. Find the room again to get the updated 'bookings' array
+        const room = await Room.findById(booking.roomId);
+        if (!room) { // Check for the case where the room might have been deleted
+            console.warn(`Room with ID ${booking.roomId} not found after cancelling booking ${bookingId}`);
+            return res.status(500).json({ message: "Error cancelling booking: Room not found" });
+        }
+
+        // 4. Check if the 'bookings' array is now empty
+        if (room.bookings.length === 0) {
+            // 5. If the array is empty, set 'isBooked' to false and save the room
+            room.isBooked = false;
+            await room.save();
+        }
+
+        // 6. Delete the booking itself
         await Booking.findByIdAndDelete(bookingId);
 
         res.status(200).json({ message: "Booking cancelled successfully" });
+
     } catch (error) {
         console.error("Error cancelling booking:", error);
         res.status(500).json({ message: "Error cancelling booking", error: error.message });

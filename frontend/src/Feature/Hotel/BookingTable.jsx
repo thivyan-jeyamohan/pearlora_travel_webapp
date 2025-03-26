@@ -29,8 +29,8 @@ const BookingTable = ({ bookings, fetchBookings }) => {
           {bookings.map((booking) => (
             <tr key={booking._id}>
               <td className="border p-2">{booking._id}</td>
-              <td className="border p-2">{booking.userId ? booking.userId.name : 'N/A'}</td>
-              <td className="border p-2">{booking.roomId ? booking.roomId.roomNumber : 'N/A'}</td>
+              <td className="border p-2">{booking.userId ? booking.userId: 'N/A'}</td>
+              <td className="border p-2">{booking.roomId ? booking.roomId: 'N/A'}</td>
               <td className="border p-2">{new Date(booking.checkInDate).toLocaleDateString()}</td>
               <td className="border p-2">{new Date(booking.checkOutDate).toLocaleDateString()}</td>
               <td className="border p-2">{booking.totalPrice}</td>

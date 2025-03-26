@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User",  },
     roomId: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
     checkInDate: { type: Date, required: true },
     checkOutDate: { type: Date, required: true },
