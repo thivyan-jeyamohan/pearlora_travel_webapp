@@ -1,15 +1,12 @@
+// bookingRoute.js
 import express from "express";
-import { createBooking, getAllBookings, cancelBooking } from "../controllers/bookingController";
+import { bookRoom, getAllBookings, cancelBooking } from "../controllers/hotelBookingController.js";
 
 const router = express.Router();
 
-// Create a new booking
-router.post("/", createBooking);
+router.post("/", bookRoom); 
 
-// Get all bookings
 router.get("/", getAllBookings);
-
-// Cancel a booking
 router.delete("/:id", cancelBooking);
 
-module.exports = router;
+export default router;

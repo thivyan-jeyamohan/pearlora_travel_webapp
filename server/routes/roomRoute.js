@@ -1,13 +1,13 @@
+// routes/roomRoutes.js
 import express from "express";
-import { createRoom, getRoomsByHotel, getRoomById, updateRoom, deleteRoom } from "../controllers/roomController";
-
+import { createRoom, getRooms, getRoomById, updateRoom, deleteRoom, checkRoomAvailability } from "../controllers/roomController.js";
 const router = express.Router();
 
-// Create a new room for a specific hotel
-router.post("/", createRoom);
+// Create a new room
+router.post("/", createRoom);  
 
-// Get all rooms for a specific hotel
-router.get("/hotel/:hotelId", getRoomsByHotel);
+// Get all rooms (optionally filtered by hotelId)
+router.get("/", getRooms);
 
 // Get a single room by ID
 router.get("/:id", getRoomById);
@@ -15,7 +15,10 @@ router.get("/:id", getRoomById);
 // Update room details
 router.put("/:id", updateRoom);
 
-// +Delete a room
+// Delete a room
 router.delete("/:id", deleteRoom);
 
-module.exports = router;
+ // Check room availability
+router.post('/check-availability', checkRoomAvailability);
+
+export default router;

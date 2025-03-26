@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import HotelManagement from './HotelManagement';
 import RoomManagement from './RoomManagement';
 import BookingManagement from './BookingManagement';
 import Overview from './Overview';
+import HotelDetail from "./HotelDetail"; //Ensure that this path is accurate
 
 const ManagerDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
+  const [fetchBookingsFromDashboard, setFetchBookingsFromDashboard] = useState(null)
+
+  const handleFetchBookingsCallback = useCallback((fetchBookings) => {
+      setFetchBookingsFromDashboard(() => fetchBookings);
+  }, []);
 
   return (
     <div className="flex h-screen mt-20">
@@ -65,7 +71,12 @@ const ManagerDashboard = () => {
         {activeSection === 'overview' && <Overview />}
         {activeSection === 'hotelManagement' && <HotelManagement />}
         {activeSection === 'roomManagement' && <RoomManagement />}
-        {activeSection === 'bookingManagement' && <BookingManagement />}
+       {activeSection === 'bookingManagement' && (
+         <BookingManagement setFetchBookingsFromDashboard= {handleFetchBookingsCallback}/>
+        )}
+        {activeSection === 'hotel' && fetchBookingsFromDashboard && (
+             <HotelDetail fetchBookings={fetchBookingsFromDashboard} />
+         )}
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
   const [description, setDescription] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [imageError, setImageError] = useState(null); // State for image upload errors
+  const [imageError, setImageError] = useState(null); 
 
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) {
-      setCoverPhoto("");  // Ensure coverPhoto is empty string if no file selected
+      setCoverPhoto("");  
       setImageError("Please select an image.");
       return;
     }
@@ -51,12 +51,12 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       return;
     }
 
-    setImageError(null); // Clear any previous errors
+    setImageError(null); 
     setUploading(true);
 
     const reader = new FileReader();
     reader.onload = () => {
-      setCoverPhoto(reader.result); // Store the Base64 encoded string
+      setCoverPhoto(reader.result); 
       setUploading(false); 
     };
     reader.onerror = () => {
@@ -78,7 +78,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       return;
     }
 
-    if (!coverPhoto) {  //Validate image is here before uploading.
+    if (!coverPhoto) {  
         alert("Please upload image first!");
         return;
     }
@@ -96,7 +96,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       availabilityStatus: availabilityStatus === "Available",
       rating: parseFloat(rating),
       description,
-      coverPhoto, // This will now be a Base64 encoded string
+      coverPhoto, 
     };
 
     try {
@@ -110,7 +110,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       onClose();
     } catch (error) {
       console.error("Error saving hotel:", error);
-      alert("Error saving hotel. Check the console for more details."); // Added alert
+      alert("Error saving hotel. Check the console for more details."); 
     }
   };
 
@@ -200,7 +200,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
             className="w-full p-2 border rounded-md"
             onChange={handleImageUpload}
           />
-          {imageError && <p className="text-red-500">{imageError}</p>} {/* Display image error */}
+          {imageError && <p className="text-red-500">{imageError}</p>} 
           {uploading && <p className="text-blue-500">Uploading...</p>}
           {coverPhoto && (
             <div className="mt-2">

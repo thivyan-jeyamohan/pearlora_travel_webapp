@@ -6,7 +6,8 @@ import Event from "./Feature/Event/Event";
 import Financial from "./Feature/Financial/Financial";
 import Hotel from "./Feature/Hotel/Hotel";
 import Header from "./components/header";
-// import ManagerDashboard from "./Feature/Hotel/ManagerDashboard";
+import ManagerDashboard from "./Feature/Hotel/ManagerDashboard";
+import HotelDetail from "./Feature/Hotel/HotelDetail";
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
         <Route path="/transport" element={<Transport />} />
         <Route path="/Financial" element={<Financial />} />
         <Route path="/hotel" element={<Hotel />} />
+        <Route path="/hotel/:hotelId" element={<HotelDetail />} />
+        <Route path="/manager/dashboard" element={<ManagerDashboard />}/>S 
       </Routes>
     </BrowserRouter>
   );

@@ -4,17 +4,19 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 
 import hotelRoutes from "./routes/hotelRoute.js"; 
-// import roomRoutes from "./routes/roomRoutes.js";
-// import bookingRoutes from "./routes/bookingRoutes.js";
+import roomRoutes from "./routes/roomRoute.js";
+import bookingRoutes from "./routes/bookingRoute.js";
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());  // To parse incoming JSON requests
+
 
 // Middleware
-app.use(cors()); // Enable CORS for all origins
-app.use(express.json({ limit: '10mb' })); // Enable JSON parsing with increased limit. Adjust as needed.  Important for Base64
-app.use(express.urlencoded({ limit: '10mb', extended: true })); // Also increase urlencoded limit
+app.use(cors()); 
+app.use(express.json({ limit: '10mb' })); 
+app.use(express.urlencoded({ limit: '10mb', extended: true })); 
 
 
 // Database Connection
@@ -25,9 +27,9 @@ connectDB();
 // app.use("/api/destinations", destinationRoutes);
 // app.use("/api/transport", transportRoutes);
 
-app.use("/api/hotels", hotelRoutes); // Use the correct route
-// app.use("/api/rooms", roomRoutes);
-// app.use("/api/bookings", bookingRoutes);
+app.use("/api/hotels", hotelRoutes); 
+app.use("/api/rooms", roomRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // app.use("/api/events", eventRoutes);
 // app.use("/api/finance", financeRoutes);
