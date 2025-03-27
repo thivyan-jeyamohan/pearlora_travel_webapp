@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trash } from 'lucide-react'; 
 import API from './services/api';
 
 const BookingTable = ({ bookings, fetchBookings }) => {
@@ -13,29 +14,38 @@ const BookingTable = ({ bookings, fetchBookings }) => {
 
   return (
     <div className="mt-6 overflow-x-auto">
-      <table className="min-w-full border-collapse">
-        <thead>
+      <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
+        <thead className="bg-gray-100 text-gray-800 text-sm font-semibold">
           <tr>
-            <th className="border p-2">Booking ID</th>
-            <th className="border p-2">User ID</th>
-            <th className="border p-2">Room ID</th>
-            <th className="border p-2">Check-in Date</th>
-            <th className="border p-2">Check-out Date</th>
-            <th className="border p-2">Total Price</th>
-            <th className="border p-2">Actions</th>
+            <th className="border-b px-4 py-3 text-left">Booking ID</th>
+            <th className="border-b px-4 py-3 text-left">User ID</th>
+            <th className="border-b px-4 py-3 text-left">Room ID</th>
+            <th className="border-b px-4 py-3 text-left">Check-in Date</th>
+            <th className="border-b px-4 py-3 text-left">Check-out Date</th>
+            <th className="border-b px-4 py-3 text-left">Total Price</th>
+            <th className="border-b px-4 py-3 text-center">Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-sm text-gray-700">
           {bookings.map((booking) => (
-            <tr key={booking._id}>
-              <td className="border p-2">{booking._id}</td>
-              <td className="border p-2">{booking.userId ? booking.userId: 'N/A'}</td>
-              <td className="border p-2">{booking.roomId ? booking.roomId: 'N/A'}</td>
-              <td className="border p-2">{new Date(booking.checkInDate).toLocaleDateString()}</td>
-              <td className="border p-2">{new Date(booking.checkOutDate).toLocaleDateString()}</td>
-              <td className="border p-2">{booking.totalPrice}</td>
-              <td className="border p-2">
-                <button onClick={() => handleDelete(booking._id)} className="p-2 bg-red-500 text-white">Cancel</button>
+            <tr key={booking._id} className="hover:bg-gray-50">
+              <td className="border-b px-4 py-3">{booking._id}</td>
+              <td className="border-b px-4 py-3">{booking.userId || 'N/A'}</td>
+              <td className="border-b px-4 py-3">{booking.roomId || 'N/A'}</td>
+              <td className="border-b px-4 py-3">
+                {new Date(booking.checkInDate).toLocaleDateString()}
+              </td>
+              <td className="border-b px-4 py-3">
+                {new Date(booking.checkOutDate).toLocaleDateString()}
+              </td>
+              <td className="border-b px-4 py-3">{booking.totalPrice}</td>
+              <td className="border-b px-4 py-3 text-center">
+                <button
+                  onClick={() => handleDelete(booking._id)}
+                  className="p-2 bg-red-100 hover:bg-red-200 rounded-full text-red-500"
+                >
+                  <Trash size={16} />
+                </button>
               </td>
             </tr>
           ))}

@@ -11,8 +11,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
   const [description, setDescription] = useState("");
   const [coverPhoto, setCoverPhoto] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [imageError, setImageError] = useState(null); 
-
+  const [imageError, setImageError] = useState(null);
 
   useEffect(() => {
     if (hotelData) {
@@ -41,7 +40,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) {
-      setCoverPhoto("");  
+      setCoverPhoto("");
       setImageError("Please select an image.");
       return;
     }
@@ -51,23 +50,22 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       return;
     }
 
-    setImageError(null); 
+    setImageError(null);
     setUploading(true);
 
     const reader = new FileReader();
     reader.onload = () => {
-      setCoverPhoto(reader.result); 
-      setUploading(false); 
+      setCoverPhoto(reader.result);
+      setUploading(false);
     };
     reader.onerror = () => {
       console.error("Error reading file");
       setImageError("Error reading the image file.");
-      setUploading(false); 
-      setCoverPhoto(""); 
+      setUploading(false);
+      setCoverPhoto("");
     };
     reader.readAsDataURL(file);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,11 +76,10 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       return;
     }
 
-    if (!coverPhoto) {  
-        alert("Please upload image first!");
-        return;
+    if (!coverPhoto) {
+      alert("Please upload image first!");
+      return;
     }
-
 
     if (imageError) {
       alert(`Image error: ${imageError}`);
@@ -96,7 +93,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       availabilityStatus: availabilityStatus === "Available",
       rating: parseFloat(rating),
       description,
-      coverPhoto, 
+      coverPhoto,
     };
 
     try {
@@ -110,119 +107,129 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null }) => {
       onClose();
     } catch (error) {
       console.error("Error saving hotel:", error);
-      alert("Error saving hotel. Check the console for more details."); 
+      alert("Error saving hotel. Check the console for more details.");
     }
   };
 
   return (
-    <div className="p-4 bg-white border shadow-md rounded-lg">
-      <h3 className="text-xl mb-4 font-semibold">
+    <div className="p-6 bg-white rounded-lg shadow-lg max-w-2xl mx-auto">
+      <h3 className="text-2xl font-semibold text-gray-800 mb-6">
         {hotelData ? "Edit Hotel" : "Add New Hotel"}
       </h3>
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2">Hotel ID</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-            value={hotelId}
-            onChange={(e) => setHotelId(e.target.value)}
-            required
-            disabled={!!hotelData}
-          />
+        <div className="space-y-6">
+          <div>
+            <label className="text-sm font-medium text-gray-700">Hotel ID</label>
+            <input
+              type="text"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={hotelId}
+              onChange={(e) => setHotelId(e.target.value)}
+              required
+              disabled={!!hotelData}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Hotel Name</label>
+            <input
+              type="text"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Location</label>
+            <input
+              type="text"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Price</label>
+            <input
+              type="number"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Availability</label>
+            <select
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={availabilityStatus}
+              onChange={(e) => setAvailabilityStatus(e.target.value)}
+            >
+              <option value="Available">Available</option>
+              <option value="Unavailable">Unavailable</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Rating</label>
+            <input
+              type="number"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              min="1"
+              max="5"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700">Cover Photo</label>
+            <input
+              type="file"
+              className="w-full p-3 mt-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={handleImageUpload}
+            />
+            {imageError && <p className="text-sm text-red-500 mt-2">{imageError}</p>}
+            {uploading && <p className="text-sm text-blue-500 mt-2">Uploading...</p>}
+            {coverPhoto && (
+              <div className="mt-4">
+                <img
+                  src={coverPhoto}
+                  alt="Cover"
+                  className="w-32 h-32 object-cover rounded-lg shadow-md"
+                />
+              </div>
+            )}
+          </div>
         </div>
-        <div className="mb-4">
-          <label className="block mb-2">Hotel Name</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Location</label>
-          <input
-            type="text"
-            className="w-full p-2 border rounded-md"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Price</label>
-          <input
-            type="number"
-            className="w-full p-2 border rounded-md"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Availability</label>
-          <select
-            className="w-full p-2 border rounded-md"
-            value={availabilityStatus}
-            onChange={(e) => setAvailabilityStatus(e.target.value)}
-          >
-            <option value="Available">Available</option>
-            <option value="Unavailable">Unavailable</option>
-          </select>
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Rating</label>
-          <input
-            type="number"
-            className="w-full p-2 border rounded-md"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            min="1"
-            max="5"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Description</label>
-          <textarea
-            className="w-full p-2 border rounded-md"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Cover Photo</label>
-          <input
-            type="file"
-            className="w-full p-2 border rounded-md"
-            onChange={handleImageUpload}
-          />
-          {imageError && <p className="text-red-500">{imageError}</p>} 
-          {uploading && <p className="text-blue-500">Uploading...</p>}
-          {coverPhoto && (
-            <div className="mt-2">
-              <img
-                src={coverPhoto}
-                alt="Cover"
-                className="w-32 h-32 object-cover rounded-md"
-              />
-            </div>
-          )}
-        </div>
-        <div className="flex justify-end space-x-2">
+
+        <div className="flex justify-end space-x-4 mt-6">
           <button
             type="submit"
-            className="p-2 bg-green-500 text-white rounded-lg"
+            className="px-6 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             Save
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 bg-gray-500 text-white rounded-lg"
+            className="px-6 py-3 text-white bg-gray-500 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             Cancel
           </button>

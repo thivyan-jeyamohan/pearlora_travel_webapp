@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import API from './services/api';
 import { Link } from 'react-router-dom';
-import { FaStar, FaMapMarkerAlt, FaBed, FaBath } from 'react-icons/fa'; 
+import { FaStar, FaMapMarkerAlt } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import introImage from './images/intro.png'; 
+import introImage from './images/intro.png';
+import welcomeImage from './images/welcome.jpeg';
 
 const Hotel = () => {
     const [hotels, setHotels] = useState([]);
@@ -22,7 +23,6 @@ const Hotel = () => {
         "Polonnaruwa", "Puttalam", "Rathnapura", "Trincomalee", "Vavuniya"
     ];
 
-    
     const fetchHotels = async () => {
         try {
             const { data } = await API.get(`/hotels`, { params: { location: searchQuery || location } });
@@ -30,7 +30,6 @@ const Hotel = () => {
         } catch (error) {
             console.error("Error fetching hotels:", error);
         }
-
     };
 
     useEffect(() => {
@@ -82,6 +81,38 @@ const Hotel = () => {
                 </div>
             </div>
 
+            <section className="py-16 px-6 md:px-20 bg-gray-50">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    {/* Text Content */}
+    <div className="text-center md:text-left">
+      <h2 className="text-4xl font-extrabold text-gray-800 leading-tight mb-4">
+        Welcome to Your Dream Stay!
+      </h2>
+      <p className="text-lg text-gray-600 mb-6">
+        Discover a world of comfort and elegance at our curated selection of hotels. 
+        Whether you're planning a romantic getaway or a family vacation, 
+        we offer personalized experiences that suit your every need.
+      </p>
+      <a
+        href="#"
+        className="inline-block px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+      >
+        Learn More
+      </a>
+    </div>
+
+    {/* Image */}
+    <div className="flex justify-center md:justify-end">
+      <img
+        src={welcomeImage} // Replace with your imported image
+        alt="Luxury Hotel"
+        className="rounded-2xl shadow-lg w-full max-w-md object-cover"
+      />
+    </div>
+  </div>
+</section>
+
+
             {/* Search and Filter Section */}
             <div className="max-w-5xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">Find Your Ideal Hotel</h2>
@@ -115,7 +146,7 @@ const Hotel = () => {
                             <div className="p-4 flex flex-col justify-between flex-grow">
                                 <h3 className="text-xl font-bold text-gray-800">{hotel.name}</h3>
                                 <div className="text-gray-600 flex items-center mb-2">
-                                    <FaMapMarkerAlt className="mr-1" /> {hotel.location}
+                                    <FaMapMarkerAlt className="mr-1 text-red-700" /> {hotel.location}
                                 </div>
                                 <p className="text-blue-600 font-semibold mt-1">${hotel.price} per night</p>
                                 <p className="text-yellow-500 mt-1">⭐ {hotel.rating} / 5</p>

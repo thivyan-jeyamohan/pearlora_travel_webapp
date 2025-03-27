@@ -1,65 +1,63 @@
 import React, { useState, useCallback } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faHotel, faBed, faClipboardList } from '@fortawesome/free-solid-svg-icons';
 import HotelManagement from './HotelManagement';
 import RoomManagement from './RoomManagement';
 import BookingManagement from './BookingManagement';
 import Overview from './Overview';
-import HotelDetail from "./HotelDetail"; //Ensure that this path is accurate
+import HotelDetail from "./HotelDetail";
 
 const ManagerDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
-  const [fetchBookingsFromDashboard, setFetchBookingsFromDashboard] = useState(null)
+  const [fetchBookingsFromDashboard, setFetchBookingsFromDashboard] = useState(null);
 
   const handleFetchBookingsCallback = useCallback((fetchBookings) => {
-      setFetchBookingsFromDashboard(() => fetchBookings);
+    setFetchBookingsFromDashboard(() => fetchBookings);
   }, []);
 
   return (
-    <div className="flex h-screen mt-20">
+    <div className="flex h-screen bg-gray-100 mt-20">
       {/* Sidebar */}
-      <div className="w-64 text-white min-h-screen p-4" style={{ backgroundColor: "#8A2BE2" }}>
-        <h2 className="text-xl font-bold mb-6">Manager Dashboard</h2>
-        <ul>
+      <div className="w-64 text-white min-h-screen p-6" style={{ backgroundColor: "#8A2BE2" }}>
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">Manager Dashboard</h2>
+        <ul className="space-y-4">
           <li>
             <button
               onClick={() => setActiveSection('overview')}
-              className={`w-full text-left py-2 px-4 hover:bg-purple-700 cursor-pointer ${
-                activeSection === 'overview' ? 'bg-purple-600' : ''
-              }`}
+              className={`flex items-center w-full text-left py-2 px-4 hover:bg-purple-700 rounded-lg cursor-pointer ${activeSection === 'overview' ? 'bg-purple-600' : ''}`}
               aria-label="Overview"
             >
+              <FontAwesomeIcon icon={faHome} className="mr-3" />
               Overview
             </button>
           </li>
           <li>
             <button
               onClick={() => setActiveSection('hotelManagement')}
-              className={`w-full text-left py-2 px-4 hover:bg-purple-700 cursor-pointer ${
-                activeSection === 'hotelManagement' ? 'bg-purple-600' : ''
-              }`}
+              className={`flex items-center w-full text-left py-2 px-4 hover:bg-purple-700 rounded-lg cursor-pointer ${activeSection === 'hotelManagement' ? 'bg-purple-600' : ''}`}
               aria-label="Hotel Management"
             >
+              <FontAwesomeIcon icon={faHotel} className="mr-3" />
               Hotel Management
             </button>
           </li>
           <li>
             <button
               onClick={() => setActiveSection('roomManagement')}
-              className={`w-full text-left py-2 px-4 hover:bg-purple-700 cursor-pointer ${
-                activeSection === 'roomManagement' ? 'bg-purple-600' : ''
-              }`}
+              className={`flex items-center w-full text-left py-2 px-4 hover:bg-purple-700 rounded-lg cursor-pointer ${activeSection === 'roomManagement' ? 'bg-purple-600' : ''}`}
               aria-label="Room Management"
             >
+              <FontAwesomeIcon icon={faBed} className="mr-3" />
               Room Management
             </button>
           </li>
           <li>
             <button
               onClick={() => setActiveSection('bookingManagement')}
-              className={`w-full text-left py-2 px-4 hover:bg-purple-700 cursor-pointer ${
-                activeSection === 'bookingManagement' ? 'bg-purple-600' : ''
-              }`}
+              className={`flex items-center w-full text-left py-2 px-4 hover:bg-purple-700 rounded-lg cursor-pointer ${activeSection === 'bookingManagement' ? 'bg-purple-600' : ''}`}
               aria-label="Booking Management"
             >
+              <FontAwesomeIcon icon={faClipboardList} className="mr-3" />
               Booking Management
             </button>
           </li>
@@ -67,16 +65,18 @@ const ManagerDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100">
-        {activeSection === 'overview' && <Overview />}
-        {activeSection === 'hotelManagement' && <HotelManagement />}
-        {activeSection === 'roomManagement' && <RoomManagement />}
-       {activeSection === 'bookingManagement' && (
-         <BookingManagement setFetchBookingsFromDashboard= {handleFetchBookingsCallback}/>
-        )}
-        {activeSection === 'hotel' && fetchBookingsFromDashboard && (
-             <HotelDetail fetchBookings={fetchBookingsFromDashboard} />
-         )}
+      <div className="flex-1 p-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          {activeSection === 'overview' && <Overview />}
+          {activeSection === 'hotelManagement' && <HotelManagement />}
+          {activeSection === 'roomManagement' && <RoomManagement />}
+          {activeSection === 'bookingManagement' && (
+            <BookingManagement setFetchBookingsFromDashboard={handleFetchBookingsCallback} />
+          )}
+          {activeSection === 'hotel' && fetchBookingsFromDashboard && (
+            <HotelDetail fetchBookings={fetchBookingsFromDashboard} />
+          )}
+        </div>
       </div>
     </div>
   );

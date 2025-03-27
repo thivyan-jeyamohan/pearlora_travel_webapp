@@ -1,67 +1,89 @@
 import React from 'react';
+import { Edit, Trash } from 'lucide-react';
 import API from './services/api';
 
 const RoomTable = ({ rooms, setShowRoomForm, setSelectedRoom, fetchRooms, hotels }) => {
+  const getHotelName = (hotelId) => {
+    const hotel = hotels.find((h) => h._id === hotelId);
+    return hotel ? hotel.name : 'Unknown Hotel';
+  };
 
-    const getHotelName = (hotelId) => {
-        const hotel = hotels.find(h => h._id === hotelId);
-        return hotel ? hotel.name : "Unknown Hotel";
-    };
+  const handleEdit = (room) => {
+    setSelectedRoom(room);
+    setShowRoomForm(true);
+  };
 
+  const handleDelete = async (roomId) => {
+    try {
+      await API.delete(`/rooms/${roomId}`);
+      fetchRooms();
+    } catch (error) {
+      console.error('Error deleting room:', error);
+    }
+  };
 
-    const handleEdit = (room) => {
-        setSelectedRoom(room);
-        setShowRoomForm(true);
-    };
+  return (
+    <div className="mt-6 overflow-x-auto">
+        <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
+            <thead className="bg-gray-100 text-gray-800 text-sm font-semibold">
+            <tr>
+                <th className="border-b px-4 py-3 text-left w-[20%]">Room ID</th>
+                <th className="border-b px-4 py-3 text-left w-[15%]">Hotel Name</th>
+                <th className="border-b px-4 py-3 text-left w-[10%]">Room Number</th>
+                <th className="border-b px-4 py-3 text-left w-[15%]">Photo</th>
+                <th className="border-b px-4 py-3 text-left w-[10%]">Price</th>
+                <th className="border-b px-4 py-3 text-left w-[12%]">Room Category</th>
+                <th className="border-b px-4 py-3 text-left w-[10%]">Room Status</th>
+                <th className="border-b px-4 py-3 text-center w-[8%]">Actions</th>
+            </tr>
+            </thead>
+            <tbody className="text-sm text-gray-700">
+            {rooms.map((room) => (
+                <tr key={room._id} className="hover:bg-gray-50">
+                <td className="border-b px-4 py-3 align-middle">{room._id}</td>
+                <td className="border-b px-4 py-3 align-middle">{getHotelName(room.hotelId)}</td>
+                <td className="border-b px-4 py-3 align-middle">{room.roomNumber}</td>
+                <td className="border-b px-4 py-3 align-middle">
+                    <img
+                    src={room.photo}
+                    alt="Room"
+                    className="w-14 h-14 object-cover rounded-md shadow-sm"
+                    />
+                </td>
+                <td className="border-b px-4 py-3 align-middle">${room.price}</td>
+                <td className="border-b px-4 py-3 align-middle truncate">{room.roomCategory}</td>
+                <td className="border-b px-4 py-3 align-middle">
+                    <span
+                    className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        room.isBooked ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
+                    }`}
+                    >
+                    {room.isBooked ? 'Booked' : 'Available'}
+                    </span>
+                </td>
+                <td className="border-b px-4 py-3 align-middle text-center">
+                    <div className="flex justify-center items-center gap-2">
+                    <button
+                        onClick={() => handleEdit(room)}
+                        className="p-2 bg-yellow-100 hover:bg-yellow-200 rounded-full text-yellow-500"
+                    >
+                        <Edit size={16} />
+                    </button>
+                    <button
+                        onClick={() => handleDelete(room._id)}
+                        className="p-2 bg-red-100 hover:bg-red-200 rounded-full text-red-500"
+                    >
+                        <Trash size={16} />
+                    </button>
+                    </div>
+                </td>
+                </tr>
+            ))}
+            </tbody>
+        </table>
+    </div>
 
-    const handleDelete = async (roomId) => {
-        try {
-            await API.delete(`/rooms/${roomId}`);
-            fetchRooms();
-        } catch (error) {
-            console.error('Error deleting room:', error);
-        }
-    };
-
-    return (
-        <div className="mt-6 overflow-x-auto">
-            <table className="min-w-full border-collapse">
-                <thead>
-                    <tr>
-                        <th className="border p-2">Room ID</th>
-                        <th className="border p-2">Hotel Name</th>
-                        <th className="border p-2">Room Number</th>
-                        <th className="border p-2">Photo</th>
-                        <th className="border p-2">Price</th>
-                        <th className="border p-2">Room Category</th>
-                        <th className="border p-2">Room Status</th>
-                        {/* <th className="border p-2">Bed Type</th> */}
-                        <th className="border p-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rooms.map((room) => (
-                        <tr key={room._id}>
-                            <td className="border p-2">{room._id}</td>
-                            <td className="border p-2">{getHotelName(room.hotelId)}</td>
-                            <td className="border p-2">{room.roomNumber}</td>
-                            <td className="border p-2">
-                                <img src={room.photo} alt="Room" className="w-16 h-16 object-cover" />
-                            </td>
-                            <td className="border p-2">{room.price}</td>
-                            <td className="border p-2">{room.roomCategory}</td>
-                            <td className="border p-2">{room.isBooked ? "Booked" : "Available"}</td>
-                            {/* <td className="border p-2">{room.bedType}</td> */}
-                            <td className="border p-2">
-                                <button onClick={() => handleEdit(room)} className="p-2 bg-yellow-500 text-white mr-2">Edit</button>
-                                <button onClick={() => handleDelete(room._id)} className="p-2 bg-red-500 text-white">Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+  );
 };
 
 export default RoomTable;
