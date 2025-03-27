@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import flightseat from "../../../assets/flightseats.jpg"
+import { IoMdArrowRoundBack } from "react-icons/io";
+
+
 
 const SeatBooking = () => {
   const { travelId } = useParams(); 
@@ -67,36 +71,81 @@ const SeatBooking = () => {
   if (!seatData) return <div className="text-center p-10">Loading...</div>;
 
   return (
-    <div className="flex flex-col items-center p-5 mt-20">
-      <h2 className="text-xl font-bold mb-4">AirTaxi Seat Booking</h2>
-      <div className="grid grid-cols-10 gap-2">
-        {seatData.seats.map((seat) => {
-          const isBooked = seatData.bookedSeats.includes(seat);
-          const isUnbooking = unbookedSeats.includes(seat);
-          const isSelected = selectedSeats.includes(seat);
+    <div  className="flex flex-col items-center p-20 mt-7 bg-cover bg-center"
+    style={{backgroundImage: `url(${flightseat})`}}>
 
-          return (
-            <button
-              key={seat}
-              className={`w-10 h-10 rounded text-white text-sm flex items-center justify-center
-                ${
-                  isBooked
-                    ? isUnbooking
-                      ? "bg-green-500" // Unbooking seats turn green
-                      : "bg-red-500" // Booked seats are red
-                    : isSelected
-                    ? "bg-purple-500" // Selected seats are purple
-                    : "bg-blue-300 hover:bg-purple-300" // Available seats
-                }`}
-              onClick={() => toggleSeat(seat)}
-            >
-              {seat}
-            </button>
-          );
-        })}
+      <div 
+        className="bg-white rounded-full p-1 mb-2"
+        onClick={() => window.history.back()}
+      >
+        <IoMdArrowRoundBack size={40} />
       </div>
+
+      
+
+      <div className="grid grid-cols-2 gap-2">
+     
+  {/* Left Side Seats (First 50) */}
+  <div className="grid grid-cols-5 gap-2 m-2">
+    {seatData.seats.slice(0, 50).map((seat) => {
+      const isBooked = seatData.bookedSeats.includes(seat);
+      const isUnbooking = unbookedSeats.includes(seat);
+      const isSelected = selectedSeats.includes(seat);
+
+      return (
+        <button
+          key={seat}
+          className={`w-10 h-10  rounded text-white text-sm flex items-center justify-center
+            ${
+              isBooked
+                ? isUnbooking
+                  ? "bg-red-600" // Unbooking seats turn red
+                  : "bg-green-600" // Booked seats are green
+                : isSelected
+                ? "bg-purple-500" // Selected seats are purple
+                : "bg-blue-800 hover:bg-purple-300" // Available seats
+            }`}
+          onClick={() => toggleSeat(seat)}
+        >
+          {seat}
+        </button>
+      );
+    })}
+  </div>
+
+  
+
+  {/* Right Side Seats (Next 50) */}
+  <div className="grid grid-cols-5 gap-2 m-2">
+    {seatData.seats.slice(50, 100).map((seat) => {
+      const isBooked = seatData.bookedSeats.includes(seat);
+      const isUnbooking = unbookedSeats.includes(seat);
+      const isSelected = selectedSeats.includes(seat);
+
+      return (
+        <button
+          key={seat}
+          className={`w-10 h-10 rounded text-white text-sm flex items-center justify-center
+            ${
+              isBooked
+                ? isUnbooking
+                  ? "bg-red-600" // Unbooking seats turn red
+                  : "bg-green-600" // Booked seats are green
+                : isSelected
+                ? "bg-purple-500" // Selected seats are purple
+                : "bg-blue-800 hover:bg-purple-300" // Available seats
+            }`}
+          onClick={() => toggleSeat(seat)}
+        >
+          {seat}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
       <button
-        className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        className="mt-4 px-6 py-2 bg-violet-700 text-white rounded-full hover:bg-blue-700"
         onClick={confirmSeats}
         disabled={selectedSeats.length === 0 && unbookedSeats.length === 0}
       >

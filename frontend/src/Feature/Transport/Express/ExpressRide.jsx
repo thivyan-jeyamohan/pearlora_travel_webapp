@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ExpressIntro from "./ExpressIntro";
-import TravelList from "../User/TravelList";
+import TravelList from "./TravelList";
 
 const ExpressRide = () => {
 

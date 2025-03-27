@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import rideBookingRoute from "./Transport/User/BasicRide/BasicRideBookingRoute.js";
+import rideBookingRoutes from "./Transport/User/BasicRide/BasicRideBookingRoute.js";
 import airTaxiTravelRoutes from "./Transport/Admin/Travel/AirTaxiTravelRoutes.js";
 import authRoutes from "./User/User.js";
 import airSeatRoutes from "./Transport/AirSeat/AirSeatRoutes.js";
@@ -21,9 +21,10 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
-app.use("/api/rides", rideBookingRoute);
+app.use("/api/rides", rideBookingRoutes);
 app.use("/api/airtaxitravels", airTaxiTravelRoutes);
 app.use("/api/airseats", airSeatRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;

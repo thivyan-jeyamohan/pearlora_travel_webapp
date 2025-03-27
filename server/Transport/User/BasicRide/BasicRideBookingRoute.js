@@ -1,12 +1,11 @@
 import express from "express";
-import RideBooking from "./BasicRideBooking.js";
+import { createRideBooking, getRideBookings, deleteRideBooking, updateRideBooking } from "./transportController.js";
 
 const router = express.Router();
 
-router.post("/book-ride", async (req, res) => {
-  const newBooking = new RideBooking(req.body);
-  await newBooking.save();
-  res.status(201).json({ message: "Booking successful!" });
-});
+router.post("/book-ride", createRideBooking);
+router.get("/ridebookings", getRideBookings);
+router.delete("/ridebookings/:id", deleteRideBooking);
+router.put("/ridebookings/:id", updateRideBooking);
 
 export default router;
