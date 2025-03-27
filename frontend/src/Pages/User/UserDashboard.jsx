@@ -39,7 +39,7 @@ export default function UserDashboard() {
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
         <div className="flex flex-col items-center space-x-3 mb-5 mt-7 ml-6">
           <img src={profile} className="w-20" />
-          <h1 className="text-1xl font-bold">Riaz Tony</h1>
+          <h1 className="text-1xl font-bold">Riaz Tonys</h1>
           <h1 className="text-1xl">abc@example.com</h1>
         </div>
         <nav className="space-y-5 ml-6 font-bold">
