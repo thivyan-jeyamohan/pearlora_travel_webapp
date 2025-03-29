@@ -50,7 +50,7 @@ const RoomTable = ({ rooms, setShowRoomForm, setSelectedRoom, fetchRooms, hotels
                     className="w-14 h-14 object-cover rounded-md shadow-sm"
                     />
                 </td>
-                <td className="border-b px-4 py-3 align-middle">${room.price}</td>
+                <td className="border-b px-4 py-3 align-middle">Rs {room.price}</td>
                 <td className="border-b px-4 py-3 align-middle truncate">{room.roomCategory}</td>
                 <td className="border-b px-4 py-3 align-middle">
                     <span

@@ -1,11 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faHotel, faBed, faClipboardList } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faHotel, faBed, faClipboardList, faChartBar } from '@fortawesome/free-solid-svg-icons';
 import HotelManagement from './HotelManagement';
 import RoomManagement from './RoomManagement';
 import BookingManagement from './BookingManagement';
 import Overview from './Overview';
 import HotelDetail from "./HotelDetail";
+import Reports from './Reports'; 
 
 const ManagerDashboard = () => {
   const [activeSection, setActiveSection] = useState('overview');
@@ -61,6 +62,16 @@ const ManagerDashboard = () => {
               Booking Management
             </button>
           </li>
+           <li>
+            <button
+              onClick={() => setActiveSection('reports')}
+              className={`flex items-center w-full text-left py-2 px-4 hover:bg-purple-700 rounded-lg cursor-pointer ${activeSection === 'reports' ? 'bg-purple-600' : ''}`}
+              aria-label="Reports"
+            >
+              <FontAwesomeIcon icon={faChartBar} className="mr-3" />
+              Reports
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -73,6 +84,7 @@ const ManagerDashboard = () => {
           {activeSection === 'bookingManagement' && (
             <BookingManagement setFetchBookingsFromDashboard={handleFetchBookingsCallback} />
           )}
+           {activeSection === 'reports' && <Reports />}
           {activeSection === 'hotel' && fetchBookingsFromDashboard && (
             <HotelDetail fetchBookings={fetchBookingsFromDashboard} />
           )}

@@ -6,6 +6,8 @@ import connectDB from "./config/db.js";
 import hotelRoutes from "./routes/hotelRoute.js"; 
 import roomRoutes from "./routes/roomRoute.js";
 import bookingRoutes from "./routes/bookingRoute.js";
+import reportRoute from "./routes/reportRoute.js";
+import {startScheduledTasks} from './controllers/backgroundTasks.js';
 
 dotenv.config();
 
@@ -24,10 +26,11 @@ connectDB();
 // app.use("/api/users", userRoutes);
 // app.use("/api/destinations", destinationRoutes);
 // app.use("/api/transport", transportRoutes);
-
+startScheduledTasks();
 app.use("/api/hotels", hotelRoutes); 
 app.use("/api/rooms", roomRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/reports", reportRoute);
 
 // app.use("/api/events", eventRoutes);
 // app.use("/api/finance", financeRoutes);

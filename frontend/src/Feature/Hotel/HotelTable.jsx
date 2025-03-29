@@ -38,7 +38,7 @@ const HotelTable = ({ hotels, setShowHotelForm, setSelectedHotel, fetchHotels })
               <td className="border-b px-4 py-3 align-middle">{hotel.hotelId}</td>
               <td className="border-b px-4 py-3 align-middle">{hotel.name}</td>
               <td className="border-b px-4 py-3 align-middle">{hotel.location}</td>
-              <td className="border-b px-4 py-3 align-middle">${hotel.price}</td>
+              <td className="border-b px-4 py-3 align-middle">Rs {hotel.price}</td>
               <td className="border-b px-4 py-3 align-middle">
                 <span
                   className={`px-3 py-1 text-xs font-medium rounded-full ${

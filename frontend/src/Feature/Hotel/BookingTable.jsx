@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash } from 'lucide-react'; 
 import API from './services/api';
+import moment from 'moment-timezone';
 
 const BookingTable = ({ bookings, fetchBookings }) => {
   const handleDelete = async (bookingId) => {
@@ -33,12 +34,12 @@ const BookingTable = ({ bookings, fetchBookings }) => {
               <td className="border-b px-4 py-3">{booking.userId || 'N/A'}</td>
               <td className="border-b px-4 py-3">{booking.roomId || 'N/A'}</td>
               <td className="border-b px-4 py-3">
-                {new Date(booking.checkInDate).toLocaleDateString()}
+                {moment.utc(booking.checkInDate).format('YYYY-MM-DD')}  
               </td>
               <td className="border-b px-4 py-3">
-                {new Date(booking.checkOutDate).toLocaleDateString()}
+                {moment.utc(booking.checkOutDate).format('YYYY-MM-DD')}
               </td>
-              <td className="border-b px-4 py-3">{booking.totalPrice}</td>
+              <td className="border-b px-4 py-3">Rs {booking.totalPrice}</td>
               <td className="border-b px-4 py-3 text-center">
                 <button
                   onClick={() => handleDelete(booking._id)}
