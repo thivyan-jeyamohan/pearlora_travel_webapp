@@ -121,3 +121,57 @@ export const cancelBooking = async (req, res) => {
         res.status(500).json({ message: "Error cancelling booking", error: error.message });
     }
 };
+
+
+
+export const updateBooking = async (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        const { checkInDate, checkOutDate, totalPrice, firstName, lastName, email, phone, specialRequests } = req.body; 
+
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+
+        if (!checkInDate || !checkOutDate || !totalPrice || !firstName || !lastName || !email || !phone) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // Convert dates to Date objects
+        const checkIn = new Date(checkInDate);
+        const checkOut = new Date(checkOutDate);
+
+        
+
+        const existingBookings = await Booking.find({
+            roomId: { $in: booking.roomId },
+            _id: { $ne: bookingId }, 
+            $or: [
+                { checkInDate: { $lt: checkOut }, checkOutDate: { $gt: checkIn } }
+            ]
+        });
+
+        if (existingBookings.length > 0) {
+            return res.status(400).json({ message: "One or more rooms are already booked for these dates" });
+        }
+
+
+        booking.checkInDate = checkIn;
+        booking.checkOutDate = checkOut;
+        booking.totalPrice = totalPrice;
+        booking.firstName = firstName;
+        booking.lastName = lastName;
+        booking.email = email;
+        booking.phone = phone;
+        booking.specialRequests = specialRequests;
+
+        const updatedBooking = await booking.save();
+
+        res.status(200).json({ message: "Booking updated successfully", booking: updatedBooking });
+
+    } catch (error) {
+        console.error("Error updating booking:", error);
+        res.status(500).json({ message: "Error updating booking", error: error.stack || error.message });
+    }
+};
