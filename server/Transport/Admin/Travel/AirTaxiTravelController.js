@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 export const addTravel = async (req, res) => {
   try {
-    const { airtaxiName, departure, departure_datetime, destination, destination_datetime, ticket_price, seats } = req.body;
+    const { airtaxiName, departure, departure_datetime, destination, destination_datetime, ticket_price, seats,airtaxicompanymail } = req.body;
 
     // Validate departure and destination times
     const now = new Date();
@@ -28,6 +28,7 @@ export const addTravel = async (req, res) => {
       destination_datetime,
       ticket_price,
       seats,
+      airtaxicompanymail,
     });
 
     const savedTravel = await newTravel.save();
@@ -42,6 +43,7 @@ export const addTravel = async (req, res) => {
       destination: savedTravel.destination,
       destination_datetime: savedTravel.destination_datetime,
       ticket_price: savedTravel.ticket_price,
+      airtaxicompanymail:savedTravel.airtaxicompanymail,
       seats: seatsArray, // All 100 seats
       bookedSeats: [], // Initially, no seats are booked
       nonSelectableSeats: [], // No non-selectable seats initially
@@ -95,6 +97,7 @@ export const updateTravel = async (req, res) => {
         destination: updatedTravel.destination,
         destination_datetime: updatedTravel.destination_datetime,
         ticket_price: updatedTravel.ticket_price,
+        airtaxicompanymail: updatedTravel.airtaxicompanymail,
       },
       { new: true }
     );

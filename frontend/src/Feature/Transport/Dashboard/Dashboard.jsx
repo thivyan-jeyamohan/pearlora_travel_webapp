@@ -21,8 +21,10 @@ export default function TransportDashboard() {
         setActiveTab(tab)
     }
 
+    console.log("TransportDashboard component rendered!");
 
-  return (
+
+    return (
     <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">

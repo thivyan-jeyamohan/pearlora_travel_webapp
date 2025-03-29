@@ -8,6 +8,7 @@ const airTaxiTravelSchema = new mongoose.Schema({
   destination_datetime: { type: String, required: true },
   ticket_price: { type: Number, required: true },
   seats: { type: Number, required: true },
+  airtaxicompanymail:{type: String, required: true}
 });
 
 const AirTaxiTravel = mongoose.model("AirTaxiTravel", airTaxiTravelSchema);

@@ -1,30 +1,210 @@
-import User from "./models/User.js";
+import User from "./User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import validator from "validator";
+
+// Helper function for sending error responses
+const sendError = (res, status, message) => {
+  return res.status(status).json({ 
+    success: false,
+    error: message 
+  });
+};
+
+// Add this to your existing userController.js
+export const deleteUser = async (req, res) => {
+  try {
+    // 1. Find and delete user
+    await User.findByIdAndDelete(req.user.id);
+    
+    // 2. Clear the token cookie
+    res.clearCookie('token');
+    
+    // 3. Send success response
+    res.status(200).json({
+      success: true,
+      message: 'User account deleted successfully'
+    });
+
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Server error during account deletion"
+    });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return sendError(res, 404, "User not found");
+    }
+    res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("Get profile error:", error);
+    return sendError(res, 500, "Server error while fetching profile");
+  }
+};
+
+// Add this function to your existing userController.js
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+
+    // 1. Validate inputs
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        error: "Name and email are required"
+      });
+    }
+
+    // 2. Find and update user
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, email },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    // 3. Return updated user
+    res.status(200).json({
+      success: true,
+      user
+    });
+
+  } catch (error) {
+    console.error("Update error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Server error during update"
+    });
+  }
+};
 
 // 📌 Register User
 export const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password, secretKey } = req.body;
 
-  // Hash Password
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({ name, email, password: hashedPassword });
+    // Validate inputs
+    if (!name || !email || !password || !secretKey) {
+      return sendError(res, 400, "All fields are required");
+    }
 
-  await newUser.save();
-  res.json({ message: "✅ User registered successfully" });
+    if (!validator.isEmail(email)) {
+      return sendError(res, 400, "Invalid email format");
+    }
+
+    if (secretKey !== process.env.SECRET_SIGNUP_KEY) {
+      return sendError(res, 403, "Invalid secret key");
+    }
+
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return sendError(res, 400, 
+        "Password must be at least 8 characters with one letter, one number, and one special character"
+      );
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return sendError(res, 409, "User already exists");
+    }
+
+    // Remove explicit hashing; let the model handle it
+    const newUser = new User({ 
+      name, 
+      email, 
+      password // Pass plain-text password
+    });
+
+    await newUser.save();
+
+    const token = jwt.sign(
+      { id: newUser._id }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: process.env.JWT_EXPIRE || "1h" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict"
+    });
+
+    return res.status(201).json({
+      success: true,
+      token,
+      user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email
+      }
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    return sendError(res, 500, "Server error during registration");
+  }
 };
 
 // 📌 Login User
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  try {
+    const { email, password } = req.body;
+    console.log("Login attempt with:", { email, password });
 
-  if (!user) return res.status(400).json({ error: "❌ User not found" });
+    if (!email || !password) {
+      return sendError(res, 400, "Email and password are required");
+    }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ error: "❌ Invalid credentials" });
+    const user = await User.findOne({ email }).select("+password");
+    console.log("Found user:", user ? { email: user.email, passwordHash: user.password } : "No user found");
+    if (!user) {
+      return sendError(res, 401, "Invalid credentials");
+    }
 
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match:", isMatch);
+    if (!isMatch) {
+      return sendError(res, 401, "Invalid credentials");
+    }
 
-  res.json({ token });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || "1h" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict"
+    });
+
+    user.password = undefined;
+    return res.status(200).json({
+      success: true,
+      token,
+      user: { id: user._id, name: user.name, email: user.email },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    return sendError(res, 500, "Server error during login");
+  }
+};
+
+// 📌 Logout User
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ 
+      success: true, 
+      message: "Successfully logged out" 
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    return sendError(res, 500, "Server error during logout");
+  }
 };

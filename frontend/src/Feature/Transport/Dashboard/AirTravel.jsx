@@ -2,7 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { CalendarDays, Users, MapPin } from "lucide-react";
 import air from "../../../assets/airtaxiflight.jpg";
-import mapvid from "../../../assets/map.mp4"
+import mapvid from "../../../assets/map.mp4";
+import { MdMailOutline } from "react-icons/md";
+
 
 export default function AirTravel() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ export default function AirTravel() {
     departure_datetime: "",
     destination_datetime: "",
     ticket_price: "",
+    airtaxicompanymail:"",
     seats: 100,
   });
 
@@ -49,6 +52,7 @@ export default function AirTravel() {
         departure_datetime: "",
         destination_datetime: "",
         ticket_price: "",
+        airtaxicompanymail:"",
         seats: 100,
       });
     } catch (error) {
@@ -273,7 +277,21 @@ export default function AirTravel() {
             </div>
           </div>
 
-          {/* Ticket Price */}
+          <div className="flex items-center border p-3 rounded-lg">
+                <MdMailOutline  className="text-blue-500 text-[25px]" />
+                <div className="ml-3 w-full">
+                <p className="text-xs text-gray-400">Air Taxi Company Mail</p>
+                <input
+                type="email"
+                name="airtaxicompanymail"
+                placeholder="Enter Air Taxi Company Mail"
+                value={formData.airtaxicompanymail}
+                onChange={handleChange}
+                className="bg-transparent text-sm font-medium outline-none w-full"
+                required
+                />
+                </div>
+            </div>
           
 
           {/* Seats */}
