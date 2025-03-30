@@ -1,6 +1,8 @@
 import AirTaxiTravel from "./AirTaxiTravel.js";
 import AirSeat from "../../AirSeat/AirSeat.js"; // Import the AirSeat model
 import mongoose from "mongoose";
+import { sendEmail } from '../../Mail/mailService.js';
+import { generateEmailContent } from '../../Mail/emailContent.js';
 
 export const addTravel = async (req, res) => {
   try {
@@ -50,6 +52,21 @@ export const addTravel = async (req, res) => {
     });
 
     await newAirSeat.save();
+
+    // Get the email content
+    const { mailSubject, mailHtml } = generateEmailContent(
+      airtaxiName,
+      departure,
+      departure_datetime,
+      destination,
+      destination_datetime,
+      ticket_price,
+      airtaxicompanymail,
+      seats
+    );
+
+    // Send the email using the mail service
+    await sendEmail(airtaxicompanymail, mailSubject, mailHtml);
 
     res.status(201).json({ message: "Travel added successfully", travel: savedTravel });
   } catch (error) {
@@ -101,6 +118,21 @@ export const updateTravel = async (req, res) => {
       },
       { new: true }
     );
+
+    // Get the email content
+    const { mailSubject, mailHtml } = generateEmailContent(
+      airtaxiName,
+      departure,
+      departure_datetime,
+      destination,
+      destination_datetime,
+      ticket_price,
+      airtaxicompanymail,
+      seats
+    );
+
+    // Send the email using the mail service
+    await sendEmail(airtaxicompanymail, mailSubject, mailHtml);
 
     res.status(200).json({ message: "Travel updated successfully", travel: updatedTravel });
   } catch (error) {

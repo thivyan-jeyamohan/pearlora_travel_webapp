@@ -73,7 +73,7 @@ export default function AirTravel() {
       {/* Right Section - Form */}
       <div className="w-full md:w-1/2 space-y-4">
         <h2 className="text-xl font-semibold">
-          Let's Add AirTaxi <br />
+          Let's Add AirTaxi 
           <span className="text-gray-500">New Trip</span>
         </h2>
 

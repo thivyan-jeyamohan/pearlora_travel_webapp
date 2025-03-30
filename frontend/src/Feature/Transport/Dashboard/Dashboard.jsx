@@ -11,6 +11,9 @@ import AirTravel from "./AirTravel";
 import flightravelimg from "../../../assets/AirplaneFlightMap.png";
 import { FaCarSide } from "react-icons/fa";
 import BasicRideHistory from "./BasicRideHistory";
+import Report from "./Report";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+
 
 
 export default function TransportDashboard() {
@@ -28,11 +31,11 @@ export default function TransportDashboard() {
     <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
-        <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
+        <div className="flex items-center space-x-3 mb-5 mt-5 ml-6">
           
           <h1 className="text-1xl font-bold">TRANSPORT ADMIN</h1>
         </div>
-        <nav className="space-y-5 ml-6 font-bold">
+        <nav className="space-y-4 ml-6 font-bold">
           
             <hr className="border-t border-gray-300 " />
 
@@ -87,12 +90,22 @@ export default function TransportDashboard() {
 
             <hr className="border-t border-gray-300 " />
 
+            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "Report" ? "text-violet-700" : "text-gray-500"}`}
+                    onClick={() => handleClick("Report")}>
+                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "Report" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
+                    <HiOutlineDocumentReport   className="text-xl" />
+                </div>
+                <span className="transition-all duration-300">Report</span>
+            </div>
+
+            <hr className="border-t border-gray-300 " />
+
         </nav>
         <img src={flightravelimg}/>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 mt-7 ml-64 bg-white w-fit h-fit">
+      <div className="flex-1 p-6 mt-0 ml-64 bg-white w-fit h-fit">
         
       {
           activeTab === "Dashboard" && (
@@ -119,10 +132,18 @@ export default function TransportDashboard() {
           )
         }
 
-{
+        {
           activeTab === "Help" && (
             <div className=" p-6 rounded-lg shadow-lg">
             <BasicRideHistory/>
+        </div>
+          )
+        }
+
+        {
+          activeTab === "Report" && (
+            <div className=" p-6 rounded-lg shadow-lg">
+            <Report/>
         </div>
           )
         }
