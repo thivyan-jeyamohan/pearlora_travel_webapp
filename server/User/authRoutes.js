@@ -4,22 +4,20 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { registerUser, loginUser } from './userController.js';
-import User from './User.js'; 
+import { registerUser, loginUser } from "./userController.js";
+import User from "./User.js";
 
 const router = express.Router();
 const SECRET_KEY = "your-secret-key"; // Change this in production!
 const SECRET_SIGNUP_KEY = "123p"; // Secret key for signup
 
 // Password validation regex
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+const passwordRegex =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
 // User Signup
 router.post("/signup", registerUser); // Use controller directly
-router.post("/login", loginUser);     // Use controller directly
-
-
-
+router.post("/login", loginUser); // Use controller directly
 
 // Forgot Password
 router.post("/forgot-password", async (req, res) => {
@@ -35,13 +33,13 @@ router.post("/forgot-password", async (req, res) => {
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-    
+
     await user.save();
 
     // In a real app, you would send an email here with the reset link
-    res.json({ 
-      message: "Password reset link sent", 
-      resetToken // For testing purposes only
+    res.json({
+      message: "Password reset link sent",
+      resetToken, // For testing purposes only
     });
   } catch (error) {
     res.status(500).json({ message: "Error processing request" });
@@ -58,14 +56,15 @@ router.post("/reset-password", async (req, res) => {
     }
 
     if (!passwordRegex.test(newPassword)) {
-      return res.status(400).json({ 
-        message: "Password must be at least 8 characters with one letter, one number, and one special character"
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters with one letter, one number, and one special character",
       });
     }
 
-    const user = await User.findOne({ 
+    const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -75,7 +74,7 @@ router.post("/reset-password", async (req, res) => {
     user.password = newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
-    
+
     await user.save();
 
     res.json({ message: "Password reset successful" });

@@ -35,7 +35,10 @@ const FlightBooking = () => {
     <div className="p-6">
       <div className="flex flex-wrap justify-center gap-6">
         {travels.map((travel) => (
-          <div key={travel._id} className="bg-white shadow-lg rounded-lg p-6 w-[400px] border-2 border-gray-300 relative">
+          <div
+            key={travel._id}
+            className="bg-white shadow-lg rounded-lg p-6 w-[400px] border-2 border-gray-300 relative"
+          >
             <div className="text-center bg-black text-white py-2 font-bold text-lg uppercase">
               {travel.airtaxiName}
             </div>
@@ -45,12 +48,16 @@ const FlightBooking = () => {
                 <p className="font-bold text-xl">{travel.departure}</p>
                 <p className="font-semibold text-1xl">
                   {new Date(travel.departure_datetime).toLocaleString("en-US", {
-                    month: "long", day: "numeric", year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
                   })}
                 </p>
                 <p className="font-semibold text-1xl">
                   {new Date(travel.departure_datetime).toLocaleString("en-US", {
-                    hour: "2-digit", minute: "2-digit", hour12: true
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
                   })}
                 </p>
               </div>
@@ -59,14 +66,24 @@ const FlightBooking = () => {
                 <h3 className="text-gray-600">DESTINATION</h3>
                 <p className="font-bold text-xl">{travel.destination}</p>
                 <p className="font-semibold text-1xl">
-                  {new Date(travel.destination_datetime).toLocaleString("en-US", {
-                    month: "long", day: "numeric", year: "numeric",
-                  })}
+                  {new Date(travel.destination_datetime).toLocaleString(
+                    "en-US",
+                    {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    },
+                  )}
                 </p>
                 <p className="font-semibold text-1xl">
-                  {new Date(travel.destination_datetime).toLocaleString("en-US", {
-                    hour: "2-digit", minute: "2-digit", hour12: true
-                  })}
+                  {new Date(travel.destination_datetime).toLocaleString(
+                    "en-US",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    },
+                  )}
                 </p>
               </div>
             </div>

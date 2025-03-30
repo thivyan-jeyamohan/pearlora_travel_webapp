@@ -1,5 +1,10 @@
 import express from "express";
-import { createRideBooking, getRideBookings, deleteRideBooking, updateRideBooking } from "./transportController.js";
+import {
+  createRideBooking,
+  getRideBookings,
+  deleteRideBooking,
+  updateRideBooking,
+} from "./transportController.js";
 
 const router = express.Router();
 

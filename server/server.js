@@ -7,18 +7,17 @@ import airTaxiTravelRoutes from "./Transport/Admin/Travel/AirTaxiTravelRoutes.js
 import authRoutes from "./User/authRoutes.js";
 import airSeatRoutes from "./Transport/AirSeat/AirSeatRoutes.js";
 import userRoutes from "./User/userRoutes.js";
-import { protect } from "./middleware/authMiddleware.js";
 dotenv.config();
 
 const app = express();
 
 // Log raw request body for debugging
 app.use((req, res, next) => {
-  let rawBody = '';
-  req.on('data', chunk => {
+  let rawBody = "";
+  req.on("data", (chunk) => {
     rawBody += chunk.toString();
   });
-  req.on('end', () => {
+  req.on("end", () => {
     console.log("Raw request body:", rawBody);
     req.rawBody = rawBody; // Store for later use if needed
   });
@@ -28,12 +27,13 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json()); // This is where parsing fails if JSON is invalid
 
-mongoose.connect(`${process.env.MONGO_URI}pearlora`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ MongoDB connected successfully"))
-.catch((err) => console.error("❌ MongoDB connection error:", err));
+mongoose
+  .connect(`${process.env.MONGO_URI}pearlora`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/rides", rideBookingRoutes);
@@ -41,11 +41,10 @@ app.use("/api/airtaxitravels", airTaxiTravelRoutes);
 app.use("/api/airseats", airSeatRoutes);
 app.use("/api/users", userRoutes);
 
-
 app.use((err, req, res, next) => {
   console.error("Error stack:", err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Something broke!");
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

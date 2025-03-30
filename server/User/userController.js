@@ -5,9 +5,9 @@ import validator from "validator";
 
 // Helper function for sending error responses
 const sendError = (res, status, message) => {
-  return res.status(status).json({ 
+  return res.status(status).json({
     success: false,
-    error: message 
+    error: message,
   });
 };
 
@@ -16,34 +16,33 @@ export const deleteUser = async (req, res) => {
   try {
     // 1. Find and delete user
     await User.findByIdAndDelete(req.user.id);
-    
+
     // 2. Clear the token cookie
-    res.clearCookie('token');
-    
+    res.clearCookie("token");
+
     // 3. Send success response
     res.status(200).json({
       success: true,
-      message: 'User account deleted successfully'
+      message: "User account deleted successfully",
     });
-
   } catch (error) {
     console.error("Delete error:", error);
     res.status(500).json({
       success: false,
-      error: "Server error during account deletion"
+      error: "Server error during account deletion",
     });
   }
 };
 
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) {
       return sendError(res, 404, "User not found");
     }
     res.status(200).json({
       success: true,
-      user
+      user,
     });
   } catch (error) {
     console.error("Get profile error:", error);
@@ -60,7 +59,7 @@ export const updateUserProfile = async (req, res) => {
     if (!name || !email) {
       return res.status(400).json({
         success: false,
-        error: "Name and email are required"
+        error: "Name and email are required",
       });
     }
 
@@ -68,20 +67,19 @@ export const updateUserProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { name, email },
-      { new: true, runValidators: true }
-    ).select('-password');
+      { new: true, runValidators: true },
+    ).select("-password");
 
     // 3. Return updated user
     res.status(200).json({
       success: true,
-      user
+      user,
     });
-
   } catch (error) {
     console.error("Update error:", error);
     res.status(500).json({
       success: false,
-      error: "Server error during update"
+      error: "Server error during update",
     });
   }
 };
@@ -104,10 +102,13 @@ export const registerUser = async (req, res) => {
       return sendError(res, 403, "Invalid secret key");
     }
 
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!passwordRegex.test(password)) {
-      return sendError(res, 400, 
-        "Password must be at least 8 characters with one letter, one number, and one special character"
+      return sendError(
+        res,
+        400,
+        "Password must be at least 8 characters with one letter, one number, and one special character",
       );
     }
 
@@ -117,25 +118,23 @@ export const registerUser = async (req, res) => {
     }
 
     // Remove explicit hashing; let the model handle it
-    const newUser = new User({ 
-      name, 
-      email, 
-      password // Pass plain-text password
+    const newUser = new User({
+      name,
+      email,
+      password, // Pass plain-text password
     });
 
     await newUser.save();
 
-    const token = jwt.sign(
-      { id: newUser._id }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: process.env.JWT_EXPIRE || "1h" }
-    );
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "1h",
+    });
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: "strict"
+      sameSite: "strict",
     });
 
     return res.status(201).json({
@@ -144,8 +143,8 @@ export const registerUser = async (req, res) => {
       user: {
         id: newUser._id,
         name: newUser.name,
-        email: newUser.email
-      }
+        email: newUser.email,
+      },
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -164,7 +163,12 @@ export const loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({ email }).select("+password");
-    console.log("Found user:", user ? { email: user.email, passwordHash: user.password } : "No user found");
+    console.log(
+      "Found user:",
+      user
+        ? { email: user.email, passwordHash: user.password }
+        : "No user found",
+    );
     if (!user) {
       return sendError(res, 401, "Invalid credentials");
     }
@@ -175,12 +179,14 @@ export const loginUser = async (req, res) => {
       return sendError(res, 401, "Invalid credentials");
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || "1h" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || "1h",
+    });
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: "strict"
+      sameSite: "strict",
     });
 
     user.password = undefined;
@@ -199,9 +205,9 @@ export const loginUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("token");
-    return res.status(200).json({ 
-      success: true, 
-      message: "Successfully logged out" 
+    return res.status(200).json({
+      success: true,
+      message: "Successfully logged out",
     });
   } catch (error) {
     console.error("Logout error:", error);

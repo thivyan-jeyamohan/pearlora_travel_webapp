@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const airSeatSchema = new mongoose.Schema({
-  travelId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'AirTaxiTravel' },
+  travelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "AirTaxiTravel",
+  },
   airtaxiName: { type: String, required: true },
   departure: { type: String, required: true },
   departure_datetime: { type: String, required: true },

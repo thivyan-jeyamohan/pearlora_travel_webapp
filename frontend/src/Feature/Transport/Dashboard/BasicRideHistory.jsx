@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Autocomplete,
+  Marker,
+} from "@react-google-maps/api";
 import { MdCancel, MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsSave2 } from "react-icons/bs";
@@ -45,7 +50,9 @@ const BasicRideHistory = () => {
 
   const fetchTravels = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/rides/ridebookings");
+      const response = await axios.get(
+        "http://localhost:5000/api/rides/ridebookings",
+      );
       setTravels(response.data);
     } catch (error) {
       console.error("Error fetching travel details:", error);
@@ -77,16 +84,24 @@ const BasicRideHistory = () => {
     e.preventDefault();
 
     const selectedVehicle = vehicleOptions.find(
-      (vehicle) => vehicle.name === formData.selectedVehicle
+      (vehicle) => vehicle.name === formData.selectedVehicle,
     );
 
-    if (selectedVehicle && formData.passengerCount > selectedVehicle.maxPassengers) {
-      alert(`The selected vehicle (${selectedVehicle.name}) can only carry up to ${selectedVehicle.maxPassengers} passengers.`);
+    if (
+      selectedVehicle &&
+      formData.passengerCount > selectedVehicle.maxPassengers
+    ) {
+      alert(
+        `The selected vehicle (${selectedVehicle.name}) can only carry up to ${selectedVehicle.maxPassengers} passengers.`,
+      );
       return;
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/rides/ridebookings/${editingTravel}`, { ...formData, pickupLocation });
+      await axios.put(
+        `http://localhost:5000/api/rides/ridebookings/${editingTravel}`,
+        { ...formData, pickupLocation },
+      );
       setEditingTravel(null);
       fetchTravels();
     } catch (error) {
@@ -107,15 +122,28 @@ const BasicRideHistory = () => {
     <div className="px-6">
       <div className="overflow-x-auto">
         {editingTravel ? (
-          <form onSubmit={handleUpdate} className="space-y-4 bg-white p-6 rounded-md shadow-md flex gap-10">
+          <form
+            onSubmit={handleUpdate}
+            className="space-y-4 bg-white p-6 rounded-md shadow-md flex gap-10"
+          >
             <div className="w-1/2 py-15">
               <img src={jeep} alt="Vehicle" className="w-full h-auto" />
             </div>
             <div className="w-3/4">
               <div>
-                <label className="block mb-2 text-sm font-semibold">Pickup Location</label>
-                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={LIBRARIES}>
-                  <Autocomplete onLoad={(autocompleteInstance) => setAutocomplete(autocompleteInstance)} onPlaceChanged={handlePlaceSelect}>
+                <label className="block mb-2 text-sm font-semibold">
+                  Pickup Location
+                </label>
+                <LoadScript
+                  googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+                  libraries={LIBRARIES}
+                >
+                  <Autocomplete
+                    onLoad={(autocompleteInstance) =>
+                      setAutocomplete(autocompleteInstance)
+                    }
+                    onPlaceChanged={handlePlaceSelect}
+                  >
                     <input
                       type="text"
                       className="w-full p-3 border rounded-md text-black"
@@ -128,24 +156,73 @@ const BasicRideHistory = () => {
                 </LoadScript>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">Email</label>
-                <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full p-3 border rounded-md" required />
+                <label className="block mb-2 text-sm font-semibold">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="w-full p-3 border rounded-md"
+                  required
+                />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">Passenger Count</label>
-                <input type="number" min="1" value={formData.passengerCount} onChange={(e) => setFormData({ ...formData, passengerCount: e.target.value })} className="w-full p-3 border rounded-md" required />
+                <label className="block mb-2 text-sm font-semibold">
+                  Passenger Count
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.passengerCount}
+                  onChange={(e) =>
+                    setFormData({ ...formData, passengerCount: e.target.value })
+                  }
+                  className="w-full p-3 border rounded-md"
+                  required
+                />
               </div>
               <div>
                 <label className="block mb-2 text-sm font-semibold">Date</label>
-                <input type="date" value={formData.selectedDate} onChange={(e) => setFormData({ ...formData, selectedDate: e.target.value })} className="w-full p-3 border rounded-md" required />
+                <input
+                  type="date"
+                  value={formData.selectedDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, selectedDate: e.target.value })
+                  }
+                  className="w-full p-3 border rounded-md"
+                  required
+                />
               </div>
               <div>
                 <label className="block mb-2 text-sm font-semibold">Time</label>
-                <input type="time" value={formData.selectedTime} onChange={(e) => setFormData({ ...formData, selectedTime: e.target.value })} className="w-full p-3 border rounded-md" required />
+                <input
+                  type="time"
+                  value={formData.selectedTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, selectedTime: e.target.value })
+                  }
+                  className="w-full p-3 border rounded-md"
+                  required
+                />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">Vehicle Type</label>
-                <select value={formData.selectedVehicle} onChange={(e) => setFormData({ ...formData, selectedVehicle: e.target.value })} className="w-full p-3 border rounded-md" required>
+                <label className="block mb-2 text-sm font-semibold">
+                  Vehicle Type
+                </label>
+                <select
+                  value={formData.selectedVehicle}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      selectedVehicle: e.target.value,
+                    })
+                  }
+                  className="w-full p-3 border rounded-md"
+                  required
+                >
                   {vehicleOptions.map((vehicle) => (
                     <option key={vehicle.name} value={vehicle.name}>
                       {vehicle.name}
@@ -154,10 +231,17 @@ const BasicRideHistory = () => {
                 </select>
               </div>
               <div className="flex space-x-4 mt-4 justify-center">
-                <button type="submit" className="bg-blue-800 text-white p-3 rounded-md">
+                <button
+                  type="submit"
+                  className="bg-blue-800 text-white p-3 rounded-md"
+                >
                   <BsSave2 />
                 </button>
-                <button type="button" onClick={() => setEditingTravel(null)} className="bg-blue-500 text-white p-3 rounded-md">
+                <button
+                  type="button"
+                  onClick={() => setEditingTravel(null)}
+                  className="bg-blue-500 text-white p-3 rounded-md"
+                >
                   <MdCancel />
                 </button>
               </div>
@@ -165,7 +249,7 @@ const BasicRideHistory = () => {
           </form>
         ) : (
           <table className="min-w-full bg-white border border-gray-300 ">
-            <thead >
+            <thead>
               <tr className="bg-gray-200 ">
                 <th className="border px-4 py-2">Pickup Location</th>
                 <th className="border px-4 py-2">Email</th>
@@ -177,32 +261,31 @@ const BasicRideHistory = () => {
               </tr>
             </thead>
             <tbody>
-  {travels.map((travel) => (
-    <tr key={travel._id} className="text-center">
-      <td className="border px-4 py-2">{travel.pickupLocation}</td>
-      <td className="border px-4 py-2">{travel.email}</td>
-      <td className="border px-4 py-2">{travel.passengerCount}</td>
-      <td className="border px-4 py-2">{travel.vehicleType}</td>
-      <td className="border px-4 py-2">{travel.selectedDate}</td>
-      <td className="border px-4 py-2">{travel.selectedTime}</td>
-      <td className="border px-4 py-2 flex justify-center space-x-3">
-        <button
-          className="bg-blue-800 text-white p-2 rounded-md"
-          onClick={() => handleEdit(travel)}
-        >
-          <FiEdit />
-        </button>
-        <button
-          className="bg-blue-600 text-white p-2 rounded-md"
-          onClick={() => handleDelete(travel._id)}
-        >
-          <MdDeleteOutline />
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+              {travels.map((travel) => (
+                <tr key={travel._id} className="text-center">
+                  <td className="border px-4 py-2">{travel.pickupLocation}</td>
+                  <td className="border px-4 py-2">{travel.email}</td>
+                  <td className="border px-4 py-2">{travel.passengerCount}</td>
+                  <td className="border px-4 py-2">{travel.vehicleType}</td>
+                  <td className="border px-4 py-2">{travel.selectedDate}</td>
+                  <td className="border px-4 py-2">{travel.selectedTime}</td>
+                  <td className="border px-4 py-2 flex justify-center space-x-3">
+                    <button
+                      className="bg-blue-800 text-white p-2 rounded-md"
+                      onClick={() => handleEdit(travel)}
+                    >
+                      <FiEdit />
+                    </button>
+                    <button
+                      className="bg-blue-600 text-white p-2 rounded-md"
+                      onClick={() => handleDelete(travel._id)}
+                    >
+                      <MdDeleteOutline />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         )}
       </div>

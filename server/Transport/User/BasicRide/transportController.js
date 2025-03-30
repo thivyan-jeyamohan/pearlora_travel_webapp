@@ -37,7 +37,11 @@ export const deleteRideBooking = async (req, res) => {
 // 📌 Update a ride booking by ID
 export const updateRideBooking = async (req, res) => {
   try {
-    const updatedRide = await RideBooking.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedRide = await RideBooking.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true },
+    );
     if (!updatedRide) {
       return res.status(404).json({ error: "Ride not found" });
     }

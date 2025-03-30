@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import RAirtaxitravelList from "./RAirtaxitravelList";  // Import RAirtaxitravelsList for filtered results
+import RAirtaxitravelList from "./RAirtaxitravelList"; // Import RAirtaxitravelsList for filtered results
 
 const RAirtaxitravels = () => {
   const [destinationFrom, setDestinationFrom] = useState("");
@@ -12,7 +12,7 @@ const RAirtaxitravels = () => {
     date: "",
   });
 
-  const [showReport, setShowReport] = useState(false);  // State to toggle report visibility
+  const [showReport, setShowReport] = useState(false); // State to toggle report visibility
 
   const handleSearch = () => {
     setFilters({
@@ -20,18 +20,17 @@ const RAirtaxitravels = () => {
       destination: destinationTo,
       date,
     });
-    setShowReport(false);  // Reset report visibility after search
+    setShowReport(false); // Reset report visibility after search
   };
 
   const handleViewReport = () => {
-    setShowReport(true);  // Show the report when the button is clicked
+    setShowReport(true); // Show the report when the button is clicked
   };
 
   return (
     <div>
       {/* Content */}
       <div className="relative z-10 text-center text-white px-6">
-
         {/* Search Bar */}
         <div className="py-3 px-4 flex items-center justify-between shadow-md max-w-250 mx-auto gap-5 bg-blue-200 rounded-full mt-20">
           <select
@@ -70,17 +69,17 @@ const RAirtaxitravels = () => {
             className="px-7 py-5 text-black outline-none bg-white rounded-full"
           />
 
-          <button onClick={handleSearch} className="bg-purple-900 text-white px-7 rounded-full py-5">
+          <button
+            onClick={handleSearch}
+            className="bg-purple-900 text-white px-7 rounded-full py-5"
+          >
             <FaSearch />
           </button>
-
-          
         </div>
       </div>
 
       {/* Display Filtered Travel List */}
       <RAirtaxitravelList filters={filters} />
-
     </div>
   );
 };

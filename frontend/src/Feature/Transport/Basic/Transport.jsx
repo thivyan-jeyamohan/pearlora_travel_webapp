@@ -6,9 +6,8 @@ import BasicRide from './BasicRide';
 function Transport() {
   return (
     <>
-    <TransBegin />
-    <BasicRide />
-    
+      <TransBegin />
+      <BasicRide />
     </>
     
   );

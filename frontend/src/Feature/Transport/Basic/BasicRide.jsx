@@ -18,9 +18,9 @@ const vehicleImages = {
 };
 
 
-
 const GOOGLE_MAPS_API_KEY = "AIzaSyCH4lsu_OdnUIyGdYX-yz5qQIZLS7KvFdI";
 const LIBRARIES = ["places"];
+
 
 const BasicRide = () => {
   const [pickupLocation, setPickupLocation] = useState("");
@@ -31,6 +31,7 @@ const BasicRide = () => {
   const [selectedVehicle, setSelectedVehicle] = useState("");
   const [autocomplete, setAutocomplete] = useState(null);
 
+
   const handlePlaceSelect = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
@@ -39,6 +40,7 @@ const BasicRide = () => {
       }
     }
   };
+
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useAuth } from './User/AuthContext'; // Import the hook
+import { useAuth } from "./User/AuthContext"; // Import the hook
 
 import Home from "./Pages/Home";
 import Transport from "./Feature/Transport/Basic/Transport";
@@ -28,7 +28,7 @@ function App() {
   ];
 
   const shouldHideHeader = hideHeaderRoutes.some((route) =>
-    location.pathname.startsWith(route.replace(":travelId", ""))
+    location.pathname.startsWith(route.replace(":travelId", "")),
   );
 
   return (
@@ -46,19 +46,33 @@ function App() {
         <Route path="/Financial" element={<Financial />} />
         <Route path="/hotel" element={<Hotel />} />
         <Route path="/express-ride" element={<ExpressRide />} />
-        
+
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/transport/express-ride/seat-booking" element={<SeatBooking />} />
-        <Route path="/transport/express-ride/seat-booking/:travelId" element={<SeatBooking />} />
+        <Route
+          path="/transport/express-ride/seat-booking"
+          element={<SeatBooking />}
+        />
+        <Route
+          path="/transport/express-ride/seat-booking/:travelId"
+          element={<SeatBooking />}
+        />
 
         {/* Protected Routes */}
         <Route path="/transport-admin-seatbook" element={<SeatBook />} />
-        <Route path="/transport-admin-seatbook/:travelId" element={<SeatBook />} />
+        <Route
+          path="/transport-admin-seatbook/:travelId"
+          element={<SeatBook />}
+        />
         <Route path="/user-dashboard" element={<UserDashboard />} />
-        
+
         {/* Protected Transport Admin Dashboard Route */}
-        <Route path="/transport-admin-dashboard" element={isAuthenticated ? <TransportDashboard /> : <Navigate to="/login" />} />
+        <Route
+          path="/transport-admin-dashboard"
+          element={
+            isAuthenticated ? <TransportDashboard /> : <Navigate to="/login" />
+          }
+        />
       </Routes>
     </>
   );

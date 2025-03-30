@@ -1,9 +1,17 @@
 // emailContent.js
 
-export const generateEmailContent = (airtaxiName, departure, departure_datetime, destination, destination_datetime, ticket_price, seats) => {
-    const mailSubject = `New Air Taxi Travel Added: ${airtaxiName}`;
-    
-    const mailHtml = `
+export const generateEmailContent = (
+  airtaxiName,
+  departure,
+  departure_datetime,
+  destination,
+  destination_datetime,
+  ticket_price,
+  seats,
+) => {
+  const mailSubject = `New Air Taxi Travel Added: ${airtaxiName}`;
+
+  const mailHtml = `
       <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,7 +108,6 @@ export const generateEmailContent = (airtaxiName, departure, departure_datetime,
 </body>
 </html>
     `;
-    
-    return { mailSubject, mailHtml };
-  };
-  
+
+  return { mailSubject, mailHtml };
+};

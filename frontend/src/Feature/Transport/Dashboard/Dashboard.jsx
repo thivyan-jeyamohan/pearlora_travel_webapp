@@ -14,140 +14,156 @@ import BasicRideHistory from "./BasicRideHistory";
 import Report from "./Report";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 
-
-
 export default function TransportDashboard() {
-    const [activeTab, setActiveTab] = useState("Dashboard");
-    
+  const [activeTab, setActiveTab] = useState("Dashboard");
 
-    const handleClick = (tab) => {
-        setActiveTab(tab)
-    }
+  const handleClick = (tab) => {
+    setActiveTab(tab);
+  };
 
-    console.log("TransportDashboard component rendered!");
+  console.log("TransportDashboard component rendered!");
 
-
-    return (
+  return (
     <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
         <div className="flex items-center space-x-3 mb-5 mt-5 ml-6">
-          
           <h1 className="text-1xl font-bold">TRANSPORT ADMIN</h1>
         </div>
         <nav className="space-y-4 ml-6 font-bold">
-          
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "Dashboard" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("Dashboard")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "Dashboard" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <MdSpaceDashboard className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Dashboard</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "Dashboard" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("Dashboard")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "Dashboard" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <MdSpaceDashboard className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Dashboard</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "flightTravel" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("flightTravel")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "flightTravel" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <RiFlightTakeoffFill className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Flight Travels</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "flightTravel" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("flightTravel")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "flightTravel" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <RiFlightTakeoffFill className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Flight Travels</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "FlightBooking" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("FlightBooking")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "FlightBooking" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <IoBookmarks className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Flight Booking</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "FlightBooking" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("FlightBooking")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "FlightBooking" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <IoBookmarks className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Flight Booking</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "FlightGPS" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("FlightGPS")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "FlightGPS" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <MdGpsFixed className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Flight GPS</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "FlightGPS" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("FlightGPS")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "FlightGPS" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <MdGpsFixed className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Flight GPS</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "Help" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("Help")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "Help" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <FaCarSide  className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Basic Ride</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "Help" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("Help")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "Help" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <FaCarSide className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Basic Ride</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " />
 
-            <div className={`flex items-center space-x-3 cursor-pointer ${activeTab === "Report" ? "text-violet-700" : "text-gray-500"}`}
-                    onClick={() => handleClick("Report")}>
-                <div className={`p-2 rounded-full transition-all duration-300 ${activeTab === "Report" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}>
-                    <HiOutlineDocumentReport   className="text-xl" />
-                </div>
-                <span className="transition-all duration-300">Report</span>
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "Report" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("Report")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "Report" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <HiOutlineDocumentReport className="text-xl" />
             </div>
+            <span className="transition-all duration-300">Report</span>
+          </div>
 
-            <hr className="border-t border-gray-300 " />
-
+          <hr className="border-t border-gray-300 " />
         </nav>
-        <img src={flightravelimg}/>
+        <img src={flightravelimg} />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 p-6 mt-0 ml-64 bg-white w-fit h-fit">
-        
-      {
-          activeTab === "Dashboard" && (
-            <div className=" p-6 rounded-lg shadow-lg">
-            <AirTravel/>
-        </div>
-          )
-        }
+        {activeTab === "Dashboard" && (
+          <div className=" p-6 rounded-lg shadow-lg">
+            <AirTravel />
+          </div>
+        )}
 
         {/* Flight Booking Widget */}
-        {
-          activeTab === "flightTravel" && (
-            <div className=" p-6 rounded-lg shadow-lg">
+        {activeTab === "flightTravel" && (
+          <div className=" p-6 rounded-lg shadow-lg">
             <FlightTravels />
-        </div>
-          )
-        }
+          </div>
+        )}
 
-        {
-          activeTab === "FlightBooking" && (
-            <div className=" p-6 rounded-lg shadow-lg">
+        {activeTab === "FlightBooking" && (
+          <div className=" p-6 rounded-lg shadow-lg">
             <FlightBooking />
-        </div>
-          )
-        }
+          </div>
+        )}
 
-        {
-          activeTab === "Help" && (
-            <div className=" p-6 rounded-lg shadow-lg">
-            <BasicRideHistory/>
-        </div>
-          )
-        }
+        {activeTab === "Help" && (
+          <div className=" p-6 rounded-lg shadow-lg">
+            <BasicRideHistory />
+          </div>
+        )}
 
-        {
-          activeTab === "Report" && (
-            <div className=" p-6 rounded-lg shadow-lg">
-            <Report/>
-        </div>
-          )
-        }
-        
+        {activeTab === "Report" && (
+          <div className=" p-6 rounded-lg shadow-lg">
+            <Report />
+          </div>
+        )}
       </div>
     </div>
   );

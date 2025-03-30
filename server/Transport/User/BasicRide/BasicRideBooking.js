@@ -6,7 +6,7 @@ const basicrideBookingSchema = new mongoose.Schema({
   passengerCount: { type: Number, required: true },
   selectedDate: { type: String, required: true },
   selectedTime: { type: String, required: true },
-  vehicleType: { type: String, required: true }
+  vehicleType: { type: String, required: true },
 });
 
 const RideBooking = mongoose.model("RideBooking", basicrideBookingSchema);

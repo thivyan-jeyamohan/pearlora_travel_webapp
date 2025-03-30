@@ -7,7 +7,6 @@ const TravelList = ({ filters }) => {
   const [travels, setTravels] = useState([]);
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     const fetchTravels = async () => {
       try {
@@ -68,21 +67,20 @@ const TravelList = ({ filters }) => {
               TICKET FEE : {travel.ticket_price} LKR
             </div>
 
-             
-
             {/* Book Button */}
             <div className="flex justify-center mt-5">
-            <Link to={`/transport/express-ride/seat-booking/${travel._id}`}>
-  <button className="bg-purple-300 text-purple-950 rounded-4xl font-bold px-10 py-2">
-    BOOK
-  </button>
-</Link>
-
+              <Link to={`/transport/express-ride/seat-booking/${travel._id}`}>
+                <button className="bg-purple-300 text-purple-950 rounded-4xl font-bold px-10 py-2">
+                  BOOK
+                </button>
+              </Link>
             </div>
           </div>
         ))
       ) : (
-        <p className="text-center text-gray-600">No matching travel details found.</p>
+        <p className="text-center text-gray-600">
+          No matching travel details found.
+        </p>
       )}
     </div>
   );
