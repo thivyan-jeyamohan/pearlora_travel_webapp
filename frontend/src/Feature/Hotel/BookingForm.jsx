@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import API from './services/api';
-import moment from 'moment';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment-timezone'; 
 
-const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOutDate,availableRooms,selectedRooms,handleRoomToggle,isLoading,availabilityMessage,handleShowBookingForm,selectedRoomDetails,totalPrice,handleBookingSuccess,setAvailabilityMessage,setSelectedRooms, setTotalPrice,setShowBookingForm,setCheckInDate: setCheckInDateProp, setCheckOutDate: setCheckOutDateProp, setAvailableRooms, setSelectedRoomDetails,onCheckRoomAvailability
-}) => {
+const BookingForm = () => {
+    const { hotelId } = useParams();
+    const location = useLocation();
+    const navigate = useNavigate();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -15,9 +16,48 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
     const [lastNameError, setLastNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [phoneError, setPhoneError] = useState('');
-    const [checkInDateError, setCheckInDateError] = useState('');
-    const [checkOutDateError, setCheckOutDateError] = useState('');
     const [userId, setUserId] = useState("65b5a38efbd544a87204b73a");
+    const [checkInDate, setCheckInDate] = useState('');
+    const [checkOutDate, setCheckOutDate] = useState('');
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [selectedRoomDetails, setSelectedRoomDetails] = useState([]);
+    const [availabilityMessage, setAvailabilityMessage] = useState('');
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const checkIn = params.get('checkInDate');
+        const checkOut = params.get('checkOutDate');
+        const roomIds = params.get('roomIds')?.split(',') || [];
+
+        setCheckInDate(checkIn);
+        setCheckOutDate(checkOut);
+        setSelectedRooms(roomIds);
+
+        const fetchRoomDetails = async () => {
+            try {
+                const roomDetails = await Promise.all(
+                    roomIds.map(roomId => API.get(`/rooms/${roomId}`).then(res => res.data))
+                );
+                setSelectedRoomDetails(roomDetails);
+
+                // Calculate total price
+                const startDate = moment(checkIn);
+                const endDate = moment(checkOut);
+                const numberOfDays = endDate.diff(startDate, 'days');
+                const newTotalPrice = roomDetails.reduce((acc, room) => acc + room.price * numberOfDays, 0);
+                setTotalPrice(newTotalPrice);
+
+            } catch (error) {
+                console.error("Error fetching room details:", error);
+                setAvailabilityMessage("Error fetching room details. Please try again.");
+            }
+        };
+
+        if (roomIds.length > 0) {
+            fetchRoomDetails();
+        }
+    }, [location.search]);
 
     const validateName = (name) => {
         const nameRegex = /^[a-zA-Z\s]*$/;
@@ -34,44 +74,13 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
         return phoneRegex.test(phone);
     };
 
-    const formatDateForAPI = (date) => {
-        return moment(date).utc().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-    };
+       const formatDateForAPI = (date) => {
+            const sriLankaTimezone = 'Asia/Colombo'; 
+            const timezoneOffsetMinutes = moment.tz(sriLankaTimezone).utcOffset();
 
-    useEffect(() => {
-        if (checkInDate) {
-            const checkIn = moment(checkInDate);
-
-            if (!checkIn.isValid()) {
-                setCheckInDateError("Invalid date format.");
-            } else if (checkIn.isBefore(moment(), 'day')) {
-                setCheckInDateError("Check-in date cannot be in the past.");
-            } else {
-                setCheckInDateError("");
-            }
-        }
-    }, [checkInDate]); 
-
-    useEffect(() => {
-        if (checkInDate && checkOutDate) {
-            const checkIn = moment(checkInDate);
-            const checkOut = moment(checkOutDate);
-
-            if (!checkIn.isValid() || !checkOut.isValid()) {
-                setCheckInDateError("Invalid date format.");
-                setCheckOutDateError("Invalid date format.");
-            } else if (checkIn.isBefore(moment(), 'day')) {
-                setCheckInDateError("Check-in date cannot be in the past.");
-                setCheckOutDateError("");
-            } else if (checkOut.isSameOrBefore(checkIn, 'day')) {
-                setCheckOutDateError("Check-out date must be after check-in date.");
-                setCheckInDateError("");
-            } else {
-                setCheckInDateError("");
-                setCheckOutDateError("");
-            }
-        }
-    }, [checkInDate, checkOutDate]);
+            const sriLankaTime = moment(date).utcOffset(timezoneOffsetMinutes);
+            return sriLankaTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        };
 
     const handleBookingSubmit = async (e) => {
         e.preventDefault();
@@ -115,15 +124,6 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
             setPhoneError("");
         }
 
-        if (!checkInDate) {
-            setCheckInDateError("Check-in date is required.");
-            isValid = false;
-        }
-        if (!checkOutDate) {
-            setCheckOutDateError("Check-out date is required.");
-            isValid = false;
-        }
-
         if (!isValid) {
             return;
         }
@@ -143,25 +143,13 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
             };
 
             const response = await API.post('/bookings', bookingData);
-            console.log("API Response:", response);
 
             if (response.status === 201) {
-              console.log("Booking Successful - Resetting Form"); 
+                window.alert("Booking successful! Details have been sent to your email.");
+                console.log("Booking Successful - Resetting Form");
                 setAvailabilityMessage("Booking successful!");
-                setSelectedRooms([]);
-                setTotalPrice(0);
-                setFirstName('');
-                setLastName('');
-                setEmail('');
-                setPhone('');
-                setSpecialRequests('');
-                setCheckInDateProp('');
-                setCheckOutDateProp('');
-                setAvailableRooms([]);
-                setSelectedRoomDetails(null);
+                navigate(`/hotel/${hotelId}`); 
 
-                setShowBookingForm(false); 
-                handleBookingSuccess(); 
             } else {
                 setAvailabilityMessage("Failed to book. Please check details and try again.");
             }
@@ -171,38 +159,8 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
         }
     };
 
-    const handleCheckAvailability = () => {
-        if (!checkInDate) {
-            setCheckInDateError("Check-in date is required.");
-            return;
-        } else {
-            setCheckInDateError('');
-        }
-
-        if (!checkOutDate) {
-            setCheckOutDateError("Check-out date is required.");
-            return;
-        } else {
-            setCheckOutDateError('');
-        }
-
-        onCheckRoomAvailability(checkInDate, checkOutDate);
-    };
-
     const handleCancelBooking = () => {
-        setShowBookingForm(false);
-        setAvailabilityMessage("");
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPhone('');
-        setSpecialRequests('');
-        setFirstNameError('');
-        setLastNameError('');
-        setEmailError('');
-        setPhoneError('');
-        setCheckInDateError('');
-        setCheckOutDateError('');
+        navigate(`/hotel/${hotelId}`);
     };
 
     const handleFirstNameChange = (e) => {
@@ -246,109 +204,36 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
     };
 
     return (
-        <>
-            {!hotelId ? (
-                <>
-                    <div className="mb-4">
-                        <label htmlFor="checkInDate" className="block text-gray-700 text-sm font-bold mb-2">
-                            Check-in Date:
-                            <FontAwesomeIcon icon={faCalendar} className="ml-2" />
-                        </label>
-                        <input
-                            type="date"
-                            id="checkInDate"
-                            value={checkInDate}
-                            onChange={(e) => setCheckInDate(e.target.value)}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        />
-                        {checkInDateError && <p className="text-red-500 text-xs italic">{checkInDateError}</p>}
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="checkOutDate" className="block text-gray-700 text-sm font-bold mb-2">
-                            Check-out Date:
-                            <FontAwesomeIcon icon={faCalendar} className="ml-2" />
-                        </label>
-                        <input
-                            type="date"
-                            id="checkOutDate"
-                            value={checkOutDate}
-                            onChange={(e) => setCheckOutDate(e.target.value)}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        />
-                        {checkOutDateError && <p className="text-red-500 text-xs italic">{checkOutDateError}</p>}
-                    </div>
-
-                    <button
-                        onClick={handleCheckAvailability}
-                        className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Checking...' : 'Check Availability'}
-                    </button>
-
-                    {availabilityMessage && (
-                        <p className="text-center text-gray-700 mb-4">{availabilityMessage}</p>
-                    )}
-
-                    {availableRooms.length > 0 && (
-                        <div className="mb-4">
-                            <h3 className="text-xl font-semibold text-gray-900 mb-3">Available Rooms</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {availableRooms.map(room => (
-                                    <div key={room._id} className="border rounded p-4">
-                                        <p>{room.roomNumber} ({room.roomCategory}) - {room.price}Rs</p>
-                                        <img
-                                            src={room.photo}
-                                            alt={room.roomNumber}
-                                            className="w-full h-32 object-cover rounded-md"
-                                        />
-
-                                        <label className="flex items-center mt-2 space-x-3">
-                                            <input
-                                                type="checkbox"
-                                                className="form-checkbox h-5 w-5 text-blue-600"
-                                                value={room._id}
-                                                checked={selectedRooms.includes(room._id)}
-                                                onChange={() => handleRoomToggle(room._id)}
-                                                disabled={isLoading}
-                                            />
-                                            <span className="text-gray-700">Select Room</span>
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    <button
-                        onClick={handleShowBookingForm}
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-5"
-                        disabled={selectedRooms.length === 0 || !checkInDate || !checkOutDate || isLoading}
-                    >
-                        Book Now
-                    </button>
-                </>
-            ) : (
-                <>
+        <div className="font-sans bg-gray-100 min-h-screen mt-14 py-12">
+            <div className="container mx-auto px-4 w-150">
+                <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">Enter Your Details</h2>
                     {selectedRoomDetails && selectedRoomDetails.length > 0 && (
                         <div>
-                            <h3 className="text-xl font-semibold text-gray-900 mb-2">Selected Rooms:</h3>
-                            <ul>
-                                {selectedRoomDetails.map(room => (
-                                    <li key={room._id} className="mb-2">
-                                        {room.roomNumber} ({room.roomCategory}) - ${room.price} per night
-                                        <img
-                                            src={room.photo}
-                                            alt={room.roomNumber}
-                                            className="w-full h-32 object-cover rounded-md"
-                                        />
-                                    </li>
-                                ))}
-                            </ul>
-                            <p className="text-gray-700">Total Price: ${totalPrice}</p>
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Selected Rooms:</h3>
+                        <div className="flex flex-row overflow-x-auto space-x-4"> 
+                            {selectedRoomDetails.map(room => (
+                                <div key={room._id} className="flex-none w-64"> 
+                                    <div className="mb-2">
+                                        {room.roomNumber} ({room.roomCategory}) - Rs {room.price} per night
+                                    </div>
+                                    <img
+                                        src={room.photo}
+                                        alt={room.roomNumber}
+                                        className="w-full h-40 object-cover rounded-md"
+                                    />
+                                </div>
+                            ))}
                         </div>
+                        <p className="text-center mt-4">
+                            <span className="font-bold text-black">Total Price: </span>
+                            <span className="text-green-500"> Rs {totalPrice}</span>
+                        </p>
+                    </div>
+
+                    )}
+                    {availabilityMessage && (
+                        <p className="text-center text-gray-700 mb-4">{availabilityMessage}</p>
                     )}
                     <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
                         <div>
@@ -419,14 +304,14 @@ const BookingForm = ({hotelId,checkInDate,setCheckInDate,checkOutDate,setCheckOu
                             <button
                                 type="submit"
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            >
+                                >
                                 Confirm Booking
                             </button>
                         </div>
                     </form>
-                </>
-            )}
-        </>
+                </div>
+            </div>
+        </div>
     );
 };
 

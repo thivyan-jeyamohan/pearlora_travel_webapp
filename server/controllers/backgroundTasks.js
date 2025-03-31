@@ -14,22 +14,34 @@ const updateRoomStatus = async () => {
         });
         console.log(`Found ${expiredBookings.length} expired bookings.`)
 
-        if (expiredBookings.length == 0)
+        if (expiredBookings.length === 0) {
+            console.log("No expired bookings found."); // Log if no bookings are expired
             return 0;
+        }
 
         let updated = 0;
         for (let i = 0; i < expiredBookings.length; i++) {
             const booking = expiredBookings[i];
 
-            const room = await Room.findById(booking.roomId)
-            if (room && room.isBooked) {
-                room.isBooked = false;
-                await room.save();  
+            // Fetch the room - it's important to fetch the existing document
+            const room = await Room.findById(booking.roomId);
 
-                updated++;
-            }else{
-                console.log('Data Updated Already')
+            if (!room) {
+                console.warn(`Room with ID ${booking.roomId} not found!`);
+                continue;
             }
+            console.log(booking);
+            // Construct and use the correct $pull operation to remove the booking
+             await Room.updateOne(
+                { _id: booking.roomId },
+                { $pull: { bookings: booking._id } }
+            );
+
+            if (room.bookings.length <= 1 ) {
+                room.isBooked = false;
+                await room.save();
+            }
+             updated++;
         }
         console.log("test and Updated " + updated + " rooms.");
 
@@ -51,7 +63,7 @@ export const startScheduledTasks = async () => {
         } else {
             console.log("Already connected to the database.");
         }
-        updateRoomStatus();
+        await updateRoomStatus();
         setInterval(updateRoomStatus, interval);
 
     } catch (error) {

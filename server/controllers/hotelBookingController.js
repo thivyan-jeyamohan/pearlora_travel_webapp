@@ -1,73 +1,101 @@
 import Booking from "../models/HotelBooking.js";
 import Room from "../models/Room.js";
+import Hotel from "../models/Hotel.js";
+import { sendEmail } from '../mail/mailService.js';
+import { generateEmailContent } from '../mail/emailContent.js';
+import moment from 'moment-timezone'; 
 
 export const bookRoom = async (req, res) => {
     try {
         const { userId, roomIds, checkInDate, checkOutDate, totalPrice,firstName,lastName,email,phone,specialRequests, } = req.body;
 
-        // Validate input
         if (!userId || !roomIds || !checkInDate || !checkOutDate || !totalPrice || !Array.isArray(roomIds) || roomIds.length === 0 || !firstName || !lastName || !email || !phone) {
             return res.status(400).json({ message: "All fields are required, and roomIds must be a non-empty array" });
         }
 
-        
-        const checkIn = new Date(checkInDate);
-        const checkOut = new Date(checkOutDate);
+        const sriLankaTimezone = 'Asia/Colombo';
 
+        const checkIn = moment.tz(checkInDate,sriLankaTimezone).toDate();
+        const checkOut = moment.tz(checkOutDate,sriLankaTimezone).toDate();
 
-        // Check if all rooms exist
         const rooms = await Room.find({ _id: { $in: roomIds } });
         if (rooms.length !== roomIds.length) {
             return res.status(404).json({ message: "One or more rooms not found" });
         }
 
-        // Check if any of the selected rooms are already booked
-        const existingBookings = await Booking.find({
-            roomId: { $in: roomIds },
-            $or: [
-                { checkInDate: { $lt: checkOut }, checkOutDate: { $gt: checkIn } }
-            ]
-        });
+        for (const roomId of roomIds){
+            const existingBookings = await Booking.find({
+                roomId:  roomId ,  
+                $or: [
+                    { checkInDate: { $lt: checkOut }, checkOutDate: { $gt: checkIn } }
+                ]
+            });
 
-        if (existingBookings.length > 0) {
-            return res.status(400).json({ message: "One or more rooms are already booked for these dates" });
+            if (existingBookings.length > 0) {
+                return res.status(400).json({ message: "One or more rooms are already booked for these dates" });
+            }
         }
 
-        // Create bookings for each room
-        const newBookings = await Promise.all(roomIds.map(async roomId => {
-            const newBooking = new Booking({
-                userId,
-                roomId,
-                checkInDate,
-                checkOutDate,
-                totalPrice,
-                firstName,        
-                lastName,
-                email,
-                phone,
-                specialRequests,
-            });
-            await newBooking.save();
+        const placeholderBooking = new Booking({
+            userId,
+            roomId: roomIds[0], 
+            checkInDate: checkIn,
+            checkOutDate: checkOut,
+            totalPrice,
+            firstName,
+            lastName,
+            email,
+            phone,
+            specialRequests,
+        });
+        await placeholderBooking.save();
 
-            // Update room bookings in MongoDB
+        for (const roomId of roomIds) {
             await Room.findByIdAndUpdate(roomId, {
-                $push: { bookings: newBooking._id },
+                $push: { bookings: placeholderBooking._id },
                 isBooked: true 
             });
+        }
 
-            return newBooking;
-        }));
+        await Booking.findByIdAndUpdate(placeholderBooking._id, {
+            $set: {
+                allRoomIds: roomIds 
+            }
+        });
 
+        const hotel = await Hotel.findOne({ rooms: { $in: roomIds } });
+        if (!hotel) {
+            console.warn(`Hotel not found for rooms: ${roomIds.join(', ')}`);
+            return res.status(500).json({ message: "Can't find hotels to send email confirmation", error: error.message });
+        }
+        let roomNumbers = ""
+        for (let i = 0; i < rooms.length; i++) {
+            roomNumbers += rooms[i].roomNumber + ", "
+        }
 
-        res.status(201).json({ message: "Rooms booked successfully", bookings: newBookings });
+        console.log("test : Number of booking to be " + roomNumbers)
+
+        const { mailSubject, mailHtml } = generateEmailContent(
+            firstName,
+            lastName,
+            hotel.name,
+            roomNumbers,
+            moment(checkIn).tz(sriLankaTimezone).format('YYYY-MM-DD'),
+            moment(checkOut).tz(sriLankaTimezone).format('YYYY-MM-DD'),
+            totalPrice,
+            placeholderBooking._id
+        );
+
+        await sendEmail(email, mailSubject, mailHtml);
+        console.log("Successfully to send email at")
+
+        res.status(201).json({ message: "Rooms booked successfully", booking: placeholderBooking });
 
     } catch (error) {
         console.error("Error booking rooms:", error);
         res.status(500).json({ message: "Error booking rooms", error: error.stack || error.message });
     }
 };
-
-
 
 
 export const getAllBookings = async (req, res) => {
@@ -87,31 +115,29 @@ export const cancelBooking = async (req, res) => {
     try {
         const bookingId = req.params.id;
 
-        
         const booking = await Booking.findById(bookingId);
         if (!booking) {
             return res.status(404).json({ message: "Booking not found" });
         }
 
-        
-        await Room.updateOne(
-            { _id: booking.roomId }, 
-            { $pull: { bookings: bookingId } } 
-        );
+        const roomIds = booking.allRoomIds;
 
-        
-        const room = await Room.findById(booking.roomId);
-        if (!room) { 
-            console.warn(`Room with ID ${booking.roomId} not found after cancelling booking ${bookingId}`);
-            return res.status(500).json({ message: "Error cancelling booking: Room not found" });
+        for (const roomId of roomIds) {
+            await Room.updateOne(
+                { _id: roomId },
+                { $pull: { bookings: bookingId } }
+            );
+            const room = await Room.findById(roomId);
+            if (!room) {
+                console.warn(`Room with ID ${roomId} not found after cancelling booking ${bookingId}`);
+                continue; 
+            }
+
+            if (room.bookings.length === 0) {
+                room.isBooked = false;
+                await room.save();
+            }
         }
-
-        
-        if (room.bookings.length === 0) {
-            room.isBooked = false;
-            await room.save();
-        }
-
         await Booking.findByIdAndDelete(bookingId);
 
         res.status(200).json({ message: "Booking cancelled successfully" });
@@ -122,56 +148,3 @@ export const cancelBooking = async (req, res) => {
     }
 };
 
-
-
-export const updateBooking = async (req, res) => {
-    try {
-        const bookingId = req.params.id;
-        const { checkInDate, checkOutDate, totalPrice, firstName, lastName, email, phone, specialRequests } = req.body; 
-
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ message: "Booking not found" });
-        }
-
-        if (!checkInDate || !checkOutDate || !totalPrice || !firstName || !lastName || !email || !phone) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-
-        // Convert dates to Date objects
-        const checkIn = new Date(checkInDate);
-        const checkOut = new Date(checkOutDate);
-
-        
-
-        const existingBookings = await Booking.find({
-            roomId: { $in: booking.roomId },
-            _id: { $ne: bookingId }, 
-            $or: [
-                { checkInDate: { $lt: checkOut }, checkOutDate: { $gt: checkIn } }
-            ]
-        });
-
-        if (existingBookings.length > 0) {
-            return res.status(400).json({ message: "One or more rooms are already booked for these dates" });
-        }
-
-
-        booking.checkInDate = checkIn;
-        booking.checkOutDate = checkOut;
-        booking.totalPrice = totalPrice;
-        booking.firstName = firstName;
-        booking.lastName = lastName;
-        booking.email = email;
-        booking.phone = phone;
-        booking.specialRequests = specialRequests;
-
-        const updatedBooking = await booking.save();
-
-        res.status(200).json({ message: "Booking updated successfully", booking: updatedBooking });
-
-    } catch (error) {
-        console.error("Error updating booking:", error);
-        res.status(500).json({ message: "Error updating booking", error: error.stack || error.message });
-    }
-};

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import API from './services/api';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faDownload } from '@fortawesome/free-solid-svg-icons';
 
 const Reports = () => {
     const [reportData, setReportData] = useState([]);
@@ -17,6 +17,8 @@ const Reports = () => {
     const [hotels, setHotels] = useState([]);
     const [availableRooms, setAvailableRooms] = useState([]);
     const [filteredRooms, setFilteredRooms] = useState([]);
+
+    const [downloadingPdf, setDownloadingPdf] = useState(false);
 
     useEffect(() => {
         const fetchHotels = async () => {
@@ -45,8 +47,8 @@ const Reports = () => {
         fetchAvailableRooms();
     }, []);
 
-     // Filter rooms when hotelId changes
-     useEffect(() => {
+
+    useEffect(() => {
         if (hotelId) {
             const filtered = availableRooms.filter(room => room.hotelId === hotelId);
             setFilteredRooms(filtered);
@@ -81,166 +83,346 @@ const Reports = () => {
         }
     };
 
+    const downloadPdfReport = async () => {
+        setDownloadingPdf(true); // Disable button
+        try {
+            // Construct the HTML table
+            let tableHtml = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Report</title>
+                <style>
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin-top:40px;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                    tr:nth-child(even) {
+                      background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <table >
+                    <thead>
+                        <tr>
+                            <th>Hotel Name</th>
+                            <th>Booking ID</th>
+                            <th>Room Numbers</th>
+                            <th>Check-in Date</th>
+                            <th>Check-out Date</th>
+                            <th>Days Stayed</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${reportData.map(item => `
+                            <tr>
+                                <td>${item.hotelName}</td>
+                                <td>${item._id}</td>
+                                <td>${Array.isArray(item.allRoomIds)
+                                    ? item.allRoomIds.map(id => availableRooms.find(room => room._id === id)?.roomNumber || 'N/A').join(', ')
+                                    : 'N/A'}</td>
+                                <td>${moment(item.checkInDate).format('YYYY-MM-DD')}</td>
+                                <td>${moment(item.checkOutDate).format('YYYY-MM-DD')}</td>
+                                <td>${item.daysStayed}</td>
+                                <td>Rs ${item.totalPrice}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+            `;
+
+            const pdfShiftApiKey = 'sk_7987f7c5af0ff5e0330a842fa20f87c2e6349016';
+            const pdfShiftApiUrl = 'https://api.pdfshift.io/v3/convert/pdf';
+
+            // Base64 Encode API Key
+            const apiKeyBase64 = btoa(`api:${pdfShiftApiKey}`);
+
+            const requestBody = {
+                source: tableHtml,
+            };
+
+            const response = await fetch(pdfShiftApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${apiKeyBase64}`,
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (!response.ok) {
+                throw new Error(`PDFShift API Error: ${response.status} - ${await response.text()}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'report.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            //reset page
+            setReportData([]);
+            setCheckInDateFrom('');
+            setCheckInDateTo('');
+            setCheckOutDateFrom('');
+            setCheckOutDateTo('');
+            setBookingId('');
+            setHotelId('');
+            setRoomId('');
+            setReportError('');
+
+        } catch (error) {
+            console.error("Error generating and downloading PDF:", error);
+            setReportError(`Failed to generate PDF: ${error.message}`);
+        } finally {
+            setDownloadingPdf(false); // Re-enable button
+        }
+    };
+
+
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Generate Report</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="container mx-auto  p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-3xl font-semibold mb-6 text-gray-800">Generate Report</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {/* Hotel Name */}
                 <div>
-                    <label htmlFor="hotelId" className="block text-sm font-medium text-gray-700">Hotel Name</label>
-                    <select
-                        id="hotelId"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={hotelId}
-                        onChange={(e) => setHotelId(e.target.value)}
-                    >
-                        <option value="">All Hotels</option>
-                        {hotels.length > 0 ? (
-                            hotels.map((hotel) => (
-                                <option key={hotel._id} value={hotel._id}>{hotel.name}</option>
-                            ))
-                        ) : (
-                            <option>Loading hotels...</option>
-                        )}
-                    </select>
+                    <label htmlFor="hotelId" className="block text-sm font-medium text-gray-700">
+                        Hotel Name
+                    </label>
+                    <div className="mt-1">
+                        <select
+                            id="hotelId"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-3"
+                            value={hotelId}
+                            onChange={(e) => setHotelId(e.target.value)}
+                        >
+                            <option value="">All Hotels</option>
+                            {hotels.length > 0 ? (
+                                hotels.map((hotel) => (
+                                    <option key={hotel._id} value={hotel._id}>
+                                        {hotel.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option>Loading hotels...</option>
+                            )}
+                        </select>
+                    </div>
                 </div>
+                {/* Room Number */}
                 <div>
-                    <label htmlFor="roomId" className="block text-sm font-medium text-gray-700">Room Number</label>
-                    <select
-                        id="roomId"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={roomId}
-                        onChange={(e) => setRoomId(e.target.value)}
-                    >
-                        <option value="">All Rooms</option>
-                        {filteredRooms.length > 0 ? (  // Use filtered rooms here
-                            filteredRooms.map((room) => (
-                                <option key={room._id} value={room._id}>{room.roomNumber}</option>
-                            ))
-                        ) : (
-                            <option>No rooms available for this hotel</option>
-                        )}
-                    </select>
+                    <label htmlFor="roomId" className="block text-sm font-medium text-gray-700">
+                        Room Number
+                    </label>
+                    <div className="mt-1">
+                        <select
+                            id="roomId"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-3"
+                            value={roomId}
+                            onChange={(e) => setRoomId(e.target.value)}
+                        >
+                            <option value="">All Rooms</option>
+                            {filteredRooms.length > 0 ? (
+                                filteredRooms.map((room) => (
+                                    <option key={room._id} value={room._id}>
+                                        {room.roomNumber}
+                                    </option>
+                                ))
+                            ) : (
+                                <option>No rooms available for this hotel</option>
+                            )}
+                        </select>
+                    </div>
                 </div>
+                {/* Booking ID */}
                 <div>
-                    <label htmlFor="bookingId" className="block text-sm font-medium text-gray-700">Booking ID</label>
-                    <input
-                        type="text"
-                        id="bookingId"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={bookingId}
-                        onChange={(e) => setBookingId(e.target.value)}
-                    />
+                    <label htmlFor="bookingId" className="block text-sm font-medium text-gray-700">
+                        Booking ID
+                    </label>
+                    <div className="mt-1">
+                        <input
+                            type="text"
+                            id="bookingId"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-3"
+                            value={bookingId}
+                            onChange={(e) => setBookingId(e.target.value)}
+                        />
+                    </div>
                 </div>
-                
-                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+
                 {/* Check-in Date From */}
-                  <div className="w-full md:w-1/2">
+                <div>
                     <label htmlFor="checkInDateFrom" className="block text-sm font-medium text-gray-700">
                         Check-in Date From
-                        <FontAwesomeIcon icon={faCalendar} className="ml-2" />
                     </label>
-                    <input
-                        type="date"
-                        id="checkInDateFrom"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={checkInDateFrom}
-                        onChange={(e) => setCheckInDateFrom(e.target.value)}
-                    />
-                   </div>
-                    {/* Check-in Date To */}
-                   <div className="w-full md:w-1/2">
+                    <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FontAwesomeIcon icon={faCalendar} className="text-gray-500" />
+                        </div>
+                        <input
+                            type="date"
+                            id="checkInDateFrom"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
+                            value={checkInDateFrom}
+                            onChange={(e) => setCheckInDateFrom(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* Check-in Date To */}
+                <div>
                     <label htmlFor="checkInDateTo" className="block text-sm font-medium text-gray-700">
                         Check-in Date To
-                        <FontAwesomeIcon icon={faCalendar} className="ml-2" />
                     </label>
-                    <input
-                        type="date"
-                        id="checkInDateTo"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={checkInDateTo}
-                        onChange={(e) => setCheckInDateTo(e.target.value)}
-                    />
+                    <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FontAwesomeIcon icon={faCalendar} className="text-gray-500" />
+                        </div>
+                        <input
+                            type="date"
+                            id="checkInDateTo"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
+                            value={checkInDateTo}
+                            onChange={(e) => setCheckInDateTo(e.target.value)}
+                        />
+                    </div>
                 </div>
-              </div>
 
-                   
-              <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                 {/* Check-out Date From */}
-                 <div className="w-full md:w-1/2">
+                <div>
                     <label htmlFor="checkOutDateFrom" className="block text-sm font-medium text-gray-700">
                         Check-out Date From
-                        <FontAwesomeIcon icon={faCalendar} className="ml-2" />
                     </label>
-                    <input
-                        type="date"
-                        id="checkOutDateFrom"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={checkOutDateFrom}
-                        onChange={(e) => setCheckOutDateFrom(e.target.value)}
-                    />
-                  </div>
+                    <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FontAwesomeIcon icon={faCalendar} className="text-gray-500" />
+                        </div>
+                        <input
+                            type="date"
+                            id="checkOutDateFrom"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
+                            value={checkOutDateFrom}
+                            onChange={(e) => setCheckOutDateFrom(e.target.value)}
+                        />
+                    </div>
+                </div>
+
                 {/* Check-out Date To */}
-                    <div className="w-full md:w-1/2">
+                <div>
                     <label htmlFor="checkOutDateTo" className="block text-sm font-medium text-gray-700">
                         Check-out Date To
-                        <FontAwesomeIcon icon={faCalendar} className="ml-2" />
                     </label>
-                    <input
-                        type="date"
-                        id="checkOutDateTo"
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        value={checkOutDateTo}
-                        onChange={(e) => setCheckOutDateTo(e.target.value)}
-                    />
-                  </div>
+                    <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <FontAwesomeIcon icon={faCalendar} className="text-gray-500" />
+                        </div>
+                        <input
+                            type="date"
+                            id="checkOutDateTo"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
+                            value={checkOutDateTo}
+                            onChange={(e) => setCheckOutDateTo(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
-              
 
             <button
                 onClick={generateReport}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
             >
-                Generate Report
+                Submit
             </button>
 
             {reportError && <p className="text-red-500 mt-4">{reportError}</p>}
 
-            <div className="mt-6 overflow-x-auto">
+            <div className="mt-8 overflow-x-auto mb-8">
                 {reportData.length > 0 ? (
-                    <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
-                        <thead className="bg-gray-100 text-gray-800 text-sm font-semibold">
-                            <tr>
-                                <th className="border-b px-4 py-3 text-left">Hotel Name</th>
-                                <th className="border-b px-4 py-3 text-left">Booking ID</th>
-                                <th className="border-b px-4 py-3 text-left">Room Number</th>
-                                <th className="border-b px-4 py-3 text-left">Check-in Date</th>
-                                <th className="border-b px-4 py-3 text-left">Check-out Date</th>
-                                <th className="border-b px-4 py-3 text-left">Days Stayed</th>
-                                <th className="border-b px-4 py-3 text-left">Total Price</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-sm text-gray-700">
-                            {reportData.map((reportItem) => (
-                                <tr key={reportItem._id} className="hover:bg-gray-50">
-                                    <td className="border-b px-4 py-3">{reportItem.hotelName}</td>
-                                    <td className="border-b px-4 py-3">{reportItem._id}</td>
-                                    <td className="border-b px-4 py-3">{reportItem.roomNumber}</td>
-                                    <td className="border-b px-4 py-3">{moment(reportItem.checkInDate).format('YYYY-MM-DD')}</td>
-                                    <td className="border-b px-4 py-3">{moment(reportItem.checkOutDate).format('YYYY-MM-DD')}</td>
-                                    <td className="border-b px-4 py-3">{reportItem.daysStayed}</td>
-                                    <td className="border-b px-4 py-3">{reportItem.totalPrice}</td>
+                    <>
+                        <table className="min-w-full divide-y divide-gray-200 ">
+                            <thead className="bg-gray-300">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Hotel Name
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Booking ID
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Room Numbers
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Check-in Date
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Check-out Date
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Days Stayed
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                                        Total Price
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {reportData.map((reportItem) => (
+                                    <tr key={reportItem._id}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem.hotelName}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem._id}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {Array.isArray(reportItem.allRoomIds)
+                                                ? reportItem.allRoomIds.map(id => availableRooms.find(room => room._id === id)?.roomNumber || 'N/A').join(', ')
+                                                : 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{moment(reportItem.checkInDate).format('YYYY-MM-DD')}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{moment(reportItem.checkOutDate).format('YYYY-MM-DD')}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem.daysStayed}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem.totalPrice}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                         <button
+                            onClick={downloadPdfReport}
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mt-4"
+                            disabled={downloadingPdf}
+                        >
+                            {downloadingPdf ? (
+                                "Generating PDF..."
+                            ) : (
+                                <>
+                                    <FontAwesomeIcon icon={faDownload} className="mr-2" />
+                                    Download PDF
+                                </>
+                            )}
+                        </button>
+                    </>
                 ) : (
-                    <div className="text-center">
+                    <div className="text-center py-8">
                         <p className="text-gray-600">No data available for the selected criteria.</p>
                         <p className="text-gray-600">Please adjust your filters and try again.</p>
                     </div>
-                    )
-                }
+                )}
             </div>
         </div>
     );

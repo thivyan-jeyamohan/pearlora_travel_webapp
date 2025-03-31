@@ -12,7 +12,9 @@ const roomSchema = new mongoose.Schema({
     },
     isBooked: { type: Boolean, default: false },  
     bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "HotelBooking" }],
-});
+},{ timestamps: true });
+
+roomSchema.index({ hotelId: 1, roomNumber: 1 }, { unique: true });
 
 const Room = mongoose.model("Room", roomSchema);
 export default Room;

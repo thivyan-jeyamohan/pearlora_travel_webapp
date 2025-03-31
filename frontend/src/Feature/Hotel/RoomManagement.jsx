@@ -11,12 +11,12 @@ const RoomManagement = () => {
 
   useEffect(() => {
     fetchRooms();
-    fetchHotels(); // Fetch hotels for the RoomForm select
+    fetchHotels();
   }, []);
 
   const fetchRooms = async () => {
     try {
-      const response = await API.get('/rooms'); // Fetch all rooms (you can filter by hotelId if needed)
+      const response = await API.get('/rooms');
       setRooms(response.data);
     } catch (error) {
       console.error('Error fetching rooms:', error);
@@ -25,50 +25,62 @@ const RoomManagement = () => {
 
   const fetchHotels = async () => {
     try {
-      const response = await API.get('/hotels'); // Fetch all hotels
+      const response = await API.get('/hotels');
       setHotels(response.data);
     } catch (error) {
       console.error('Error fetching hotels:', error);
     }
   };
 
+  const handleAddRoomClick = () => {
+    setSelectedRoom(null);
+    setShowRoomForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowRoomForm(false);
+    setSelectedRoom(null);
+  };
+
+  const handleRoomSaved = () => {
+    fetchRooms();
+    handleCloseForm();
+  };
+
+  const handleEditRoom = (room) => {  
+    setSelectedRoom(room);
+    setShowRoomForm(true);
+  };
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-semibold mb-4">Room Management</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-semibold">Room Management</h1>
+        {!showRoomForm && (
+          <button
+            onClick={handleAddRoomClick}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Add New Room
+          </button>
+        )}
+      </div>
 
-      <button
-        onClick={() => {
-          setSelectedRoom(null);
-          setShowRoomForm(true);
-        }}
-        className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer"
-      >
-        Add New Room
-      </button>
-
-      <RoomTable
-        rooms={rooms}
-        setShowRoomForm={setShowRoomForm}
-        setSelectedRoom={setSelectedRoom}
-        fetchRooms={fetchRooms}
-        hotels={hotels} // Pass hotels to RoomTable
-      />
-
-      {showRoomForm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"> 
-          <div className="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg max-h-[80vh] overflow-y-auto"> 
-            <RoomForm
-              roomData={selectedRoom}
-              onClose={() => {
-                setShowRoomForm(false);
-                setSelectedRoom(null);
-              }}
-              fetchRooms={fetchRooms}
-              hotels={hotels}
-            />
-          </div>
-        </div>
+      {showRoomForm ? (
+        <RoomForm
+          roomData={selectedRoom}
+          onClose={handleCloseForm}
+          fetchRooms={fetchRooms}
+          hotels={hotels}
+          onRoomSaved={handleRoomSaved}
+        />
+      ) : (
+        <RoomTable
+          rooms={rooms}
+          fetchRooms={fetchRooms}
+          hotels={hotels}
+          onEdit={handleEditRoom}  
+        />
       )}
     </div>
   );
