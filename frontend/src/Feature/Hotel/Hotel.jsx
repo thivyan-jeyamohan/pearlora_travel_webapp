@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import introImage from './images/intro.png';
 import welcomeImage from './images/intro1.png'; 
+import Footer from '../../components/Footer';
 
 const Hotel = () => {
     const [hotels, setHotels] = useState([]);
@@ -35,7 +36,7 @@ const Hotel = () => {
 
     return (
         <div className="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter']">
-            {/* Hero Section with Carousel */}
+            {/* Hero Section  */}
             <div className="relative h-96 overflow-hidden">  
                 <img src={introImage} alt="Hotel Cover" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black opacity-20"></div>
@@ -66,7 +67,7 @@ const Hotel = () => {
                 </div>
             </section>
 
-            {/* Search and Filter Section - Modernized */}
+            {/* Search and Filter Section */}
             <div className="max-w-5xl mx-auto mt-17 p-6 bg-white rounded-3xl shadow-md flex flex-col md:flex-row items-center gap-4">
                 <div className="relative w-full md:w-2/3">
                     <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -116,6 +117,7 @@ const Hotel = () => {
                     <p className="text-center text-gray-600 col-span-full">No hotels found.</p>
                 )}
             </div>
+            <Footer />
         </div>
     );
 };

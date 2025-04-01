@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import API from './services/api';
 import moment from 'moment-timezone'; 
+import Footer from '../../components/Footer';
 
 const BookingForm = () => {
     const { hotelId } = useParams();
@@ -101,6 +102,7 @@ const BookingForm = () => {
             isValid = false;
         } else if (!validateName(lastName)) {
             setLastNameError("Last name cannot contain numbers or symbols.");
+            isValid = false;
         } else {
             setLastNameError("");
         }
@@ -120,6 +122,7 @@ const BookingForm = () => {
             isValid = false;
         } else if (!validatePhone(phone)) {
             setPhoneError("Must start with 077, 071, 074, 075, or 076 and be 10 digits.");
+            isValid = false;
         } else {
             setPhoneError("");
         }
@@ -204,8 +207,8 @@ const BookingForm = () => {
     };
 
     return (
-        <div className="font-sans bg-gray-100 min-h-screen mt-14 py-12">
-            <div className="container mx-auto px-4 w-150">
+        <div className="font-sans bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] flex flex-col mt-18">
+            <div className="container mx-auto px-4 w-150 mb-20">
                 <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4">Enter Your Details</h2>
                     {selectedRoomDetails && selectedRoomDetails.length > 0 && (
@@ -311,6 +314,7 @@ const BookingForm = () => {
                     </form>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };

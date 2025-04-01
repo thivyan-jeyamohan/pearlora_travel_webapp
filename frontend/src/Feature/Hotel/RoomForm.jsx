@@ -143,6 +143,7 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
                         type="number"
                         id="price"
                         value={price}
+                        min="1"
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         required

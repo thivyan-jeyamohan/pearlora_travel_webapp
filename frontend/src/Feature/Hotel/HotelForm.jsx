@@ -147,6 +147,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
                         type="number"
                         id="price"
                         value={price}
+                        min="1"
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         required
@@ -183,6 +184,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
                         className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         min="1"
                         max="5"
+                        step="0.1"
                         required
                     />
                 </div>

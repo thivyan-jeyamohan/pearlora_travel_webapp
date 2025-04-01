@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import API from './services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faWifi, faSwimmingPool, faParking, faSmoking, faPaw, faLocationDot, faCalendar } from '@fortawesome/free-solid-svg-icons';
-import moment from 'moment-timezone'; // Import moment-timezone
+import moment from 'moment-timezone'; 
+import Footer from '../../components/Footer';
 
 const HotelDetail = () => {
     const { hotelId } = useParams();
@@ -129,11 +130,11 @@ const HotelDetail = () => {
     };
 
     return (
-        <div className="font-sans bg-gray-100 min-h-screen py-12 mt-20 mr-40 ml-40">
-            <div className="container mx-auto px-4">
+        <div className=" font-sans bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] flex flex-col mt-35">
+            <div className="px-4 ml-40 mb-20">
                 {hotel ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Left Column: Hotel Details */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+                        {/* Hotel Details */}
                         <div className="ml-10">
                             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6 ">
                                 <img src={hotel.coverPhoto} alt={hotel.name} className="w-full h-64 object-cover" />
@@ -183,8 +184,8 @@ const HotelDetail = () => {
                             </div>
                         </div>
 
-                        {/* Right Column: Booking Availability Form */}
-                        <div className="bg-white rounded-lg shadow-md p-6 w-130 ml-1">
+                        {/* Booking Availability Form */}
+                        <div className="bg-white rounded-lg shadow-md p-6 w-120 ml-1 ">
                             <h2 className="text-2xl font-semibold text-gray-900 mb-4">Check Availability</h2>
                             <div className="mb-4">
                                 <label htmlFor="checkInDate" className="block text-gray-700 text-sm font-bold mb-2">
@@ -281,6 +282,7 @@ const HotelDetail = () => {
                     <div className="text-center text-gray-600">Loading hotel details...</div>
                 )}
             </div>
+            <Footer />
         </div>
     );
 };

@@ -13,6 +13,7 @@ import Signup from "./User/Signup";
 import Login from "./User/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from './User/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <div className="fixed top-0 left-0 w-full shadow-lg z-50">
           <Header />
         </div>
