@@ -1,34 +1,29 @@
 import React from 'react';
-//import HeroSection from "./HeroSection"; // Import HeroSection (same folder)
-import FeaturesSection from './FeaturesSection';
-//import Sample from './sample';
 import Head from './Head';
-import SearchBar from './SearchBar';
-import TourCardSlider from './TourCardSlider/TourCardSlider'
+import TourCardSlider from './TourCardSlider/TourCardSlider';
+import DesList from './retrive/desList';
+import MyComponent from "./MyComponent"; // ✅ Use MyComponent instead of SearchBar
 
 function Destination() {
   return (
-
-    
     <div>
+      <div>  
+        <Head />
+      </div>
 
-     <diV>  {/* Head*/}
-      <Head />
-      </diV>
+      {/* ✅ Use MyComponent, which correctly passes onResults */}
+      <div>
+        <MyComponent />  
+      </div>
 
-      <diV>  {/* Search bar*/}
-      <SearchBar />
-      </diV>
-     
-      <diV>  {/* TourCardSlider*/}
-      <TourCardSlider />
-      </diV>
-     
-  
-  </div>
+      <div>  
+        <TourCardSlider />
+      </div>
 
-  
-
+      <div>
+        <DesList />
+      </div>
+    </div>
   );
 }
 
