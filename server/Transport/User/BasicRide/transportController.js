@@ -1,6 +1,6 @@
 import RideBooking from "./BasicRideBooking.js";
 
-// 📌 Create a new ride booking
+
 export const createRideBooking = async (req, res) => {
   try {
     const newBooking = new RideBooking(req.body);
@@ -11,7 +11,7 @@ export const createRideBooking = async (req, res) => {
   }
 };
 
-// 📌 Get all ride bookings
+
 export const getRideBookings = async (req, res) => {
   try {
     const rides = await RideBooking.find();
@@ -21,7 +21,7 @@ export const getRideBookings = async (req, res) => {
   }
 };
 
-// 📌 Delete a ride booking by ID
+
 export const deleteRideBooking = async (req, res) => {
   try {
     const deletedRide = await RideBooking.findByIdAndDelete(req.params.id);
@@ -34,7 +34,7 @@ export const deleteRideBooking = async (req, res) => {
   }
 };
 
-// 📌 Update a ride booking by ID
+
 export const updateRideBooking = async (req, res) => {
   try {
     const updatedRide = await RideBooking.findByIdAndUpdate(

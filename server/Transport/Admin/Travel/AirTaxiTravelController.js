@@ -6,16 +6,7 @@ import { generateEmailContent } from "../../Mail/emailContent.js";
 
 export const addTravel = async (req, res) => {
   try {
-    const {
-      airtaxiName,
-      departure,
-      departure_datetime,
-      destination,
-      destination_datetime,
-      ticket_price,
-      seats,
-      airtaxicompanymail,
-    } = req.body;
+    const { airtaxiName, departure, departure_datetime, destination, destination_datetime, ticket_price, seats,airtaxicompanymail, } = req.body;
 
     // Validate departure and destination times
     const now = new Date();
@@ -23,15 +14,11 @@ export const addTravel = async (req, res) => {
     const destinationTime = new Date(destination_datetime);
 
     if (departureTime - now < 2 * 60 * 60 * 1000) {
-      return res
-        .status(400)
-        .json({ error: "Departure time must be at least 2 hours from now." });
+      return res.status(400).json({ error: "Departure time must be at least 2 hours from now." });
     }
 
     if (destinationTime <= departureTime) {
-      return res
-        .status(400)
-        .json({ error: "Destination time must be later than departure time." });
+      return res.status(400).json({ error: "Destination time must be later than departure time." });
     }
 
     // Create new travel entry
@@ -43,7 +30,7 @@ export const addTravel = async (req, res) => {
       destination_datetime,
       ticket_price,
       seats,
-      airtaxicompanymail,
+      airtaxicompanymail
     });
 
     const savedTravel = await newTravel.save();
@@ -58,7 +45,6 @@ export const addTravel = async (req, res) => {
       destination: savedTravel.destination,
       destination_datetime: savedTravel.destination_datetime,
       ticket_price: savedTravel.ticket_price,
-      airtaxicompanymail: savedTravel.airtaxicompanymail,
       seats: seatsArray, // All 100 seats
       bookedSeats: [], // Initially, no seats are booked
       nonSelectableSeats: [], // No non-selectable seats initially
@@ -67,30 +53,28 @@ export const addTravel = async (req, res) => {
     await newAirSeat.save();
 
     // Get the email content
-    const { mailSubject, mailHtml } = generateEmailContent(
-      airtaxiName,
-      departure,
-      departure_datetime,
-      destination,
-      destination_datetime,
-      ticket_price,
-      airtaxicompanymail,
-      seats,
-    );
+        const { mailSubject, mailHtml } = generateEmailContent(
+          airtaxiName,
+          departure,
+          departure_datetime,
+          destination,
+          destination_datetime,
+          ticket_price,
+          airtaxicompanymail,
+          seats,
+        );
+    
+        // Send the email using the mail service
+        await sendEmail(airtaxicompanymail, mailSubject, mailHtml);
 
-    // Send the email using the mail service
-    await sendEmail(airtaxicompanymail, mailSubject, mailHtml);
-
-    res
-      .status(201)
-      .json({ message: "Travel added successfully", travel: savedTravel });
+    res.status(201).json({ message: "Travel added successfully", travel: savedTravel });
   } catch (error) {
     console.error("Error adding travel:", error);
     res.status(500).json({ error: "Failed to add travel" });
   }
 };
 
-// Other controller methods (getAllTravels, getTravelById, updateTravel, deleteTravel) remain unchanged
+
 
 // Get all travels
 export const getAllTravels = async (req, res) => {
@@ -116,13 +100,8 @@ export const getTravelById = async (req, res) => {
 // Update travel details and synchronize with AirSeat
 export const updateTravel = async (req, res) => {
   try {
-    const updatedTravel = await AirTaxiTravel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true },
-    );
-    if (!updatedTravel)
-      return res.status(404).json({ error: "Travel not found" });
+    const updatedTravel = await AirTaxiTravel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedTravel) return res.status(404).json({ error: "Travel not found" });
 
     // Update corresponding AirSeat entry
     await AirSeat.findOneAndUpdate(
@@ -134,29 +113,11 @@ export const updateTravel = async (req, res) => {
         destination: updatedTravel.destination,
         destination_datetime: updatedTravel.destination_datetime,
         ticket_price: updatedTravel.ticket_price,
-        airtaxicompanymail: updatedTravel.airtaxicompanymail,
       },
-      { new: true },
+      { new: true }
     );
 
-    // Get the email content
-    const { mailSubject, mailHtml } = generateEmailContent(
-      airtaxiName,
-      departure,
-      departure_datetime,
-      destination,
-      destination_datetime,
-      ticket_price,
-      airtaxicompanymail,
-      seats,
-    );
-
-    // Send the email using the mail service
-    await sendEmail(airtaxicompanymail, mailSubject, mailHtml);
-
-    res
-      .status(200)
-      .json({ message: "Travel updated successfully", travel: updatedTravel });
+    res.status(200).json({ message: "Travel updated successfully", travel: updatedTravel });
   } catch (error) {
     res.status(500).json({ error: "Failed to update travel" });
   }
@@ -188,3 +149,5 @@ export const deleteTravel = async (req, res) => {
     res.status(500).json({ error: "Failed to delete travel" });
   }
 };
+
+

@@ -19,7 +19,7 @@ const TravelList = ({ filters }) => {
     fetchTravels();
   }, []);
 
-  // Filter travels based on user selection
+  
   const filteredTravels = travels.filter((travel) => {
     return (
       (!filters.departure || travel.departure === filters.departure) &&
@@ -36,12 +36,12 @@ const TravelList = ({ filters }) => {
             key={travel._id}
             className="bg-white shadow-lg rounded-lg p-6 w-[400px] border-2 border-gray-300"
           >
-            {/* Air Taxi Name */}
+           
             <div className="text-center bg-black text-white py-2 font-bold text-lg uppercase">
               {travel.airtaxiName}
             </div>
 
-            {/* Travel Details */}
+            
             <div className="flex justify-between items-center my-6">
               <div className="text-center">
                 <h3 className="text-gray-600">DEPARTURE PLACE</h3>
@@ -62,12 +62,12 @@ const TravelList = ({ filters }) => {
               </div>
             </div>
 
-            {/* Ticket Price */}
+          
             <div className="border-t border-gray-400 text-center mt-4 pt-2 font-bold text-lg">
               TICKET FEE : {travel.ticket_price} LKR
             </div>
 
-            {/* Book Button */}
+           
             <div className="flex justify-center mt-5">
               <Link to={`/transport/express-ride/seat-booking/${travel._id}`}>
                 <button className="bg-purple-300 text-purple-950 rounded-4xl font-bold px-10 py-2">

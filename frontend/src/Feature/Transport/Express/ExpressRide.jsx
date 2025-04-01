@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ExpressIntro from "./ExpressIntro";
 import TravelList from "./TravelList";
+import Footer from '../../../components/Footer';
 
 const ExpressRide = () => {
   const [filters, setFilters] = useState({
@@ -14,6 +15,7 @@ const ExpressRide = () => {
       <ExpressIntro onFilterChange={setFilters} />
       <TravelList filters={filters} />
       <div className="mt-20"></div>
+      <Footer />
     </>
   );
 };

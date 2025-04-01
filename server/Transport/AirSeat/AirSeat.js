@@ -12,9 +12,9 @@ const airSeatSchema = new mongoose.Schema({
   destination: { type: String, required: true },
   destination_datetime: { type: String, required: true },
   ticket_price: { type: Number, required: true },
-  seats: { type: [String], required: true }, // Array of strings
-  bookedSeats: { type: [String], default: [] }, // Array of strings for booked seats
-  nonSelectableSeats: { type: [String], default: [] }, // Array of strings for non-selectable seats
+  seats: { type: [String], required: true }, 
+  bookedSeats: { type: [String], default: [] }, 
+  nonSelectableSeats: { type: [String], default: [] }, 
 });
 
 const AirSeat = mongoose.model("AirSeat", airSeatSchema);

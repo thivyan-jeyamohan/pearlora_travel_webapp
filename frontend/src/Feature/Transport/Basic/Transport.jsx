@@ -1,6 +1,7 @@
 import React from 'react';
 import TransBegin from './TransBegin';
 import BasicRide from './BasicRide';
+import Footer from '../../../components/Footer';
 
 
 function Transport() {
@@ -8,6 +9,7 @@ function Transport() {
     <>
       <TransBegin />
       <BasicRide />
+      <Footer />
     </>
     
   );

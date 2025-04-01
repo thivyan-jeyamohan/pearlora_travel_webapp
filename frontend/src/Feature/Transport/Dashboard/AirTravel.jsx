@@ -28,13 +28,13 @@ export default function AirTravel() {
     const departureTime = new Date(formData.departure_datetime);
     const destinationTime = new Date(formData.destination_datetime);
 
-    // 2 hours from now
+   
     if (departureTime - now < 2 * 60 * 60 * 1000) {
       alert("Departure time must be at least 2 hours from now.");
       return;
     }
 
-    //after departure time
+   
     if (destinationTime <= departureTime) {
       alert("Destination time must be later than departure time.");
       return;
@@ -79,7 +79,7 @@ export default function AirTravel() {
         <div className="w-full md:w-1/2 space-y-4">
           <h2 className="text-xl font-semibold">
             Let's Add AirTaxi
-            <span className="text-gray-500">New Trip</span>
+            <span className="text-gray-500"> New Trip</span>
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -88,6 +88,7 @@ export default function AirTravel() {
                 <MapPin className="text-blue-500" />
                 <div className="ml-3 w-full">
                   <p className="text-xs text-gray-400">Air Taxi Name</p>
+
                   <input
                     type="text"
                     name="airtaxiName"
@@ -96,7 +97,11 @@ export default function AirTravel() {
                     onChange={handleChange}
                     className="bg-transparent text-sm font-medium outline-none w-full"
                     required
+                    pattern="[A-Za-z0-9 ]*"
+                    title="Only letters and numbers are allowed"
                   />
+
+
                 </div>
               </div>
 

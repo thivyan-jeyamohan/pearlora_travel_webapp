@@ -1,5 +1,3 @@
-// emailContent.js
-
 export const generateEmailContent = (
   airtaxiName,
   departure,

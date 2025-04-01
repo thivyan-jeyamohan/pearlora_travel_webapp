@@ -1,4 +1,3 @@
-// mailService.js
 import SibApiV3Sdk from "sib-api-v3-sdk";
 
 // Set up the Brevo client

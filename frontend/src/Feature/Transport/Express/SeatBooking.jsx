@@ -7,7 +7,7 @@ const SeatBooking = () => {
   const { travelId } = useParams();
   const [seatData, setSeatData] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [unbookedSeats, setUnbookedSeats] = useState([]); // Track seats to unbook
+  const [unbookedSeats, setUnbookedSeats] = useState([]); 
 
   useEffect(() => {
     const fetchSeats = async () => {
@@ -31,12 +31,10 @@ const SeatBooking = () => {
     if (!seatData) return;
 
     if (seatData.bookedSeats.includes(seat)) {
-      // If already booked, allow unbooking
       setUnbookedSeats((prev) =>
         prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat],
       );
     } else {
-      // If not booked, allow booking
       setSelectedSeats((prev) =>
         prev.includes(seat) ? prev.filter((s) => s !== seat) : [...prev, seat],
       );
@@ -58,8 +56,8 @@ const SeatBooking = () => {
         setSeatData((prev) => ({
           ...prev,
           bookedSeats: [
-            ...prev.bookedSeats.filter((seat) => !unbookedSeats.includes(seat)), // Remove unbooked
-            ...selectedSeats, // Add newly booked
+            ...prev.bookedSeats.filter((seat) => !unbookedSeats.includes(seat)), 
+            ...selectedSeats, 
           ],
         }));
         setSelectedSeats([]);
@@ -86,7 +84,7 @@ const SeatBooking = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        {/* Left Side Seats (First 50) */}
+        {/* Left Side Seats */}
         <div className="grid grid-cols-5 gap-2 m-2">
           {seatData.seats.slice(0, 50).map((seat) => {
             const isBooked = seatData.bookedSeats.includes(seat);
@@ -100,11 +98,11 @@ const SeatBooking = () => {
             ${
               isBooked
                 ? isUnbooking
-                  ? "bg-red-600" // Unbooking seats turn red
-                  : "bg-green-600" // Booked seats are green
+                  ? "bg-red-600" 
+                  : "bg-green-600" 
                 : isSelected
-                  ? "bg-purple-500" // Selected seats are purple
-                  : "bg-blue-800 hover:bg-purple-300" // Available seats
+                  ? "bg-purple-500" 
+                  : "bg-blue-800 hover:bg-purple-300" 
             }`}
                 onClick={() => toggleSeat(seat)}
               >
@@ -114,7 +112,7 @@ const SeatBooking = () => {
           })}
         </div>
 
-        {/* Right Side Seats (Next 50) */}
+        {/* Right Side Seats */}
         <div className="grid grid-cols-5 gap-2 m-2">
           {seatData.seats.slice(50, 100).map((seat) => {
             const isBooked = seatData.bookedSeats.includes(seat);
@@ -128,11 +126,11 @@ const SeatBooking = () => {
             ${
               isBooked
                 ? isUnbooking
-                  ? "bg-red-600" // Unbooking seats turn red
-                  : "bg-green-600" // Booked seats are green
+                  ? "bg-red-600" 
+                  : "bg-green-600" 
                 : isSelected
-                  ? "bg-purple-500" // Selected seats are purple
-                  : "bg-blue-800 hover:bg-purple-300" // Available seats
+                  ? "bg-purple-500" 
+                  : "bg-blue-800 hover:bg-purple-300" 
             }`}
                 onClick={() => toggleSeat(seat)}
               >

@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 
-// Log raw request body for debugging
+
 app.use((req, res, next) => {
   let rawBody = "";
   req.on("data", (chunk) => {
@@ -19,13 +19,13 @@ app.use((req, res, next) => {
   });
   req.on("end", () => {
     console.log("Raw request body:", rawBody);
-    req.rawBody = rawBody; // Store for later use if needed
+    req.rawBody = rawBody; 
   });
   next();
 });
 
 app.use(cors());
-app.use(express.json()); // This is where parsing fails if JSON is invalid
+app.use(express.json()); 
 
 mongoose
   .connect(`${process.env.MONGO_URI}pearlora`, {

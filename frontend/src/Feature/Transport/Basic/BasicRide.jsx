@@ -153,8 +153,19 @@ const BasicRide = () => {
                 <input
                   type="time"
                   className="p-3 border rounded-md text-black"
+                  min={new Date(new Date().getTime() + 15 * 60000).toISOString().slice(11, 16)}
                   value={selectedTime}
                   onChange={(e) => setSelectedTime(e.target.value)}
+                  onBlur={(e) => {
+                    const selectedTime = e.target.value;
+                    const currentTime = new Date();
+                    const minTime = new Date(currentTime.getTime() + 15 * 60000); // 15 minutes from now
+                    const selectedTimeObj = new Date(`${currentTime.toDateString()} ${selectedTime}`);
+                
+                    if (selectedTimeObj < minTime) {
+                      alert("Please select a time that is at least 15 minutes from now.");
+                    }
+                  }}
                   required
                 />
               </div>
