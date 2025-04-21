@@ -1,7 +1,7 @@
 import Room from "../models/Room.js";
 import Hotel from "../models/Hotel.js";
 import HotelBooking from "../models/HotelBooking.js";
-import moment from 'moment-timezone';  // Import moment-timezone
+import moment from 'moment-timezone';  
 
 // Check room availability
 export const checkRoomAvailability = async (req, res) => {

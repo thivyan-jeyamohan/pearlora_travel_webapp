@@ -5,8 +5,9 @@ import { FaSearch, FaMapMarkerAlt } from 'react-icons/fa';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import introImage from './images/intro.png';
-import welcomeImage from './images/intro1.png'; 
+import welcomeImage from './images/intro1.png';
 import Footer from '../../components/Footer';
+import AIChatbot from './AIChatbot';//Import new component
 
 const Hotel = () => {
     const [hotels, setHotels] = useState([]);
@@ -35,7 +36,7 @@ const Hotel = () => {
     }, [location, searchQuery]);
 
     return (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter']">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] relative">  {/*  Added relative for positioning */}
             {/* Hero Section  */}
             <div className="relative h-96 overflow-hidden">  
                 <img src={introImage} alt="Hotel Cover" className="w-full h-full object-cover" />
@@ -63,7 +64,7 @@ const Hotel = () => {
                             Explore Hotels
                         </Link>
                     </div>
-                    <img src={welcomeImage} alt="Luxury Hotel Room" className="rounded-3xl shadow-2xl w-full max-w-2xl hover:scale-105 transition duration-300" />
+                    <img src={welcomeImage} alt="Luxury Hotel Room" className="rounded-3xl shadow-2xl w-full max-w-2xl object-cover hover:scale-105 transition duration-300" />
                 </div>
             </section>
 
@@ -92,10 +93,13 @@ const Hotel = () => {
             </div>
 
             {/* Hotel Listing */}
-            <div className="max-w-6xl mx-auto mt-17 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="container mx-auto mt-17 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
                 {hotels.length > 0 ? (
                     hotels.map((hotel) => (
-                        <div key={hotel._id} className="bg-white rounded-lg mb-20 shadow-lg overflow-hidden flex flex-col h-[22rem]">
+                        <div
+                            key={hotel._id}
+                            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-[22rem] transition-transform transform hover:scale-105 duration-300"
+                        >
                             <img src={hotel.coverPhoto} alt={hotel.name} className="w-full h-40 object-cover" />
                             <div className="p-4 flex flex-col flex-grow">
                                 <h3 className="text-lg font-bold text-gray-700">{hotel.name}</h3>
@@ -106,7 +110,7 @@ const Hotel = () => {
                                 <p className="text-gray-500 text-sm">⭐ {hotel.rating} / 5</p>
                                 <Link
                                     to={`/hotel/${hotel._id}`}
-                                    className="mt-auto bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 text-center"
+                                    className="mt-auto bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition duration-200 text-center"
                                 >
                                     View Details
                                 </Link>
@@ -117,6 +121,12 @@ const Hotel = () => {
                     <p className="text-center text-gray-600 col-span-full">No hotels found.</p>
                 )}
             </div>
+
+            {/* Position the Chatbot */}
+            <div className="fixed bottom-4 right-4 z-50">
+                <AIChatbot />
+            </div>
+
             <Footer />
         </div>
     );

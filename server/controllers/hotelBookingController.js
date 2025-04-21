@@ -4,6 +4,7 @@ import Hotel from "../models/Hotel.js";
 import { sendEmail } from '../mail/mailService.js';
 import { generateEmailContent } from '../mail/emailContent.js';
 import moment from 'moment-timezone'; 
+import { nanoid } from 'nanoid';
 
 export const bookRoom = async (req, res) => {
     try {
@@ -36,6 +37,10 @@ export const bookRoom = async (req, res) => {
             }
         }
 
+        //auto id
+        const randomPart = nanoid(5); 
+        const newBookingId = `PEARL-${randomPart}`; 
+
         const placeholderBooking = new Booking({
             userId,
             roomId: roomIds[0], 
@@ -47,6 +52,7 @@ export const bookRoom = async (req, res) => {
             email,
             phone,
             specialRequests,
+            bookingId: newBookingId,
         });
         await placeholderBooking.save();
 

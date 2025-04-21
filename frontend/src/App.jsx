@@ -9,6 +9,7 @@ import Header from "./components/header";
 import ManagerDashboard from "./Feature/Hotel/ManagerDashboard";
 import HotelDetail from "./Feature/Hotel/HotelDetail";
 import BookingFormPage from './Feature/Hotel/BookingForm';
+import AIChatbot from "./Feature/Hotel/AIChatbot";
 import Signup from "./User/Signup";
 import Login from "./User/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -34,9 +35,12 @@ function App() {
         <Route path="/event" element={<Event />} />
         <Route path="/transport" element={<Transport />} />
         <Route path="/Financial" element={<Financial />} />
+
         <Route path="/hotel" element={<Hotel />} />
         <Route path="/hotel/:hotelId" element={<HotelDetail />} />
         <Route path="/booking/:hotelId" element={<BookingFormPage />} />
+        <Route path="/hotelChatbot" element={<AIChatbot standalone={true} />} />        
+
         {/* <Route path="/manager/dashboard" element={<ManagerDashboard />}/> */}
 
         <Route path="/signup" element={<Signup />} />

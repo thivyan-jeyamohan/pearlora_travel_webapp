@@ -42,7 +42,7 @@ const BookingTable = ({ bookings, fetchBookings }) => {
                 <tbody className="text-sm text-gray-700">
                     {bookings.map((booking) => (
                         <tr key={booking._id} className="hover:bg-gray-50">
-                            <td className="border-b px-4 py-3">{booking._id}</td>
+                            <td className="border-b px-4 py-3">{booking.bookingId}</td>
                             <td className="border-b px-4 py-3">{booking.userId || 'N/A'}</td>
                             <td className="border-b px-4 py-3">{formatRoomIds(booking.allRoomIds)}</td> 
                             <td className="border-b px-4 py-3">

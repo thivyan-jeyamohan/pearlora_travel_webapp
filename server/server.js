@@ -1,5 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
+
+dotenv.config();
+
 import cors from "cors";
 import connectDB from "./config/db.js";
 
@@ -7,6 +10,7 @@ import hotelRoutes from "./routes/hotelRoute.js";
 import roomRoutes from "./routes/roomRoute.js";
 import bookingRoutes from "./routes/bookingRoute.js";
 import reportRoute from "./routes/reportRoute.js";
+import chatbotRoutes from './routes/chatbotRoutes.js';
 import { startScheduledTasks } from "./controllers/backgroundTasks.js";
 
 import authRoutes from "./User/authRoutes.js";
@@ -52,6 +56,7 @@ app.use("/api/hotels", hotelRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/reports", reportRoute);
+app.use('/api/chatbot', chatbotRoutes);
 
 // app.use("/api/events", eventRoutes);
 // app.use("/api/finance", financeRoutes);

@@ -26,7 +26,7 @@ const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
       <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
         <thead className="bg-gray-300 text-gray-800 text-sm font-semibold">
           <tr>
-            <th className="border-b px-4 py-3 text-left w-[20%]">Room ID</th>
+            <th className="border-b px-4 py-3 text-left w-[20%]">Hotel ID</th>
             <th className="border-b px-4 py-3 text-left w-[15%]">Hotel Name</th>
             <th className="border-b px-4 py-3 text-left w-[10%]">Room Number</th>
             <th className="border-b px-4 py-3 text-left w-[15%]">Photo</th>
@@ -39,7 +39,7 @@ const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
         <tbody className="text-sm text-gray-700">
           {rooms.map((room) => (
             <tr key={room._id} className="hover:bg-gray-50">
-              <td className="border-b px-4 py-3 align-middle">{room._id}</td>
+              <td className="border-b px-4 py-3 align-middle">{room.hotelId}</td>
               <td className="border-b px-4 py-3 align-middle">{getHotelName(room.hotelId)}</td>
               <td className="border-b px-4 py-3 align-middle">{room.roomNumber}</td>
               <td className="border-b px-4 py-3 align-middle">

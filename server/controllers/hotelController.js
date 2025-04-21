@@ -1,10 +1,10 @@
 import Hotel from '../models/Hotel.js';
 import Room from "../models/Room.js";
 
-// Helper function to update hotel availability
+
 export const updateHotelAvailability = async (hotelId) => {
     try {
-        // Fetch the hotel with its rooms
+        
         const hotel = await Hotel.findById(hotelId).populate('rooms');
         if (!hotel) {
             console.log(`Hotel with ID ${hotelId} not found.`);
@@ -14,7 +14,7 @@ export const updateHotelAvailability = async (hotelId) => {
         // Check if all rooms are booked
         const allRoomsBooked = hotel.rooms.every(room => room.isBooked);
 
-        // Update the hotel's availability status
+        
         hotel.availabilityStatus = !allRoomsBooked;
         await hotel.save();
 
@@ -30,7 +30,7 @@ export const createHotel = async (req, res) => {
     try {
         const { hotelId, name, location, price, availabilityStatus, rating, description, coverPhoto } = req.body;
 
-        if (!coverPhoto) { // Check on the backend as well
+        if (!coverPhoto) { 
             return res.status(400).json({ message: "Cover photo is required" });
         }
 
@@ -49,7 +49,7 @@ export const createHotel = async (req, res) => {
         res.status(201).json(newHotel);
     } catch (error) {
         console.error("Error creating hotel:", error);
-        res.status(500).json({ message: "Error creating hotel", error: error.message }); // Send more specific error
+        res.status(500).json({ message: "Error creating hotel", error: error.message }); 
     }
 };
 
@@ -68,17 +68,17 @@ export const updateHotel = async (req, res) => {
                 description,
                 coverPhoto, // Store Base64 encoded string
             },
-            { new: true, runValidators: true } // Add runValidators
+            { new: true, runValidators: true } 
         );
 
         if (!updatedHotel) {
             return res.status(404).json({ message: "Hotel not found" });
         }
 
-        res.json(updatedHotel); // Respond with the updated hotel
+        res.json(updatedHotel); 
     } catch (error) {
         console.error("Error updating hotel:", error);
-        res.status(500).json({ message: "Error updating hotel", error: error.message }); // Send more specific error
+        res.status(500).json({ message: "Error updating hotel", error: error.message }); 
     }
 };
 
@@ -93,7 +93,7 @@ export const deleteHotel = async (req, res) => {
         res.json({ message: "Hotel deleted" });
     } catch (error) {
         console.error("Error deleting hotel:", error);
-        res.status(500).json({ message: "Error deleting hotel", error: error.message }); // Send more specific error
+        res.status(500).json({ message: "Error deleting hotel", error: error.message }); 
     }
 };
 
@@ -106,7 +106,7 @@ export const getHotels = async (req, res) => {
         res.json(hotels);
     } catch (error) {
         console.error("Error fetching hotels:", error);
-        res.status(500).json({ message: "Error fetching hotels", error: error.message }); // Send more specific error
+        res.status(500).json({ message: "Error fetching hotels", error: error.message }); 
     }
 };
 
@@ -122,6 +122,6 @@ export const getHotelById = async (req, res) => {
         res.json(hotel);
     } catch (error) {
         console.error("Error fetching hotel by ID:", error);
-        res.status(500).json({ message: "Error fetching hotel", error: error.message }); // Send more specific error
+        res.status(500).json({ message: "Error fetching hotel", error: error.message }); 
     }
 };
