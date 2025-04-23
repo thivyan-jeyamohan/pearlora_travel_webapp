@@ -3,7 +3,7 @@ import { Trash, Edit } from 'lucide-react';
 import API from './services/api';
 import moment from 'moment-timezone';
 
-const BookingTable = ({ bookings, fetchBookings }) => {
+const BookingTable = ({ bookings, fetchBookings,rooms }) => {
 
     const handleDelete = async (bookingId) => {
         if (window.confirm("Are you sure you want to delete this booking?")) {
@@ -22,8 +22,17 @@ const BookingTable = ({ bookings, fetchBookings }) => {
         if (!roomIds || roomIds.length === 0) {
             return 'N/A';
         }
-        return roomIds.join(', '); 
+
+        // Retrieve room numbers for each roomId
+        const roomNumbers = roomIds.map((roomId) => {
+            const room = rooms.find((r) => r._id === roomId);
+            return room ? room.roomNumber : null;
+        }).filter((roomNumber) => roomNumber !== null);
+
+        return roomNumbers.length > 0 ? roomNumbers.join(', ') : 'N/A';
     };
+
+
 
     return (
         <div className="mt-6 overflow-x-auto">
@@ -31,8 +40,8 @@ const BookingTable = ({ bookings, fetchBookings }) => {
                 <thead className="bg-gray-300 text-gray-800 text-sm font-semibold">
                     <tr>
                         <th className="border-b px-4 py-3 text-left">Booking ID</th>
-                        <th className="border-b px-4 py-3 text-left">User ID</th>
-                        <th className="border-b px-4 py-3 text-left">Room IDs</th> 
+                        <th className="border-b px-4 py-3 text-left">User Email</th>
+                        <th className="border-b px-4 py-3 text-left">Room Numbers</th> 
                         <th className="border-b px-4 py-3 text-left">Check-in Date</th>
                         <th className="border-b px-4 py-3 text-left">Check-out Date</th>
                         <th className="border-b px-4 py-3 text-left">Total Price</th>
@@ -43,7 +52,7 @@ const BookingTable = ({ bookings, fetchBookings }) => {
                     {bookings.map((booking) => (
                         <tr key={booking._id} className="hover:bg-gray-50">
                             <td className="border-b px-4 py-3">{booking.bookingId}</td>
-                            <td className="border-b px-4 py-3">{booking.userId || 'N/A'}</td>
+                            <td className="border-b px-4 py-3">{booking.email || 'N/A'}</td>
                             <td className="border-b px-4 py-3">{formatRoomIds(booking.allRoomIds)}</td> 
                             <td className="border-b px-4 py-3">
                                 {moment.utc(booking.checkInDate).format('YYYY-MM-DD')}

@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
-import cors from "cors";
 import connectDB from "./config/db.js";
 
 import hotelRoutes from "./routes/hotelRoute.js"; 
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   });
   req.on('end', () => {
     console.log("Raw request body:", rawBody);
-    req.rawBody = rawBody; // Store for later use if needed
+    req.rawBody = rawBody;
   });
   next();
 });
@@ -44,10 +44,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Database Connection
 connectDB();
 
-// Define Routes
 
-// app.use("/api/destinations", destinationRoutes);
-// app.use("/api/transport", transportRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
@@ -58,8 +55,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/reports", reportRoute);
 app.use('/api/chatbot', chatbotRoutes);
 
-// app.use("/api/events", eventRoutes);
-// app.use("/api/finance", financeRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

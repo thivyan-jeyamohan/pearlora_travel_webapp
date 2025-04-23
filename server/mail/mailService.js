@@ -6,7 +6,7 @@ const defaultClient = SibApiV3Sdk.ApiClient.instance;
 
 // Configure API key authorization
 const apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = "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"; 
+apiKey.apiKey = process.env.MAIL_API_KEY; 
 
 // Send an email using Brevo
 export const sendEmail = async (toEmail, subject, htmlContent) => {

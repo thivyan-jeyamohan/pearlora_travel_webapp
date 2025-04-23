@@ -57,6 +57,31 @@ const Reports = () => {
         }
     }, [hotelId, availableRooms]);
 
+        
+
+    useEffect(() => {
+        if (checkInDateFrom && checkInDateTo && moment(checkInDateTo).isBefore(checkInDateFrom)) {
+            setCheckInDateTo('');
+        }
+    }, [checkInDateFrom, checkInDateTo]);
+
+    useEffect(() => {
+        if (checkOutDateFrom && moment(checkOutDateFrom).isSameOrBefore(checkInDateFrom)) {
+            setCheckOutDateFrom('');
+        }
+    }, [checkInDateFrom, checkOutDateFrom]);
+
+    useEffect(() => {
+        if (checkOutDateFrom && checkOutDateTo && moment(checkOutDateTo).isBefore(checkOutDateFrom)) {
+            setCheckOutDateTo('');
+        }
+    }, [checkOutDateFrom, checkOutDateTo]);
+    
+    
+    
+
+    
+
 
 
     const generateReport = async () => {
@@ -254,7 +279,7 @@ const Reports = () => {
                     </div>
                 </div>
                 {/* Booking ID */}
-                <div>
+                {/* <div>
                     <label htmlFor="bookingId" className="block text-sm font-medium text-gray-700">
                         Booking ID
                     </label>
@@ -267,7 +292,7 @@ const Reports = () => {
                             onChange={(e) => setBookingId(e.target.value)}
                         />
                     </div>
-                </div>
+                </div> */}
 
                 {/* Check-in Date From */}
                 <div>
@@ -281,9 +306,13 @@ const Reports = () => {
                         <input
                             type="date"
                             id="checkInDateFrom"
+                            name="checkInDateFrom"
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
                             value={checkInDateFrom}
                             onChange={(e) => setCheckInDateFrom(e.target.value)}
+                            min={checkInDateFrom}
+                           
+
                         />
                     </div>
                 </div>
@@ -300,9 +329,12 @@ const Reports = () => {
                         <input
                             type="date"
                             id="checkInDateTo"
+                            name="checkInDateTo"
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
                             value={checkInDateTo}
                             onChange={(e) => setCheckInDateTo(e.target.value)}
+                            min={checkInDateFrom} 
+                           
                         />
                     </div>
                 </div>
@@ -319,9 +351,12 @@ const Reports = () => {
                         <input
                             type="date"
                             id="checkOutDateFrom"
+                            name="checkOutDateFrom"
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
                             value={checkOutDateFrom}
                             onChange={(e) => setCheckOutDateFrom(e.target.value)}
+                            min={checkInDateFrom}
+                            
                         />
                     </div>
                 </div>
@@ -338,9 +373,12 @@ const Reports = () => {
                         <input
                             type="date"
                             id="checkOutDateTo"
+                            name="checkOutDateTo"
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md pl-10 p-3"
                             value={checkOutDateTo}
                             onChange={(e) => setCheckOutDateTo(e.target.value)}
+                            min={checkOutDateFrom || checkInDateFrom}
+                            
                         />
                     </div>
                 </div>
@@ -365,7 +403,7 @@ const Reports = () => {
                                         Hotel Name
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                                        Booking ID
+                                        Booking Ref
                                     </th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
                                         Room Numbers
@@ -388,7 +426,7 @@ const Reports = () => {
                                 {reportData.map((reportItem) => (
                                     <tr key={reportItem._id}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem.hotelName}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem._id}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{reportItem.bookingId}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {Array.isArray(reportItem.allRoomIds)
                                                 ? reportItem.allRoomIds.map(id => availableRooms.find(room => room._id === id)?.roomNumber || 'N/A').join(', ')

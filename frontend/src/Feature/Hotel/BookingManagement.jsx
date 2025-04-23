@@ -5,9 +5,11 @@ import API from './services/api';
 
 const BookingManagement = () => {
     const [bookings, setBookings] = useState([]);
+    const [rooms, setRooms] = useState([]);  
     const [showBookingForm, setShowBookingForm] = useState(false); 
     const [selectedBooking, setSelectedBooking] = useState(null); 
 
+    // Fetch bookings data
     const fetchBookings = useCallback(async () => {
         try {
             const response = await API.get('/bookings');
@@ -17,9 +19,21 @@ const BookingManagement = () => {
         }
     }, []);
 
+    // Fetch rooms data
+    const fetchRooms = useCallback(async () => {
+        try {
+            const response = await API.get('/rooms');  
+            setRooms(response.data);
+        } catch (error) {
+            console.error('Error fetching rooms:', error);
+        }
+    }, []);
+
+    
     useEffect(() => {
         fetchBookings();
-    }, [fetchBookings]);
+        fetchRooms();
+    }, [fetchBookings, fetchRooms]);
 
     const handleEdit = (booking) => {
         setSelectedBooking(booking);
@@ -33,11 +47,12 @@ const BookingManagement = () => {
             <BookingTable
                 bookings={bookings}
                 fetchBookings={fetchBookings}
-                handleEdit={handleEdit} 
+                handleEdit={handleEdit}
+                rooms={rooms}  
             />
 
             {showBookingForm && (
-                <div className="fixed inset-0 flex items-center justify-center bg-white  z-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
                     <div className="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg max-h-[80vh] overflow-y-auto">
                         <BookingUpdateForm
                             bookingData={selectedBooking}
@@ -46,6 +61,7 @@ const BookingManagement = () => {
                                 setSelectedBooking(null);
                             }}
                             fetchBookings={fetchBookings}
+                            rooms={rooms}  
                         />
                     </div>
                 </div>

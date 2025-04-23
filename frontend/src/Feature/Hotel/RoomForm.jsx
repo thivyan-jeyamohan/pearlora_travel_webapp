@@ -3,7 +3,7 @@ import API from "./services/api";
 
 const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved }) => {
     const [hotelId, setHotelId] = useState("");
-    const [roomNumber, setRoomNumber] = useState("");
+    // const [roomNumber, setRoomNumber] = useState("");
     const [photo, setPhoto] = useState("");
     const [price, setPrice] = useState("");
     const [roomCategory, setRoomCategory] = useState("Single");
@@ -12,13 +12,13 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
     useEffect(() => {
         if (roomData) {
             setHotelId(roomData.hotelId || "");
-            setRoomNumber(roomData.roomNumber || "");
+            // setRoomNumber(roomData.roomNumber || "");
             setPhoto(roomData.photo || "");
             setPrice(roomData.price || "");
             setRoomCategory(roomData.roomCategory || "Single");
         } else {
             setHotelId("");
-            setRoomNumber("");
+            // setRoomNumber("");
             setPhoto("");
             setPrice("");
             setRoomCategory("Single");
@@ -47,7 +47,6 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
         e.preventDefault();
         const roomDataToSubmit = {
             hotelId,
-            roomNumber,
             photo,
             price: parseFloat(price),
             roomCategory,
@@ -99,7 +98,7 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
                 </div>
 
                 {/* Room Number */}
-                <div>
+                {/* <div>
                     <label htmlFor="roomNumber" className="block text-sm font-medium text-gray-700">
                         Room Number
                     </label>
@@ -111,7 +110,7 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
                         className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                         required
                     />
-                </div>
+                </div> */}
 
                 {/* Photo Upload */}
                 <div>

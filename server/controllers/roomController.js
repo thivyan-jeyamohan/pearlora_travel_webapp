@@ -2,6 +2,7 @@ import Room from "../models/Room.js";
 import Hotel from "../models/Hotel.js";
 import HotelBooking from "../models/HotelBooking.js";
 import moment from 'moment-timezone';  
+import { nanoid } from 'nanoid';
 
 // Check room availability
 export const checkRoomAvailability = async (req, res) => {
@@ -51,7 +52,7 @@ export const checkRoomAvailability = async (req, res) => {
 
 export const createRoom = async (req, res) => {
     try {
-        const { hotelId } =await req.body;
+        const { hotelId,photo,price,roomCategory} =await req.body;
 
         if (!hotelId) {
             return res.status(400).json({ message: "hotelId is required in the request body" });
@@ -62,28 +63,45 @@ export const createRoom = async (req, res) => {
         }
 
         try {
-            const newRoom = new Room(req.body);
-            await newRoom.save();           
+            
+            const randomPart = nanoid(3);
+            const number = parseInt(randomPart, 36);
+            const newRoomNumber = (number % 1000) + 1;
+
+            if (isNaN(newRoomNumber)) {
+                throw new Error("Room number generation failed");
+            }
+
+            const newRoomDocument = new Room({
+                hotelId,
+                roomNumber: newRoomNumber,
+                photo,
+                price: parseFloat(price),
+                roomCategory,
+            });
+
+            
+            const savedRoom = await newRoomDocument.save();
 
            
-            hotel.rooms.push(newRoom._id);
+            hotel.rooms.push(savedRoom._id);
             await hotel.save();
 
-            res.status(201).json({ message: "Room created successfully", room: newRoom });
+            res.status(201).json({ message: "Room created successfully", room: savedRoom });
 
-        } catch (roomError) {
-            console.error("Error creating and saving room:", roomError);
-
-            if (roomError.name === 'ValidationError') {
+        } catch (roomCreationError) {
+            console.error("Error details during room creation/saving:", roomCreationError);
+            if (roomCreationError.code === 11000) {
+                 return res.status(409).json({ message: `A room with number ${newRoomNumber} might already exist for this hotel, or number generation conflict.`, error: "Duplicate Key" });
+            }
+            if (roomCreationError.name === 'ValidationError') {
                 const errors = {};
-                for (const field in roomError.errors) {
-                    errors[field] = roomError.errors[field].message; 
+                for (const field in roomCreationError.errors) {
+                    errors[field] = roomCreationError.errors[field].message;
                 }
-
                 return res.status(400).json({ message: "Validation error creating room", errors: errors });
             }
-            return res.status(500).json({ message: "Error creating and saving room", error: roomError.message });
-
+             return res.status(500).json({ message: "Error saving the new room data.", error: roomCreationError.message });
         }
 
     } catch (error) {

@@ -8,6 +8,11 @@ const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
     return hotel ? hotel.name : 'Unknown Hotel';
   };
 
+  const getHotelId=(hotelId)=>{
+    const hotel=hotels.find((h)=>h._id===hotelId);
+    return hotel ? hotel.hotelId : 'Unknown Hotel';
+  }
+
   const handleDelete = async (roomId) => {
     if (window.confirm("Are you sure you want to delete this room?")) {
       try {
@@ -39,7 +44,7 @@ const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
         <tbody className="text-sm text-gray-700">
           {rooms.map((room) => (
             <tr key={room._id} className="hover:bg-gray-50">
-              <td className="border-b px-4 py-3 align-middle">{room.hotelId}</td>
+              <td className="border-b px-4 py-3 align-middle">{getHotelId(room.hotelId)}</td>
               <td className="border-b px-4 py-3 align-middle">{getHotelName(room.hotelId)}</td>
               <td className="border-b px-4 py-3 align-middle">{room.roomNumber}</td>
               <td className="border-b px-4 py-3 align-middle">

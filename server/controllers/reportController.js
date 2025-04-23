@@ -10,13 +10,13 @@ export const getReport = async (req, res) => {
         const query = {};
 
         // Booking ID Query
-        if (req.query.bookingId) {
-            try {
-                query._id = new mongoose.Types.ObjectId(req.query.bookingId); 
-            } catch (error) {
-                return res.status(400).json({ message: "Invalid bookingId format" }); 
-            }
-        }
+        // if (req.query.bookingId) {
+        //     try {
+        //         query._id = new mongoose.Types.ObjectId(req.query.bookingId); 
+        //     } catch (error) {
+        //         return res.status(400).json({ message: "Invalid bookingId format" }); 
+        //     }
+        // }
 
         let roomIds = [];
         if (req.query.hotelId) {

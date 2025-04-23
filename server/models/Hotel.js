@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const hotelSchema = new mongoose.Schema({
-    hotelId: { type: String, required: true },
+    hotelId: {type: String,required: true,unique: true,index: true},
     name: { type: String, required: true },
     location: { type: String, required: true },
     price: { type: Number, required: true },

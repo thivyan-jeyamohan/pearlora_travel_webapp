@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 import introImage from './images/intro.png';
 import welcomeImage from './images/intro1.png';
 import Footer from '../../components/Footer';
-import AIChatbot from './AIChatbot';//Import new component
+import AIChatbot from './AIChatbot';
 
 const Hotel = () => {
     const [hotels, setHotels] = useState([]);
@@ -36,31 +36,33 @@ const Hotel = () => {
     }, [location, searchQuery]);
 
     return (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] relative">  {/*  Added relative for positioning */}
-            {/* Hero Section  */}
-            <div className="relative h-96 overflow-hidden">  
+        <div className="bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-opensans relative">
+
+            {/* Hero Section */}
+            {/* <div className="relative h-96 overflow-hidden">
                 <img src={introImage} alt="Hotel Cover" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black opacity-20"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center">
-                    <h2 className="text-4xl font-bold">Find Your Perfect Getaway</h2>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center font-poppins">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-2">Find Your Perfect Getaway</h2>
                     <p className="text-lg">Explore the best hotels and exclusive deals.</p>
-                </div>   
-            </div>
+                </div>
+            </div> */}
 
             {/* Welcome Section */}
-            <section className="py-20 px-6 md:px-20 bg-white shadow-lg rounded-3xl mt-8 relative overflow-hidden">
-                
+            <section className="py-20 px-6 md:px-20 bg-white shadow-lg rounded-3xl mt-17 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-blue-100 opacity-30 transform skew-y-[-5deg] origin-top-left"></div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
                     <div>
-                        <h2 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight">
+                        <h2 className="text-5xl font-extrabold text-gray-900 mb-6 leading-tight font-poppins">
                             Experience the Ultimate in Comfort and Style
                         </h2>
-                        <p className="text-xl text-gray-700 mb-8">
-                            Discover unparalleled elegance and impeccable service at our handpicked hotels.  Your dream stay awaits.
+                        <p className="text-xl text-gray-700 mb-8 font-opensans">
+                            Discover unparalleled elegance and impeccable service at our handpicked hotels. Your dream stay awaits.
                         </p>
-                        <Link to="/hotel" className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition duration-300 ease-in-out">
+                        <Link
+                            to="/hotel"
+                            className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition duration-300 ease-in-out font-opensans"
+                        >
                             Explore Hotels
                         </Link>
                     </div>
@@ -69,21 +71,21 @@ const Hotel = () => {
             </section>
 
             {/* Search and Filter Section */}
-            <div className="max-w-5xl mx-auto mt-17 p-6 bg-white rounded-3xl shadow-md flex flex-col md:flex-row items-center gap-4">
+            <div className="max-w-5xl mx-auto mt-20 p-6 rounded-3xl shadow-xl bg-gradient-to-r from-indigo-700 via-purple-500 to-blue-300 backdrop-blur-md flex flex-col md:flex-row items-center gap-6">
                 <div className="relative w-full md:w-2/3">
-                    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black text-lg z-10 pointer-events-none" />
                     <input
                         type="text"
                         placeholder="Search hotels by destination..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-200 transition duration-300"
+                        className="w-full pl-12 pr-4 py-3 rounded-full bg-white text-black placeholder-gray-600 font-opensans focus:outline-none focus:ring-4 focus:ring-blue-500 transition duration-300 backdrop-blur-sm"
                     />
                 </div>
                 <select
                     onChange={(e) => setLocation(e.target.value)}
                     value={location}
-                    className="w-full md:w-1/3 border border-gray-300 py-3 px-4 rounded-full focus:ring-2 focus:ring-blue-200 transition duration-300"
+                    className="w-full md:w-1/3 bg-white text-gray-600 py-3 px-4 rounded-full font-opensans focus:outline-none focus:ring-4 focus:ring-purple-500 transition duration-300"
                 >
                     <option value="">Select a Region</option>
                     {districts.map((district) => (
@@ -93,17 +95,17 @@ const Hotel = () => {
             </div>
 
             {/* Hotel Listing */}
-            <div className="container mx-auto mt-17 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+            <div className="container mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
                 {hotels.length > 0 ? (
                     hotels.map((hotel) => (
                         <div
                             key={hotel._id}
-                            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-[22rem] transition-transform transform hover:scale-105 duration-300"
+                            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-[22rem] transition-transform transform hover:scale-105 duration-300 font-opensans"
                         >
                             <img src={hotel.coverPhoto} alt={hotel.name} className="w-full h-40 object-cover" />
                             <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-lg font-bold text-gray-700">{hotel.name}</h3>
-                                <div className="text-gray-600 text-sm flex items-center">
+                                <h3 className="text-lg font-bold text-gray-700 font-poppins">{hotel.name}</h3>
+                                <div className="text-gray-600 text-sm flex items-center mb-1">
                                     <FaMapMarkerAlt className="mr-2 text-gray-500" /> {hotel.location}
                                 </div>
                                 <p className="text-gray-700 font-semibold">Rs {hotel.price} / night</p>
@@ -118,11 +120,11 @@ const Hotel = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center text-gray-600 col-span-full">No hotels found.</p>
+                    <p className="text-center text-gray-600 col-span-full font-opensans">No hotels found.</p>
                 )}
             </div>
 
-            {/* Position the Chatbot */}
+            {/* Chatbot */}
             <div className="fixed bottom-4 right-4 z-50">
                 <AIChatbot />
             </div>

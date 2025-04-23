@@ -1,5 +1,6 @@
 import Hotel from '../models/Hotel.js';
 import Room from "../models/Room.js";
+import { nanoid } from 'nanoid';
 
 
 export const updateHotelAvailability = async (hotelId) => {
@@ -28,14 +29,17 @@ export const updateHotelAvailability = async (hotelId) => {
 // CREATE HOTEL
 export const createHotel = async (req, res) => {
     try {
-        const { hotelId, name, location, price, availabilityStatus, rating, description, coverPhoto } = req.body;
+        const { name, location, price, availabilityStatus, rating, description, coverPhoto } = req.body;
 
         if (!coverPhoto) { 
             return res.status(400).json({ message: "Cover photo is required" });
         }
 
+        //auto id
+        const randomPart = nanoid(3); 
+        const newHotelId = `PearlH-${randomPart}`; 
+
         const newHotel = new Hotel({
-            hotelId,
             name,
             location,
             price,
@@ -43,6 +47,7 @@ export const createHotel = async (req, res) => {
             rating,
             description,
             coverPhoto, // Store Base64 encoded string
+            hotelId:newHotelId,
         });
 
         await newHotel.save();

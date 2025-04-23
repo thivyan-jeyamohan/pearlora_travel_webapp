@@ -37,7 +37,7 @@ export const bookRoom = async (req, res) => {
             }
         }
 
-        //auto id
+        //auto ids
         const randomPart = nanoid(5); 
         const newBookingId = `PEARL-${randomPart}`; 
 
@@ -89,7 +89,7 @@ export const bookRoom = async (req, res) => {
             moment(checkIn).tz(sriLankaTimezone).format('YYYY-MM-DD'),
             moment(checkOut).tz(sriLankaTimezone).format('YYYY-MM-DD'),
             totalPrice,
-            placeholderBooking._id
+            placeholderBooking.bookingId
         );
 
         await sendEmail(email, mailSubject, mailHtml);

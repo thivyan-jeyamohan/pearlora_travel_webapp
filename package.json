@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google-cloud/dialogflow": "^7.0.1",
     "multer": "^1.4.5-lts.2"
   }
 }

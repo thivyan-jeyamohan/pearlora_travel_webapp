@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import API from "./services/api";
 
 const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => {
-    const [hotelId, setHotelId] = useState("");
+    // const [hotelId, setHotelId] = useState("");
     const [name, setName] = useState("");
     const [location, setLocation] = useState("");
     const [price, setPrice] = useState("");
@@ -15,7 +15,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
 
     useEffect(() => {
         if (hotelData) {
-            setHotelId(hotelData.hotelId || "");
+            // setHotelId(hotelData.hotelId || "");
             setName(hotelData.name || "");
             setLocation(hotelData.location || "");
             setPrice(hotelData.price || "");
@@ -26,7 +26,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
             setDescription(hotelData.description || "");
             setCoverPhoto(hotelData.coverPhoto || "");
         } else {
-            setHotelId("");
+            // setHotelId("");
             setName("");
             setLocation("");
             setPrice("");
@@ -72,7 +72,6 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
                 await API.put(`/hotels/${hotelData._id}`, hotelDataToSubmit);
                 window.alert("Hotel updated successfully!");
             } else {
-                hotelDataToSubmit.hotelId = hotelId;
                 await API.post("/hotels", hotelDataToSubmit);
                 window.alert("The New Hotel Added successfully!");
             }
@@ -93,7 +92,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
             </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Hotel ID */}
-                <div>
+                {/* <div>
                     <label htmlFor="hotelId" className="block text-sm font-medium text-gray-700">
                         Hotel ID
                     </label>
@@ -106,7 +105,7 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
                         required
                         disabled={!!hotelData}
                     />
-                </div>
+                </div> */}
 
                 {/* Name */}
                 <div>
