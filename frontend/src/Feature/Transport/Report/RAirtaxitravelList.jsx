@@ -99,7 +99,7 @@ const RAirtaxitravelList = ({ filters }) => {
      
       <button
         onClick={generatePDF}
-        className="bg-blue-500 text-white py-2 px-6 rounded mt-5"
+        className="bg-purple-900 text-white py-2 px-6 rounded mt-5"
       >
         Download as PDF
       </button>

@@ -27,7 +27,7 @@ export default function TransportDashboard() {
     <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
-        <div className="flex items-center space-x-3 mb-5 mt-5 ml-6">
+        <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
           <h1 className="text-1xl font-bold">TRANSPORT ADMIN</h1>
         </div>
         <nav className="space-y-4 ml-6 font-bold">
@@ -81,6 +81,8 @@ export default function TransportDashboard() {
 
           <hr className="border-t border-gray-300 " />
 
+
+          {/*     
           <div
             className={`flex items-center space-x-3 cursor-pointer 
               ${activeTab === "FlightGPS" ? "text-violet-700" : "text-gray-500"}`}
@@ -95,7 +97,7 @@ export default function TransportDashboard() {
             <span className="transition-all duration-300">Flight GPS</span>
           </div>
 
-          <hr className="border-t border-gray-300 " />
+          <hr className="border-t border-gray-300 " /> */}
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 

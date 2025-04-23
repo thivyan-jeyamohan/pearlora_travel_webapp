@@ -4,8 +4,7 @@ const basicrideBookingSchema = new mongoose.Schema({
   pickupLocation: { type: String, required: true },
   email: { type: String, required: true },
   passengerCount: { type: Number, required: true },
-  selectedDate: { type: String, required: true },
-  selectedTime: { type: String, required: true },
+  selectedDateTime: { type: Date, required: true },
   vehicleType: { type: String, required: true },
 });
 

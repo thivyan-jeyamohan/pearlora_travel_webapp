@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Autocomplete,
-  Marker,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Autocomplete, Marker } from "@react-google-maps/api";
 import { MdCancel, MdDeleteOutline } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsSave2 } from "react-icons/bs";
@@ -31,8 +26,7 @@ const BasicRideHistory = () => {
     pickupLocation: "",
     passengerCount: 1,
     email: "",
-    selectedDate: "",
-    selectedTime: "",
+    selectedDateTime: "", // Keep datetime as a single string
     selectedVehicle: "",
   });
   const [pickupLocation, setPickupLocation] = useState("");
@@ -50,9 +44,7 @@ const BasicRideHistory = () => {
 
   const fetchTravels = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/rides/ridebookings",
-      );
+      const response = await axios.get("http://localhost:5000/api/rides/ridebookings");
       setTravels(response.data);
     } catch (error) {
       console.error("Error fetching travel details:", error);
@@ -65,8 +57,7 @@ const BasicRideHistory = () => {
       pickupLocation: travel.pickupLocation,
       passengerCount: travel.passengerCount,
       email: travel.email,
-      selectedDate: travel.selectedDate,
-      selectedTime: travel.selectedTime,
+      selectedDateTime: `${travel.selectedDate}T${travel.selectedTime}`, // Combined datetime
       selectedVehicle: travel.vehicleType,
     });
     setPickupLocation(travel.pickupLocation);
@@ -84,23 +75,21 @@ const BasicRideHistory = () => {
     e.preventDefault();
 
     const selectedVehicle = vehicleOptions.find(
-      (vehicle) => vehicle.name === formData.selectedVehicle,
+      (vehicle) => vehicle.name === formData.selectedVehicle
     );
 
-    if (
-      selectedVehicle &&
-      formData.passengerCount > selectedVehicle.maxPassengers
-    ) {
+    if (selectedVehicle && formData.passengerCount > selectedVehicle.maxPassengers) {
       alert(
-        `The selected vehicle (${selectedVehicle.name}) can only carry up to ${selectedVehicle.maxPassengers} passengers.`,
+        `The selected vehicle (${selectedVehicle.name}) can only carry up to ${selectedVehicle.maxPassengers} passengers.`
       );
       return;
     }
 
     try {
+      // Directly pass the merged selectedDateTime without splitting
       await axios.put(
         `http://localhost:5000/api/rides/ridebookings/${editingTravel}`,
-        { ...formData, pickupLocation },
+        { ...formData, pickupLocation }
       );
       setEditingTravel(null);
       fetchTravels();
@@ -131,17 +120,10 @@ const BasicRideHistory = () => {
             </div>
             <div className="w-3/4">
               <div>
-                <label className="block mb-2 text-sm font-semibold">
-                  Pickup Location
-                </label>
-                <LoadScript
-                  googleMapsApiKey={GOOGLE_MAPS_API_KEY}
-                  libraries={LIBRARIES}
-                >
+                <label className="block mb-2 text-sm font-semibold">Pickup Location</label>
+                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={LIBRARIES}>
                   <Autocomplete
-                    onLoad={(autocompleteInstance) =>
-                      setAutocomplete(autocompleteInstance)
-                    }
+                    onLoad={(autocompleteInstance) => setAutocomplete(autocompleteInstance)}
                     onPlaceChanged={handlePlaceSelect}
                   >
                     <input
@@ -156,70 +138,41 @@ const BasicRideHistory = () => {
                 </LoadScript>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">
-                  Email
-                </label>
+                <label className="block mb-2 text-sm font-semibold">Email</label>
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full p-3 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">
-                  Passenger Count
-                </label>
+                <label className="block mb-2 text-sm font-semibold">Passenger Count</label>
                 <input
                   type="number"
                   min="1"
                   value={formData.passengerCount}
-                  onChange={(e) =>
-                    setFormData({ ...formData, passengerCount: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, passengerCount: e.target.value })}
                   className="w-full p-3 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">Date</label>
+                <label className="block mb-2 text-sm font-semibold">Date and Time</label>
                 <input
-                  type="date"
-                  value={formData.selectedDate}
-                  onChange={(e) =>
-                    setFormData({ ...formData, selectedDate: e.target.value })
-                  }
+                  type="datetime-local"
+                  value={formData.selectedDateTime}
+                  onChange={(e) => setFormData({ ...formData, selectedDateTime: e.target.value })}
                   className="w-full p-3 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-semibold">Time</label>
-                <input
-                  type="time"
-                  value={formData.selectedTime}
-                  onChange={(e) =>
-                    setFormData({ ...formData, selectedTime: e.target.value })
-                  }
-                  className="w-full p-3 border rounded-md"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-sm font-semibold">
-                  Vehicle Type
-                </label>
+                <label className="block mb-2 text-sm font-semibold">Vehicle Type</label>
                 <select
                   value={formData.selectedVehicle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      selectedVehicle: e.target.value,
-                    })
-                  }
+                  onChange={(e) => setFormData({ ...formData, selectedVehicle: e.target.value })}
                   className="w-full p-3 border rounded-md"
                   required
                 >
@@ -231,10 +184,7 @@ const BasicRideHistory = () => {
                 </select>
               </div>
               <div className="flex space-x-4 mt-4 justify-center">
-                <button
-                  type="submit"
-                  className="bg-blue-800 text-white p-3 rounded-md"
-                >
+                <button type="submit" className="bg-blue-800 text-white p-3 rounded-md">
                   <BsSave2 />
                 </button>
                 <button
@@ -248,9 +198,9 @@ const BasicRideHistory = () => {
             </div>
           </form>
         ) : (
-          <table className="min-w-full bg-white border border-gray-300 ">
+          <table className="min-w-full bg-white border border-gray-300">
             <thead>
-              <tr className="bg-gray-200 ">
+              <tr className="bg-gray-200">
                 <th className="border px-4 py-2">Pickup Location</th>
                 <th className="border px-4 py-2">Email</th>
                 <th className="border px-4 py-2">Passenger Count</th>
@@ -260,32 +210,51 @@ const BasicRideHistory = () => {
                 <th className="border px-4 py-2">Actions</th>
               </tr>
             </thead>
+
+
+
+
             <tbody>
-              {travels.map((travel) => (
-                <tr key={travel._id} className="text-center">
-                  <td className="border px-4 py-2">{travel.pickupLocation}</td>
-                  <td className="border px-4 py-2">{travel.email}</td>
-                  <td className="border px-4 py-2">{travel.passengerCount}</td>
-                  <td className="border px-4 py-2">{travel.vehicleType}</td>
-                  <td className="border px-4 py-2">{travel.selectedDate}</td>
-                  <td className="border px-4 py-2">{travel.selectedTime}</td>
-                  <td className="border px-4 py-2 flex justify-center space-x-3">
-                    <button
-                      className="bg-blue-800 text-white p-2 rounded-md"
-                      onClick={() => handleEdit(travel)}
-                    >
-                      <FiEdit />
-                    </button>
-                    <button
-                      className="bg-blue-600 text-white p-2 rounded-md"
-                      onClick={() => handleDelete(travel._id)}
-                    >
-                      <MdDeleteOutline />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {travels.map((travel) => {
+    const [date, time] = travel.selectedDateTime
+      ? travel.selectedDateTime.split("T") // Split the combined datetime string
+      : ["", ""]; // Default empty values if no datetime is provided
+
+    // Format the time to HH:mm (if available)
+    const formattedTime = time
+      ? time.slice(0, 5) // Extract just HH:mm from time (e.g., "14:22:00" -> "14:22")
+      : "";
+
+    return (
+      <tr key={travel._id} className="text-center">
+        <td className="border px-4 py-2">{travel.pickupLocation}</td>
+        <td className="border px-4 py-2">{travel.email}</td>
+        <td className="border px-4 py-2">{travel.passengerCount}</td>
+        <td className="border px-4 py-2">{date}</td> {/* Display extracted date */}
+        <td className="border px-4 py-2">{formattedTime}</td> {/* Display formatted time */}
+        <td className="border px-4 py-2">{travel.vehicleType}</td>
+        <td className="border px-4 py-2 flex justify-center space-x-3">
+          <button
+            className="bg-blue-800 text-white p-2 rounded-md"
+            onClick={() => handleEdit(travel)}
+          >
+            <FiEdit />
+          </button>
+          <button
+            className="bg-blue-600 text-white p-2 rounded-md"
+            onClick={() => handleDelete(travel._id)}
+          >
+            <MdDeleteOutline />
+          </button>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
+
+
+
           </table>
         )}
       </div>

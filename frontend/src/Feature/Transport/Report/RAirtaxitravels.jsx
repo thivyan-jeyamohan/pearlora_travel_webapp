@@ -32,7 +32,7 @@ const RAirtaxitravels = () => {
     
       <div className="relative z-10 text-center text-white px-6">
         {/* Search Bar */}
-        <div className="py-3 px-4 flex items-center justify-between shadow-md max-w-250 mx-auto gap-5 bg-blue-200 rounded-full mt-20">
+        <div className="py-3 px-4 flex items-center justify-between shadow-md max-w-250 mx-auto gap-5 bg-blue-200 rounded-full mt-10">
           <select
             value={destinationFrom}
             onChange={(e) => setDestinationFrom(e.target.value)}

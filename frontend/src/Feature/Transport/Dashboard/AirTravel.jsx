@@ -6,6 +6,14 @@ import mapvid from "../../../assets/map.mp4";
 import { MdMailOutline } from "react-icons/md";
 
 export default function AirTravel() {
+
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false); // Track visibility of the chatbot
+  
+    const toggleChatbot = () => {
+      setIsChatbotOpen((prevState) => !prevState); // Toggle chatbot visibility
+    };
+
+
   const [formData, setFormData] = useState({
     airtaxiName: "",
     departure: "",
@@ -337,6 +345,8 @@ export default function AirTravel() {
           className="rounded-xl w-full h-full object-cover"
         />
       </div>
+
+      
     </div>
   );
 }
