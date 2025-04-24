@@ -29,6 +29,8 @@ const BasicRide = () => {
   const [autocomplete, setAutocomplete] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [bookingData, setBookingData] = useState(null);
+  const [qrValue, setQrValue] = useState('');
+
 
   const handlePlaceSelect = () => {
     if (autocomplete) {
@@ -76,8 +78,21 @@ const BasicRide = () => {
           selectedVehicle,
           message: response.data.message,
         };
-        setBookingData(bookingInfo);
-        setBookingConfirmed(true);
+
+        const qrText =
+  "Booking Confirmation\n" +
+  "------------------------------------------\n" +
+  `Pickup Location : ${pickupLocation}\n` +
+  `Email           : ${email}\n` +
+  `Passengers      : ${passengerCount}\n` +
+  `Date & Time     : ${selectedDateTimeString}\n` +
+  `Vehicle         : ${selectedVehicle}\n` +
+  `Message         : ${response.data.message}`;
+
+        
+                setQrValue(qrText.trim());
+                setBookingData(bookingInfo);
+                setBookingConfirmed(true);
 
         setPickupLocation('');
         setPassengerCount(1);
@@ -203,7 +218,7 @@ const BasicRide = () => {
         <div className="fixed inset-0 bg-transparent bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-10 rounded-xl text-center">
             <h3 className="text-2xl font-semibold mb-4">Booking Confirmed! 🎉</h3>
-            <QRCodeSVG value={JSON.stringify(bookingData)} size={256} />
+            <QRCodeSVG value={qrValue} size={256} />
             <p className="mt-4 text-lg font-semibold">Scan the QR code for booking details!</p>
             <button
               className="mt-6 bg-red-500 text-white px-6 py-2 rounded-lg"
