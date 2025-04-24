@@ -59,32 +59,43 @@ const HotelCheck = ({
 
             {availableRooms.length > 0 && !isLoading && (
                 <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">Available Rooms</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-60 overflow-y-auto pr-2"> 
-                        {availableRooms.map(room => (
-                            <div key={room._id} className="border rounded p-4 flex flex-col">
-                                <img
-                                    src={room.photo || '/placeholder-room.jpg'} 
-                                    alt={`Room ${room.roomNumber}`}
-                                    className="w-full h-32 object-cover rounded-md mb-2"
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Available Rooms</h3>
+                    <div
+                    className={`grid grid-cols-1 md:grid-cols-2 gap-5 pr-2 ${
+                        availableRooms.length > 4 ? 'max-h-72 overflow-y-auto' : ''
+                    }`}
+                    >
+                    {availableRooms.map((room) => (
+                        <div
+                        key={room._id}
+                        className="h-63 border border-gray-200 rounded-xl p-4 bg-white shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col"
+                        >
+                            <img
+                                src={room.photo || '/placeholder-room.jpg'}
+                                alt={`Room ${room.roomNumber}`}
+                                className="w-full h-35 object-cover rounded-lg mb-3"
+                            />
+                            <p className="text-gray-800 font-semibold">
+                                {room.roomNumber} ({room.roomCategory})
+                            </p>
+                            <p className="text-gray-600 mb-3">{room.price} Rs / night</p>
+                            <label className="flex items-center gap-3 mt-auto cursor-pointer select-none">
+                                <input
+                                type="checkbox"
+                                className="accent-blue-600 h-5 w-5 rounded focus:ring-2 focus:ring-blue-300"
+                                value={room._id}
+                                checked={selectedRooms.includes(room._id)}
+                                onChange={() => handleRoomToggle(room._id)}
+                                disabled={isLoading}
                                 />
-                                <p className="text-gray-800 font-medium">{room.roomNumber} ({room.roomCategory})</p>
-                                <p className="text-gray-600 mb-2">{room.price} Rs / night</p>
-                                <label className="flex items-center space-x-3 mt-auto cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox h-5 w-5 text-blue-600"
-                                        value={room._id}
-                                        checked={selectedRooms.includes(room._id)}
-                                        onChange={() => handleRoomToggle(room._id)}
-                                        disabled={isLoading}
-                                    />
-                                    <span className="text-gray-700">Select Room</span>
-                                </label>
-                            </div>
-                        ))}
-                    </div>
+                                <span className="text-gray-700 text-sm font-medium">Select Room</span>
+                            </label>
+                        </div>
+                    ))}
                 </div>
+              </div>
+              
+                
             )}
 
             {/* Booking Button Logic */}

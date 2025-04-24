@@ -17,7 +17,7 @@ const ManagerDashboard = () => {
   }, []);
 
   return (
-    <div className="flex h-screen bg-gray-100 mt-20">
+    <div className="flex h-screen w-full bg-gray-100 mt-20">
       {/* Sidebar */}
       <div className="w-64 text-white h-screen fixed left-0 top-0 p-6 bg-gradient-to-b from-gray-900 to-gray-800 shadow-lg mt-18">
         <h2 className="text-2xl font-bold mb-6 text-center text-white">Manager Dashboard</h2>
@@ -76,8 +76,8 @@ const ManagerDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="ml-64 flex-1 overflow-y-auto p-6 h-screen">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="ml-56 flex-1 overflow-y-auto w-full h-screen">
+        <div className="bg-white rounded-lg shadow-md pl-8">
           {activeSection === 'overview' && <Overview />}
           {activeSection === 'hotelManagement' && <HotelManagement />}
           {activeSection === 'roomManagement' && <RoomManagement />}

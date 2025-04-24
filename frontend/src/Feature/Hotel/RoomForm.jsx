@@ -71,120 +71,109 @@ const RoomForm = ({ onClose, fetchRooms, roomData = null, hotels, onRoomSaved })
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+        <div className="min-h-screen bg-gradient-to-tr from-purple-400 to-blue-300 py-10 px-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
+                <h3 className="text-2xl font-bold mb-6 text-gray-800">
                 {roomData ? "Edit Room" : "Add New Room"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-6">
+
                 {/* Hotel Selection */}
                 <div>
                     <label htmlFor="hotelId" className="block text-sm font-medium text-gray-700">
-                        Hotel
+                    Hotel
                     </label>
                     <select
-                        id="hotelId"
-                        value={hotelId}
-                        onChange={(e) => setHotelId(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        required
+                    id="hotelId"
+                    value={hotelId}
+                    onChange={(e) => setHotelId(e.target.value)}
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    required
                     >
-                        <option value="">Select a Hotel</option>
-                        {hotels.map((hotel) => (
-                            <option key={hotel._id} value={hotel._id}>
-                                {hotel.name}
-                            </option>
-                        ))}
+                    <option value="">Select a Hotel</option>
+                    {hotels.map((hotel) => (
+                        <option key={hotel._id} value={hotel._id}>
+                        {hotel.name}
+                        </option>
+                    ))}
                     </select>
                 </div>
-
-                {/* Room Number */}
-                {/* <div>
-                    <label htmlFor="roomNumber" className="block text-sm font-medium text-gray-700">
-                        Room Number
-                    </label>
-                    <input
-                        type="text"
-                        id="roomNumber"
-                        value={roomNumber}
-                        onChange={(e) => setRoomNumber(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                    />
-                </div> */}
 
                 {/* Photo Upload */}
                 <div>
                     <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
-                        Photo
+                    Photo
                     </label>
                     <input
-                        type="file"
-                        id="photo"
-                        onChange={handleImageUpload}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    type="file"
+                    id="photo"
+                    onChange={handleImageUpload}
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     {uploading && <p className="text-sm text-blue-500 mt-2">Uploading...</p>}
                     {photo && (
-                        <img
-                            src={photo}
-                            alt="Room"
-                            className="mt-4 w-32 h-32 object-cover rounded-lg shadow-md"
-                        />
+                    <img
+                        src={photo}
+                        alt="Room"
+                        className="mt-4 w-32 h-32 object-cover rounded-lg shadow-md"
+                    />
                     )}
                 </div>
 
                 {/* Price */}
                 <div>
                     <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                        Price
+                    Price
                     </label>
                     <input
-                        type="number"
-                        id="price"
-                        value={price}
-                        min="1"
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        required
+                    type="number"
+                    id="price"
+                    value={price}
+                    min="1"
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    required
                     />
                 </div>
 
                 {/* Room Category */}
                 <div>
                     <label htmlFor="roomCategory" className="block text-sm font-medium text-gray-700">
-                        Room Category
+                    Room Category
                     </label>
                     <select
-                        id="roomCategory"
-                        value={roomCategory}
-                        onChange={(e) => setRoomCategory(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        required
+                    id="roomCategory"
+                    value={roomCategory}
+                    onChange={(e) => setRoomCategory(e.target.value)}
+                    className="w-full mt-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    required
                     >
-                        <option value="Single">Single</option>
-                        <option value="Double">Double</option>
-                        <option value="Suite">Suite</option>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
                     </select>
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-end space-x-4 mt-6">
+                <div className="flex justify-end space-x-4 pt-6">
                     <button
-                        type="button"
-                        onClick={onClose}
-                        className="py-2 px-4 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    type="button"
+                    onClick={onClose}
+                    className="py-2 px-4 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
                     >
-                        Cancel
+                    Cancel
                     </button>
                     <button
-                        type="submit"
-                        className="py-2 px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    type="submit"
+                    className="py-2 px-4 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
-                        Save
+                    Save
                     </button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
+
     );
 };
 

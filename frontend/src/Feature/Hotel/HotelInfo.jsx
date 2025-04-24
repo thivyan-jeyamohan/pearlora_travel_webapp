@@ -17,7 +17,7 @@ const HotelInfo = ({ hotel }) => {
 
     return (
         <div className="ml-10">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-9">
                 <img
                     src={hotel.coverPhoto || '/placeholder-image.jpg'}
                     alt={hotel.name}

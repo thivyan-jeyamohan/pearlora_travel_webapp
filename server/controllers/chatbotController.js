@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 
 
-const projectId =process.env.DIALOGFLOW_PROJECT_ID; 
+const projectId ="pearlhotelbot-ndrp"; 
 const languageCode = 'en';
 
 

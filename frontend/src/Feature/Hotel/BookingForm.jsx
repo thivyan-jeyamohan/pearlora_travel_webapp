@@ -207,116 +207,147 @@ const BookingForm = () => {
     };
 
     return (
-        <div className="font-sans bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] flex flex-col mt-18">
-            <div className="container mx-auto px-4 w-150 mb-20">
-                <div className="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">Enter Your Details</h2>
-                    {selectedRoomDetails && selectedRoomDetails.length > 0 && (
-                        <div>
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">Selected Rooms:</h3>
-                        <div className="flex flex-row overflow-x-auto space-x-4"> 
-                            {selectedRoomDetails.map(room => (
-                                <div key={room._id} className="flex-none w-64"> 
-                                    <div className="mb-2">
-                                        {room.roomNumber} ({room.roomCategory}) - Rs {room.price} per night
-                                    </div>
-                                    <img
-                                        src={room.photo}
-                                        alt={room.roomNumber}
-                                        className="w-full h-40 object-cover rounded-md"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <p className="text-center mt-4">
-                            <span className="font-bold text-black">Total Price: </span>
-                            <span className="text-green-500"> Rs {totalPrice}</span>
-                        </p>
-                    </div>
+        <div className="font-sans bg-gradient-to-br from-blue-500 via-purple-300 to-blue-300 min-h-screen flex flex-col font-['Inter'] mt-12">
+            <div className="container mx-auto px-4 py-6 md:py-8 flex-grow flex flex-col items-center justify-center mt-8">
 
-                    )}
-                    {availabilityMessage && (
-                        <p className="text-center text-gray-700 mb-4">{availabilityMessage}</p>
-                    )}
-                    <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
-                        <div>
-                            <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">First Name:</label>
-                            <input
-                                type="text"
-                                id="firstName"
-                                value={firstName}
-                                onChange={handleFirstNameChange}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
-                            />
-                            {firstNameError && <p className="text-red-500 text-xs italic">{firstNameError}</p>}
-                        </div>
-                        <div>
-                            <label htmlFor="lastName" className="block text-gray-700 text-sm font-bold mb-2">Last Name:</label>
-                            <input
-                                type="text"
-                                id="lastName"
-                                value={lastName}
-                                onChange={handleLastNameChange}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
-                            />
-                            {lastNameError && <p className="text-red-500 text-xs italic">{lastNameError}</p>}
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email:</label>
-                            <input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={handleEmailChange}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
-                            />
-                            {emailError && <p className="text-red-500 text-xs italic">{emailError}</p>}
-                        </div>
-                        <div>
-                            <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-2">Phone Number:</label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                value={phone}
-                                onChange={handlePhoneChange}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                required
-                            />
-                            {phoneError && <p className="text-red-500 text-xs italic">{phoneError}</p>}
-                        </div>
-                        <div>
-                            <label htmlFor="specialRequests" className="block text-gray-700 text-sm font-bold mb-2">Special Requests:</label>
-                            <textarea
-                                id="specialRequests"
-                                value={specialRequests}
-                                onChange={(e) => setSpecialRequests(e.target.value)}
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            />
-                        </div>
-                        <div className="flex justify-between">
-                            <button
-                                type="button"
-                                className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                onClick={handleCancelBooking}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden max-h-[calc(100vh-160px)] md:max-h-[85vh]">
+                    <div className="w-full md:w-3/5 p-5 md:p-8 flex flex-col overflow-y-auto">
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-5 text-center">Enter Your Details</h2>
+                        {selectedRoomDetails && selectedRoomDetails.length > 0 && (
+
+                            <div className="mb-6  pb-4">
+                                <h3 className="text-lg font-semibold text-gray-700 mb-3">Selected Rooms:</h3>
+                                <div className="flex overflow-x-auto space-x-4 pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-500 pr-2 -mr-2 ">
+                                    {selectedRoomDetails.map(room => (
+                                        <div key={room._id} className="flex-none w-48 bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                                            <img
+                                                src={room.photo || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Room'} 
+                                                alt={`Room ${room.roomNumber}`}
+                                                className="w-full h-24 object-cover rounded-md mb-2" 
+                                                onError={(e) => e.target.src='https://via.placeholder.com/150/CCCCCC/FFFFFF?text=No+Image'}
+                                            />
+                                            <p className="text-sm font-medium text-gray-800">
+                                                {room.roomNumber} ({room.roomCategory || 'N/A'})
+                                            </p>
+                                            <p className="text-xs text-gray-600">
+                                                Rs {typeof room.price === 'number' ? room.price.toLocaleString() : 'N/A'} / night
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-right mt-3 pr-2">
+                                    <span className="font-bold text-gray-800 ">Total Price: </span>
+                                    <span className="text-purple-600 font-bold">
+                                        Rs {typeof totalPrice === 'number' ? totalPrice.toLocaleString() : '0'}
+                                    </span>
+                                </p>
+                            </div>
+                        )}
+                        {selectedRoomDetails.length === 0 && (
+                           <p className="text-center text-gray-500 mb-4">Loading room details or no rooms selected...</p>
+                        )}
+    
+                        {/* Booking Form */}
+                        <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4"> 
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="flex-1">
+                                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        value={firstName}
+                                        onChange={handleFirstNameChange}
+                                        className={`shadow-sm appearance-none border ${firstNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                                        required
+                                    />
+                                    {firstNameError && <p className="text-red-500 text-xs italic mt-1">{firstNameError}</p>}
+                                </div>
+                                <div className="flex-1">
+                                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        value={lastName} 
+                                        onChange={handleLastNameChange} 
+                                        className={`shadow-sm appearance-none border ${lastNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                                        required
+                                    />
+                                    {lastNameError && <p className="text-red-500 text-xs italic mt-1">{lastNameError}</p>}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <div className="flex-1">
+                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        value={email} 
+                                        onChange={handleEmailChange} 
+                                        className={`shadow-sm appearance-none border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                                        required
+                                    />
+                                    {emailError && <p className="text-red-500 text-xs italic mt-1">{emailError}</p>}
+                                </div>
+                                <div className="flex-1">
+                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number:</label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        value={phone} 
+                                        onChange={handlePhoneChange} 
+                                        className={`shadow-sm appearance-none border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                                        required
+                                    />
+                                    {phoneError && <p className="text-red-500 text-xs italic mt-1">{phoneError}</p>}
+                                </div>
+                            </div>
+    
+                            <div>
+                                <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700 mb-1">Special Requests:</label>
+                                <textarea
+                                    id="specialRequests"
+                                    value={specialRequests} 
+                                    onChange={(e) => setSpecialRequests(e.target.value)} 
+                                    className="shadow-sm appearance-none border border-gray-300 rounded w-full p-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    rows="3"
+                                />
+                            </div>
+    
+                            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
+                                <button
+                                    type="button"
+                                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 transition duration-150 ease-in-out w-full sm:w-auto"
+                                    onClick={handleCancelBooking} 
                                 >
-                                Confirm Booking
-                            </button>
-                        </div>
-                    </form>
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-150 ease-in-out w-full sm:w-auto"
+                                >
+                                    Confirm Booking
+                                </button>
+                            </div>
+                        </form>
+                    </div> 
+
+                    <div className="w-full md:w-2/5 hidden md:block">
+                        <div
+                            className="h-full w-full bg-cover bg-center rounded-r-lg"
+                            style={{
+                                backgroundImage: `url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')`,
+                            }}
+                        />
+                    </div> 
+    
                 </div>
-            </div>
+            </div> 
+
             <Footer />
-        </div>
+        </div> 
     );
+    
 };
 
 export default BookingForm;

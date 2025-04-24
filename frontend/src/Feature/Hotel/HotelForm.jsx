@@ -86,162 +86,139 @@ const HotelForm = ({ onClose, fetchHotels, hotelData = null, onHotelSaved }) => 
     };
 
     return (
-        <div className="p-6 bg-white shadow-lg rounded-2xl w-full max-w-lg mx-auto">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+        <div className="min-h-screen bg-gradient-to-tr from-purple-400 to-blue-300 py-10 px-4">
+            <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
                 {hotelData ? "Edit Hotel" : "Add New Hotel"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Hotel ID */}
-                {/* <div>
-                    <label htmlFor="hotelId" className="block text-sm font-medium text-gray-700">
-                        Hotel ID
-                    </label>
-                    <input
-                        type="text"
-                        id="hotelId"
-                        value={hotelId}
-                        onChange={(e) => setHotelId(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required
-                        disabled={!!hotelData}
-                    />
-                </div> */}
-
+                </h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                
                 {/* Name */}
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Name
-                    </label>
+                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">Hotel Name</label>
                     <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="e.g. The Royal Inn"
+                    required
                     />
                 </div>
 
                 {/* Location */}
                 <div>
-                    <label htmlFor="location" className="block text-sm font-medium text-gray-700">
-                        Location
-                    </label>
+                    <label htmlFor="location" className="block text-sm font-semibold text-gray-700 mb-1">Location</label>
                     <input
-                        type="text"
-                        id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required
+                    type="text"
+                    id="location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="e.g. Colombo , Vavuniya"
+                    required
                     />
                 </div>
 
                 {/* Price */}
                 <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">
-                        Price
-                    </label>
+                    <label htmlFor="price" className="block text-sm font-semibold text-gray-700 mb-1">Price per Night (₹)</label>
                     <input
-                        type="number"
-                        id="price"
-                        value={price}
-                        min="1"
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required
+                    type="number"
+                    id="price"
+                    value={price}
+                    min="1"
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
                     />
                 </div>
 
                 {/* Availability */}
                 <div>
-                    <label htmlFor="availabilityStatus" className="block text-sm font-medium text-gray-700">
-                        Availability
-                    </label>
+                    <label htmlFor="availabilityStatus" className="block text-sm font-semibold text-gray-700 mb-1">Availability</label>
                     <select
-                        id="availabilityStatus"
-                        value={availabilityStatus}
-                        onChange={(e) => setAvailabilityStatus(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        required
+                    id="availabilityStatus"
+                    value={availabilityStatus}
+                    onChange={(e) => setAvailabilityStatus(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
                     >
-                        <option value="Available">Available</option>
-                        <option value="Unavailable">Unavailable</option>
+                    <option value="Available">Available</option>
+                    <option value="Unavailable">Unavailable</option>
                     </select>
                 </div>
 
                 {/* Rating */}
                 <div>
-                    <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
-                        Rating
-                    </label>
+                    <label htmlFor="rating" className="block text-sm font-semibold text-gray-700 mb-1">Rating (1 to 5)</label>
                     <input
-                        type="number"
-                        id="rating"
-                        value={rating}
-                        onChange={(e) => setRating(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        min="1"
-                        max="5"
-                        step="0.1"
-                        required
+                    type="number"
+                    id="rating"
+                    value={rating}
+                    onChange={(e) => setRating(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                    required
                     />
                 </div>
 
                 {/* Description */}
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                        Description
-                    </label>
+                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
                     <textarea
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        rows="3"
-                        required
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    rows="3"
+                    placeholder="Write a short description about the hotel..."
+                    required
                     />
                 </div>
 
                 {/* Photo Upload */}
                 <div>
-                    <label htmlFor="photo" className="block text-sm font-medium text-gray-700">
-                        Photo
-                    </label>
+                    <label htmlFor="photo" className="block text-sm font-semibold text-gray-700 mb-1">Hotel Cover Photo</label>
                     <input
-                        type="file"
-                        id="photo"
-                        onChange={handleImageUpload}
-                        className="w-full mt-1 p-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    type="file"
+                    id="photo"
+                    onChange={handleImageUpload}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                     />
                     {uploading && <p className="text-sm text-blue-500 mt-2">Uploading...</p>}
                     {coverPhoto && (
-                        <img
-                            src={coverPhoto}
-                            alt="Cover"
-                            className="mt-4 w-32 h-32 object-cover rounded-lg shadow-md"
-                        />
+                    <img
+                        src={coverPhoto}
+                        alt="Cover"
+                        className="mt-4 w-36 h-36 object-cover rounded-lg shadow-md"
+                    />
                     )}
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-end space-x-4 mt-6">
+                <div className="flex justify-end space-x-4 pt-6">
                     <button
-                        type="button"
-                        onClick={onClose}
-                        className="py-2 px-4 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                    type="button"
+                    onClick={onClose}
+                    className="px-5 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 shadow-md focus:outline-none focus:ring-2 focus:ring-gray-300"
                     >
-                        Cancel
+                    Cancel
                     </button>
                     <button
-                        type="submit"
-                        className="py-2 px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    type="submit"
+                    className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
                     >
-                        Save
+                    Save Hotel
                     </button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
+
     );
 };
 
