@@ -9,15 +9,19 @@ import airTaxiTravelRoutes from "./Transport/Admin/Travel/AirTaxiTravelRoutes.js
 import authRoutes from "./User/authRoutes.js";
 import airSeatRoutes from "./Transport/AirSeat/AirSeatRoutes.js";
 import userRoutes from "./User/userRoutes.js";
+import vehicleRoutes from './Transport/Vehicle/vehicleRoutes.js';
+
 
 // Load env variables
 dotenv.config();
+
 
 // Initialize app
 const app = express();
 
 // Connect to MongoDB
 connectDB();
+
 
 // Middleware
 app.use((req, res, next) => {
@@ -35,12 +39,16 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/rides", rideBookingRoutes);
 app.use("/api/airtaxitravels", airTaxiTravelRoutes);
 app.use("/api/airseats", airSeatRoutes);
 app.use("/api/users", userRoutes);
+
+app.use('/api/vehicles', vehicleRoutes);
+
 
 // Error handler
 app.use((err, req, res, next) => {

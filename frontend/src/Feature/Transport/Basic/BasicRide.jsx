@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { LoadScript, Autocomplete } from '@react-google-maps/api';
 import axios from 'axios';
 import bikeImg from '../../../assets/bike.png';
@@ -26,10 +27,32 @@ const BasicRide = () => {
   const [email, setEmail] = useState('');
   const [selectedDateTimeString, setSelectedDateTimeString] = useState('');
   const [selectedVehicle, setSelectedVehicle] = useState('');
+  const [days, setdays] = useState('');
   const [autocomplete, setAutocomplete] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [bookingData, setBookingData] = useState(null);
   const [qrValue, setQrValue] = useState('');
+
+  const [vehiclePrices, setVehiclePrices] = useState({});
+
+
+  useEffect(() => {
+    const fetchVehiclePrices = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/vehicles');
+        const pricesMap = {};
+        response.data.forEach(vehicle => {
+          pricesMap[vehicle.vehicleName] = vehicle.price; // Adjust key if different
+        });
+        setVehiclePrices(pricesMap);
+      } catch (error) {
+        console.error('Failed to fetch vehicle prices:', error);
+      }
+    };
+  
+    fetchVehiclePrices();
+  }, []);
+
 
 
   const handlePlaceSelect = () => {
@@ -62,12 +85,18 @@ const BasicRide = () => {
     e.preventDefault();
     if (validateBookingTime() && validateEmail(email) && pickupLocation && selectedVehicle) {
       try {
+
+        const pricePerDay = vehiclePrices[selectedVehicle] || 0;
+        const totalAmount = parseInt(days) * pricePerDay;
+
         const response = await axios.post('http://localhost:5000/api/rides/book-ride', {
           pickupLocation,
           email,
           passengerCount,
           selectedDateTime: selectedDateTimeString,
           vehicleType: selectedVehicle,
+          days,
+          totalAmount,
         });
 
         const bookingInfo = {
@@ -76,6 +105,8 @@ const BasicRide = () => {
           passengerCount,
           selectedDateTime: selectedDateTimeString,
           selectedVehicle,
+          days,
+          totalAmount,
           message: response.data.message,
         };
 
@@ -87,6 +118,8 @@ const BasicRide = () => {
   `Passengers      : ${passengerCount}\n` +
   `Date & Time     : ${selectedDateTimeString}\n` +
   `Vehicle         : ${selectedVehicle}\n` +
+  `Days         : ${days}\n` +
+  `Total Amount    : ${totalAmount}\n` +
   `Message         : ${response.data.message}`;
 
         
@@ -99,6 +132,7 @@ const BasicRide = () => {
         setEmail('');
         setSelectedDateTimeString('');
         setSelectedVehicle('');
+        setdays('');
       } catch (error) {
         alert('Failed to book ride. Please try again!');
       }
@@ -157,6 +191,19 @@ const BasicRide = () => {
                 max="10"
                 value={passengerCount}
                 onChange={(e) => setPassengerCount(parseInt(e.target.value) || 1)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-2">Number of Days</label>
+              <input
+                type="number"
+                className="w-full p-3 border rounded-md text-black"
+                min="1"
+                max="10"
+                value={days}
+                onChange={(e) => setdays(parseInt(e.target.value) || 1)}
                 required
               />
             </div>

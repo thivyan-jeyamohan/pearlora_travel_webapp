@@ -13,6 +13,8 @@ import { FaCarSide } from "react-icons/fa";
 import BasicRideHistory from "./BasicRideHistory";
 import Report from "./Report";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import RentVehicle from "../Dashboard/RentVehicle";
+
 
 export default function TransportDashboard() {
   const [activeTab, setActiveTab] = useState("Dashboard");
@@ -24,7 +26,10 @@ export default function TransportDashboard() {
   console.log("TransportDashboard component rendered!");
 
   return (
+
     <div className="flex  bg-white mt-20 font-inter font-medium h-fit ">
+
+
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
         <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
@@ -32,6 +37,8 @@ export default function TransportDashboard() {
         </div>
         <nav className="space-y-4 ml-6 font-bold">
           <hr className="border-t border-gray-300 " />
+
+
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 
@@ -47,7 +54,13 @@ export default function TransportDashboard() {
             <span className="transition-all duration-300">Dashboard</span>
           </div>
 
+
+
+
           <hr className="border-t border-gray-300 " />
+
+
+
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 
@@ -63,7 +76,12 @@ export default function TransportDashboard() {
             <span className="transition-all duration-300">Flight Travels</span>
           </div>
 
+
+
+
           <hr className="border-t border-gray-300 " />
+
+
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 
@@ -82,22 +100,35 @@ export default function TransportDashboard() {
           <hr className="border-t border-gray-300 " />
 
 
-          {/*     
+
+
           <div
             className={`flex items-center space-x-3 cursor-pointer 
-              ${activeTab === "FlightGPS" ? "text-violet-700" : "text-gray-500"}`}
-              onClick={() => handleClick("FlightGPS")}
+              ${activeTab === "rentvehicle" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("rentvehicle")}
           >
             <div
               className={`p-2 rounded-full transition-all duration-300 
-                ${activeTab === "FlightGPS" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+                ${activeTab === "rentvehicle" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
             >
-              <MdGpsFixed className="text-xl" />
+              <FaCarSide className="text-xl" />
             </div>
-            <span className="transition-all duration-300">Flight GPS</span>
+            <span className="transition-all duration-300">Vehicles</span>
           </div>
 
-          <hr className="border-t border-gray-300 " /> */}
+
+
+          <hr className="border-t border-gray-300 " />
+
+
+
+             
+         
+
+
+        
+
+
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 
@@ -110,10 +141,14 @@ export default function TransportDashboard() {
             >
               <FaCarSide className="text-xl" />
             </div>
-            <span className="transition-all duration-300">Basic Ride</span>
+            <span className="transition-all duration-300">Rent Ride</span>
           </div>
 
+
+
           <hr className="border-t border-gray-300 " />
+
+
 
           <div
             className={`flex items-center space-x-3 cursor-pointer 
@@ -129,7 +164,11 @@ export default function TransportDashboard() {
             <span className="transition-all duration-300">Report</span>
           </div>
 
+
           <hr className="border-t border-gray-300 " />
+
+
+          
         </nav>
         <img src={flightravelimg} />
       </div>
@@ -155,6 +194,13 @@ export default function TransportDashboard() {
           </div>
         )}
 
+
+        {activeTab === "rentvehicle" && (
+          <div className=" p-6 rounded-lg shadow-lg">
+            <RentVehicle />
+          </div>
+        )}
+        
         {activeTab === "Help" && (
           <div className=" p-6 rounded-lg shadow-lg">
             <BasicRideHistory />
