@@ -14,6 +14,8 @@ import BasicRideHistory from "./BasicRideHistory";
 import Report from "./Report";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import RentVehicle from "../Dashboard/RentVehicle";
+import UserFlightSeat from "./UserFlightSeat"
+
 
 
 export default function TransportDashboard() {
@@ -32,7 +34,7 @@ export default function TransportDashboard() {
 
       {/* Sidebar */}
       <div className="w-64 h-full bg-white shadow-lg p-6 flex flex-col fixed">
-        <div className="flex items-center space-x-3 mb-10 mt-7 ml-6">
+        <div className="flex items-center space-x-3 mb-2 mt-2 ml-6">
           <h1 className="text-1xl font-bold">TRANSPORT ADMIN</h1>
         </div>
         <nav className="space-y-4 ml-6 font-bold">
@@ -95,6 +97,23 @@ export default function TransportDashboard() {
               <IoBookmarks className="text-xl" />
             </div>
             <span className="transition-all duration-300">Flight Booking</span>
+          </div>
+
+          <hr className="border-t border-gray-300 " />
+
+
+          <div
+            className={`flex items-center space-x-3 cursor-pointer 
+              ${activeTab === "UserFlightSeat" ? "text-violet-700" : "text-gray-500"}`}
+              onClick={() => handleClick("UserFlightSeat")}
+          >
+            <div
+              className={`p-2 rounded-full transition-all duration-300 
+                ${activeTab === "UserFlightSeat" ? "bg-violet-700 text-white" : "bg-transparent text-gray-500"}`}
+            >
+              <IoBookmarks className="text-xl" />
+            </div>
+            <span className="transition-all duration-300">User Flight Seat</span>
           </div>
 
           <hr className="border-t border-gray-300 " />
@@ -201,6 +220,12 @@ export default function TransportDashboard() {
           </div>
         )}
         
+        {activeTab === "UserFlightSeat" && (
+          <div className=" p-6 rounded-lg shadow-lg">
+            <UserFlightSeat />
+          </div>
+        )}
+
         {activeTab === "Help" && (
           <div className=" p-6 rounded-lg shadow-lg">
             <BasicRideHistory />

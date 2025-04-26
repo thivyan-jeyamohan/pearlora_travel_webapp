@@ -10,7 +10,7 @@ import authRoutes from "./User/authRoutes.js";
 import airSeatRoutes from "./Transport/AirSeat/AirSeatRoutes.js";
 import userRoutes from "./User/userRoutes.js";
 import vehicleRoutes from './Transport/Vehicle/vehicleRoutes.js';
-
+import flightBookingRoutes from './Transport/User/FlightBooking/FlightBookingRoute.js';
 
 // Load env variables
 dotenv.config();
@@ -48,6 +48,7 @@ app.use("/api/airseats", airSeatRoutes);
 app.use("/api/users", userRoutes);
 
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/flightbooking', flightBookingRoutes);
 
 
 // Error handler

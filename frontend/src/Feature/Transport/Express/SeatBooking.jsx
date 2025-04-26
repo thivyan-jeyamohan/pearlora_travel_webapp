@@ -43,6 +43,7 @@ const SeatBooking = () => {
 
   const confirmSeats = async () => {
     try {
+      // 1. Update the seat data first
       const response = await fetch(
         `http://localhost:5000/api/airseats/update/${travelId}`,
         {
@@ -51,23 +52,57 @@ const SeatBooking = () => {
           body: JSON.stringify({ bookedSeats: selectedSeats, unbookedSeats }),
         },
       );
-
+  
       if (response.ok) {
+        // Update frontend seatData
         setSeatData((prev) => ({
           ...prev,
           bookedSeats: [
-            ...prev.bookedSeats.filter((seat) => !unbookedSeats.includes(seat)), 
-            ...selectedSeats, 
+            ...prev.bookedSeats.filter((seat) => !unbookedSeats.includes(seat)),
+            ...selectedSeats,
           ],
         }));
         setSelectedSeats([]);
         setUnbookedSeats([]);
+  
         alert("Seats updated successfully!");
+  
+        // 2. Now create a booking record
+        const totalPrice = seatData.ticket_price * selectedSeats.length;
+  
+        const bookingData = {
+          travelId: travelId,
+          airtaxiName: seatData.airtaxiName,
+          departure: seatData.departure,
+          departure_datetime: seatData.departure_datetime,
+          destination: seatData.destination,
+          destination_datetime: seatData.destination_datetime,
+          ticket_price: seatData.ticket_price,
+          bookedSeats: selectedSeats,
+          totalPrice: totalPrice,
+          email: "user@example.com",
+        };
+  
+        const bookingResponse = await fetch(
+          `http://localhost:5000/api/flightbooking`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bookingData),
+          }
+        );
+  
+        if (bookingResponse.ok) {
+          console.log("Booking saved successfully!");
+        } else {
+          console.error("Failed to save booking.");
+        }
       }
     } catch (error) {
       console.error("Error updating seat data:", error);
     }
   };
+  
 
   if (!seatData) return <div className="text-center p-10">Loading...</div>;
 
