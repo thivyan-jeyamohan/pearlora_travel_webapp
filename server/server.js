@@ -1,18 +1,61 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import path from "path";  
+import bookingRoutes from "./routes/bookingRoutes.js";  // Added .js extension
+import destinationRoutes from "./routes/destinationRoutes.js";  // Added .js extension
+import adminDestinationRoutes from "./routes/adminDestinationRoutes.js";  // Added .js extension
+import weatherRoutes from "./routes/weatherRoutes.js";  // Added .js extension
 
-const destinationRoutes = require("./routes/destinationRoutes");
-const postRoutes = require("./routes/postRoutes");
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// Routes
+import authRoutes from "./User/authRoutes.js";
+import userRoutes from "./User/userRoutes.js";
+
+// Load env variables
+dotenv.config();
+
+// Initialize app
 const app = express();
-app.use(express.json());
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use((req, res, next) => {
+  let rawBody = "";
+  req.on("data", (chunk) => {
+    rawBody += chunk.toString();
+  });
+  req.on("end", () => {
+    console.log("Raw request body:", rawBody); // Optional for debugging
+    req.rawBody = rawBody;
+  });
+  next();
+});
+
 app.use(cors());
+app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// Routes
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/bookings", bookingRoutes);
+app.use("/api", destinationRoutes);
+app.use("/api/admin-destinations", adminDestinationRoutes);
+app.use('/api/weather', weatherRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
-app.use("/api/destinations", destinationRoutes);
-app.use("/api/posts", postRoutes);
+// Error handler
+app.use((err, req, res, next) => {
+  console.error("Error stack:", err.stack);
+  res.status(500).send({ error: "Something broke!" });
+});
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

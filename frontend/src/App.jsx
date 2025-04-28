@@ -1,5 +1,4 @@
-
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom'; // Remove BrowserRouter here
 import Home from "./Pages/Home";
 import Signup from "./User/Signup";
 import Login from "./User/Login";
@@ -23,52 +22,38 @@ import remove from "./Feature/Destination/Dashboard/RemoveDestination";
 import BookingList from "./Feature/Destination/Dashboard/userList";
 import Report from "./Feature/Destination/Dashboard/report";
 
-
-
 function App() {
-
   const { isAuthenticated } = useAuth(); // Access the authentication state
   const location = useLocation(); // Access the current route
 
   const hideHeaderRoutes = [
     "/login",
     "/signup",
-   
-  ]; 
+  ];
 
   const shouldHideHeader = hideHeaderRoutes.includes(location.pathname);
 
   return (
     <>
+      {!shouldHideHeader && (
+        <div className="fixed top-0 left-0 w-full shadow-lg z-50">
+          <Header />
+        </div>
+      )}
 
-    {!shouldHideHeader && (
-      <div className="fixed top-0 left-0 w-full shadow-lg z-50">
-        <Header />
-      </div>
-    )}
-
-    <BrowserRouter>
-      <div className='fixed top-0 left-0 w-full shadow-lg z-50'>
-        <Header />
-      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/destination" element={<Destination />} />
         <Route path="/tours/kandy" element={<Kandy />} />
         <Route path="/booking/form" element={<BookingForm />} />
         <Route path="/admin/form" element={<DestinationList />} />
-       
-        <Route path="/dashboard" element={<DestinationDashboard />} />
+        <Route path="/destination-dashboard" element={<DestinationDashboard />} />
         <Route path="/deshList" element={<DestList />} />
         <Route path="/destination/:id" element={<DestinationDetails />} />
         <Route path="/edit-destination/:id" element={<Edit />} />
-        
         <Route path="/remove-destinations" element={<remove />} />
         <Route path="/bookings/:id" element={<BookingList />} />
         <Route path="/report" element={<Report />} />
-   
-
-
         <Route path="/event" element={<Event />} />
         <Route path="/transport" element={<Transport />} />
         <Route path="/Financial" element={<Financial />} />
@@ -76,8 +61,6 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-    </BrowserRouter>
-
     </>
   );
 }

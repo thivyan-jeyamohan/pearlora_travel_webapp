@@ -157,7 +157,7 @@ const BookingForm = () => {
       alert("Booking Confirmed!");
 
       if (response.data.data && response.data.data._id) {
-        navigate(`/userList/${response.data.data._id}`);
+        navigate(`/destination`);
       } else {
         console.error('Booking ID not found!');
       }

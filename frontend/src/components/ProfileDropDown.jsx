@@ -37,7 +37,7 @@ function ProfileDropdown() {
       case 'financial-management':
         return { path: '/Financial', label: 'Financial Dashboard' };
       case 'destination-management':
-        return { path: '/destination', label: 'Destination Dashboard' };
+        return { path: '/destination-dashboard', label: 'Destination Dashboard' };
       default:
         return null; // No dashboard for 'user' role
     }
