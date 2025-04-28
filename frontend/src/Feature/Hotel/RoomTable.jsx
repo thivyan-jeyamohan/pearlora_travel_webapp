@@ -2,16 +2,16 @@ import React from 'react';
 import { Edit, Trash } from 'lucide-react';
 import API from './services/api';
 
-const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {  
+const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
   const getHotelName = (hotelId) => {
     const hotel = hotels.find((h) => h._id === hotelId);
     return hotel ? hotel.name : 'Unknown Hotel';
   };
 
-  const getHotelId=(hotelId)=>{
-    const hotel=hotels.find((h)=>h._id===hotelId);
+  const getHotelId = (hotelId) => {
+    const hotel = hotels.find((h) => h._id === hotelId);
     return hotel ? hotel.hotelId : 'Unknown Hotel';
-  }
+  };
 
   const handleDelete = async (roomId) => {
     if (window.confirm("Are you sure you want to delete this room?")) {
@@ -28,53 +28,52 @@ const RoomTable = ({ rooms, fetchRooms, hotels, onEdit }) => {
 
   return (
     <div className="mt-6 overflow-x-auto">
-      <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
+      <table className="min-w-full divide-y divide-gray-200 rounded-lg shadow-md bg-white">
         <thead className="bg-gray-300 text-gray-800 text-sm font-semibold">
           <tr>
-            <th className="border-b px-4 py-3 text-left w-[20%]">Hotel ID</th>
-            <th className="border-b px-4 py-3 text-left w-[15%]">Hotel Name</th>
-            <th className="border-b px-4 py-3 text-left w-[10%]">Room Number</th>
-            <th className="border-b px-4 py-3 text-left w-[15%]">Photo</th>
-            <th className="border-b px-4 py-3 text-left w-[10%]">Price</th>
-            <th className="border-b px-4 py-3 text-left w-[12%]">Room Category</th>
-            <th className="border-b px-4 py-3 text-left w-[10%]">Room Status</th>
-            <th className="border-b px-4 py-3 text-center w-[8%]">Actions</th>
+            <th className="px-4 py-3 text-left">Hotel ID</th>
+            <th className="px-4 py-3 text-left">Hotel Name</th>
+            <th className="px-4 py-3 text-left">Room Number</th>
+            <th className="px-4 py-3 text-left">Photo</th>
+            <th className="px-4 py-3 text-left">Price</th>
+            <th className="px-4 py-3 text-left">Room Category</th>
+            <th className="px-4 py-3 text-left">Room Status</th>
+            <th className="px-4 py-3 text-center">Actions</th>
           </tr>
         </thead>
-        <tbody className="text-sm text-gray-700">
+        <tbody className="bg-white divide-y divide-gray-200 text-xs md:text-sm">
           {rooms.map((room) => (
             <tr key={room._id} className="hover:bg-gray-50">
-              <td className="border-b px-4 py-3 align-middle">{getHotelId(room.hotelId)}</td>
-              <td className="border-b px-4 py-3 align-middle">{getHotelName(room.hotelId)}</td>
-              <td className="border-b px-4 py-3 align-middle">{room.roomNumber}</td>
-              <td className="border-b px-4 py-3 align-middle">
+              <td className="px-4 py-3 whitespace-nowrap">{getHotelId(room.hotelId)}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{getHotelName(room.hotelId)}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{room.roomNumber}</td>
+              <td className="px-4 py-3">
                 <img
                   src={room.photo}
                   alt="Room"
-                  className="w-14 h-14 object-cover rounded-md shadow-sm"
+                  className="w-12 h-12 md:w-14 md:h-14 object-cover rounded-md shadow-sm"
                 />
               </td>
-              <td className="border-b px-4 py-3 align-middle">Rs {room.price}</td>
-              <td className="border-b px-4 py-3 align-middle truncate">{room.roomCategory}</td>
-              <td className="border-b px-4 py-3 align-middle">
+              <td className="px-4 py-3 whitespace-nowrap">LKR {room.price}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{room.roomCategory}</td>
+              <td className="px-4 py-3">
                 <span
-                  className={`px-3 py-1 text-xs font-medium rounded-full ${room.isBooked ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
-                    }`}
+                  className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${room.isBooked ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`}
                 >
                   {room.isBooked ? 'Booked' : 'Available'}
                 </span>
               </td>
-              <td className="border-b px-4 py-3 align-middle text-center">
+              <td className="px-4 py-3 text-center">
                 <div className="flex justify-center items-center gap-2">
                   <button
-                    onClick={() => onEdit(room)}  
-                    className="p-2 bg-blue-200 hover:bg-blue-300 rounded-full text-blue-500"
+                    onClick={() => onEdit(room)}
+                    className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <Edit size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(room._id)}
-                    className="p-2 bg-red-200 hover:bg-red-300 rounded-full text-red-500"
+                    className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
                   >
                     <Trash size={16} />
                   </button>

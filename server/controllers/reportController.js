@@ -76,7 +76,7 @@ export const getReport = async (req, res) => {
 
             const checkInDate = moment(booking.checkInDate);
             const checkOutDate = moment(booking.checkOutDate);
-            const daysStayed = checkOutDate.diff(checkInDate, 'days');
+            const daysStayed = checkOutDate.diff(checkInDate, 'days')+1;
 
             return {
                 ...booking,

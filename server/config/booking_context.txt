@@ -1,0 +1,112 @@
+About The Pearl Hotel Booking Website
+Q: What is The Pearl Hotel Booking website?
+A: The Pearl Hotel Booking website is a user-friendly platform where you can find, explore, and book hotels across popular cities in Sri Lanka such as Kandy, Colombo, and Nuwara Eliya. It offers a smooth, secure, and enjoyable booking experience.
+
+Searching Hotels
+Q: How do I search for hotels?
+A: On the homepage, use the search bar to enter your desired location, check-in and check-out dates, and the number of guests. Click "Search" to view available hotels.
+
+Q: Can I search hotels by city?
+A: Yes! You can find hotels by entering a city name like Kandy, Colombo, or Nuwara Eliya in the search bar.
+
+Viewing Hotel Details
+Q: How can I view more information about a hotel?
+A: Click on the hotel’s listing to open the Hotel Details Page. There you’ll see a full description, a gallery of hotel images, available room categories, prices, and amenities.
+
+Checking Room Availability
+Q: How do I check room availability?
+A: First, select a hotel from the search results. On the Hotel Details Page, select your check-in and check-out dates under the "Check Availability" section. The system will validate your dates and show the available rooms.
+
+Q: What happens if no rooms are available?
+A: If no rooms are available for your selected dates, the system will inform you immediately, and you can either select different dates or another hotel.
+
+Booking a Room
+Q: How do I book a room?
+A: After checking availability, select one or more rooms and click the "Book Now" button. Complete the booking form with your personal details and click "Confirm Booking" to finalize your reservation.
+
+Q: What information do I need to provide during booking?
+A: You must enter your first name, last name (letters only), a valid email address, a 10-digit phone number, and optionally any special requests.
+
+Q: Can I book multiple rooms at once?
+A: Yes, you can select and book multiple rooms at the same time for your chosen dates.
+
+Payment Options
+Q: How can I pay for my booking?
+A: You can choose to pay online via our secure portal during booking or pay directly at the hotel during check-in using cash or major credit cards.
+ 
+ Cancellation and Modifications
+Q: How can I cancel my booking?
+A: To cancel, contact our customer support team via the provided phone number or email address. Cancellations made at least 48 hours before check-in are free or cancel via your dashboard.
+
+Q: Is there a cancellation fee?
+A: There is no fee if you cancel 48 hours before your check-in date. Cancellations within 48 hours may be subject to hotel policies.
+
+Q: Can I modify my booking after confirmation?
+A: Yes, you can contact customer support to request changes to your booking before the check-in date.
+
+Location and Hotels
+Q: What locations do you offer hotels in?
+A: We offer hotels in Kandy, Colombo, Nuwara Eliya, and other beautiful cities across Sri Lanka.
+
+Q: Can I search for hotels near a specific landmark?
+A: Currently, you can search by city. For specific landmarks or recommendations, you can contact customer support.
+
+ Special Features and Policies
+Q: How do I make special requests for my stay?
+A: During the booking process, there is a field for "Special Requests" where you can mention any needs like late check-in, room preferences, etc.
+
+Q: How is my information protected?
+A: We use secure encryption to protect your personal and booking information. Your privacy and security are very important to us.
+
+Q: Can I book a room for someone else?
+A: Yes, simply enter the guest’s details during the booking process.
+
+ Customer Support
+Q: How can I contact customer support?
+A: You can reach our friendly support team via the phone number or email address provided on the website. We're happy to assist you!
+
+ Closing
+Q: Thank you!
+A: You're welcome! Thank you for choosing The Pearl Hotel Booking website. We wish you a wonderful journey and a memorable stay in Sri Lanka! 🌴✨
+
+Q: Goodbye!
+A: Goodbye and have a lovely day! 🌟
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//dialogflow-key.json
+// {
+//   "type": "service_account",
+//   "project_id": "pearlhotelbot-ndrp",
+//   "private_key_id": "eefd3dcd3acceded12da37ff7f2864935d69ea8c",
+//   "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCx0dJl8tAzTaLj\nrKzEKbhrXgysIVlK58iM52O9D4D1bEXF5JG6/+CmBCwoLDUSC0AkB9b0hRA5p8XH\nIdc1Y37gX+ExitXRrr5ABlat7FR6y9yM7/jsv+EB0zEqlqZxH56Bg2DAb3fzVC4d\nYR/JhPzzJ0pgo5bX4aovmk7Xdn2nWfD7tH3cbcmuVMUQ81MuaCrd7ebvIQy1lUgG\n/KNqQnq1mdDE/Dih3wUXCDuinttDvcSaEPdzvbXbtAtauJ2KP2rsxHpt0Ya9YvAf\nfwEaIKuSIvq456sN0szRQt44e1sD+Dv1RduOBVOLexLmIE+Q6Vmp3ZNU3geVf9x7\n6CJ4ve91AgMBAAECggEAHtze0myEJ99h9fe2rb5bAKGce/S20YostA4GMN6DwLUH\n4CrFg2odZNslCdzwYh8bRRWqQJrmv8cHjAIq3tyTvSBPDuD8rw3P/f9LpJi36e8/\nqqOM9hRwmnc8GZr3rPsysOJrVMMUE+LotRcyI/El0RMg9Oh3yiTj+6qh5AIwGW83\n2z+J1sLiITyFcy6TTmRTOIkJfbKDm8G1cJMc8TkRxV0cdnchuQyCGJPDyf7RYg+/\n5f/cpSwy66y1ICFzKMFt6tYNo5l2yACmd9iwL1XUGil+7WvOheh5f4evKs01D25E\np/QULUec/IfvvD5Aq1HUBhWzTWVbWZKr4Mg4CRxeMQKBgQDmqHyQvW7tA/w3CwkX\ntiHANm729KGxvn4U5hNFAVdi3CTUA63RbjgHy71PfghuQ4t0tVWxPEh2cS+ccGYC\ngQpHyNBdcgjr5znv834MjcAhVrhUCJH6124k3uvLFCi9DPEf6IdF0mkVX/alrjS9\nIOwAQUqR5Hvin5APJXpIRhzSJQKBgQDFWzGOGvTTpil6s+h/5me5EuwhWIKwypPw\nvDI0EvqcdjyBvzSYhQMKkhryw9wuIgxViXD+4hRURr8tqyE6AJ0pZCFLZ4GXAXO0\nT1WpVqNclaQSuZz4wARx7qJAaEm69Icgl0wcYjz2oDZrpnVpc9JD2veWYae+hrkQ\nIXy6LmOfEQKBgCTzivkZD+Myhz4+K1e8Gs4TKlWvvROfg81PSnj8jQZOZCv+5uKt\nOJavIgXRGAKqGXY58p9xG961pT33l7ABAieb2R2PPjSkl1iEdoYGU2hD30W/FbvM\ntV18xOOEuD4JC7vj4X/jBGijNf022kYONyCXVR3oL5yPmWGDzII1kTptAoGAOsp+\nyaloE4ClTKM5eJhnf6+OXiSi0g2W4pj9j5uzwlZKkhAml+TP0h9SHc2Q0sFb0UNf\nQN6SVcS5gN5AyKmUJ9dnP7I23YgWMrmLeCWSBquhM97NTyDMcjA3b15h0Gq1slS/\n3Ji7NnDlpU3yHhbdpU8egFLZCJ3TlWWUZVYaYTECgYBjrikg+svZIXoa7s1vQGkf\n2yTqQVOP9W9vHWx1jFvNEH6XbHT0uj6yZhP+YYJggPwqd78xb7Aj4k20x8aj/M+g\nR6OMoKVLZOPY8TTxVdE9PnHgI7ofbS9KJ3gxsU06KuHTd3EiXoweZgltsBOe/rvy\n9iDaSD0nIXrZv+wIcj0hog==\n-----END PRIVATE KEY-----\n",
+//   "client_email": "dialogflow@pearlhotelbot-ndrp.iam.gserviceaccount.com",
+//   "client_id": "101645219156769040129",
+//   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+//   "token_uri": "https://oauth2.googleapis.com/token",
+//   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+//   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow%40pearlhotelbot-ndrp.iam.gserviceaccount.com",
+//   "universe_domain": "googleapis.com"
+// }
+

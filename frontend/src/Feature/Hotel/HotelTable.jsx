@@ -19,45 +19,42 @@ const HotelTable = ({ hotels, fetchHotels, onEdit }) => {
 
   return (
     <div className="mt-6 overflow-x-auto">
-      <table className="min-w-full border-collapse table-auto rounded-lg shadow-lg bg-white">
+      <table className="min-w-full divide-y divide-gray-200 rounded-lg shadow-md bg-white">
         <thead className="bg-gray-300 text-gray-800 text-sm font-semibold">
           <tr>
-            <th className="border-b px-4 py-3 text-left w-[20%]">Hotel ID</th>
-            <th className="border-b px-4 py-3 text-left w-[15%]">Name</th>
-            <th className="border-b px-4 py-3 text-left w-[15%]">Location</th>
-            <th className="border-b px-4 py-3 text-left w-[10%]">Price</th>
-            <th className="border-b px-4 py-3 text-left w-[12%]">Availability</th>
-            <th className="border-b px-4 py-3 text-left w-[10%]">Rating</th>
-            <th className="border-b px-4 py-3 text-center w-[8%]">Actions</th>
+            <th className="px-4 py-3 text-left">Hotel ID</th>
+            <th className="px-4 py-3 text-left">Name</th>
+            <th className="px-4 py-3 text-left">Location</th>
+            <th className="px-4 py-3 text-left">Price</th>
+            <th className="px-4 py-3 text-left">Availability</th>
+            <th className="px-4 py-3 text-left">Rating</th>
+            <th className="px-4 py-3 text-center">Actions</th>
           </tr>
         </thead>
-        <tbody className="text-sm text-gray-700">
+        <tbody className="bg-white divide-y divide-gray-200 text-xs md:text-sm">
           {hotels.map((hotel) => (
             <tr key={hotel._id} className="hover:bg-gray-50">
-              <td className="border-b px-4 py-3 align-middle">{hotel.hotelId}</td>
-              <td className="border-b px-4 py-3 align-middle">{hotel.name}</td>
-              <td className="border-b px-4 py-3 align-middle">{hotel.location}</td>
-              <td className="border-b px-4 py-3 align-middle">Rs {hotel.price}</td>
-              <td className="border-b px-4 py-3 align-middle">
-                <span
-                  className={`px-3 py-1 text-xs font-medium rounded-full ${hotel.availabilityStatus ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-                    }`}
-                >
+              <td className="px-4 py-3 whitespace-nowrap">{hotel.hotelId}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{hotel.name}</td>
+              <td className="px-4 py-3 whitespace-nowrap">{hotel.location}</td>
+              <td className="px-4 py-3 whitespace-nowrap">LKR {hotel.price}</td>
+              <td className="px-4 py-3">
+                <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${hotel.availabilityStatus ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                   {hotel.availabilityStatus ? 'Available' : 'Booked'}
                 </span>
               </td>
-              <td className="border-b px-4 py-3 align-middle">{hotel.rating}</td>
-              <td className="border-b px-4 py-3 align-middle text-center">
+              <td className="px-4 py-3 whitespace-nowrap">{hotel.rating}</td>
+              <td className="px-4 py-3 text-center">
                 <div className="flex justify-center items-center gap-2">
                   <button
-                    onClick={() => onEdit(hotel)}  
-                    className="p-2 bg-blue-200 hover:bg-blue-300 rounded-full text-blue-500"
+                    onClick={() => onEdit(hotel)}
+                    className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                   >
                     <Edit size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(hotel._id)}
-                    className="p-2 bg-red-200 hover:bg-red-300 rounded-full text-red-500"
+                    className="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
                   >
                     <Trash size={16} />
                   </button>

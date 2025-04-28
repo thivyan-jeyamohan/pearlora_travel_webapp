@@ -26,7 +26,7 @@ export const generateEmailContent = (
       <li><strong>Room Number:</strong> ${roomNumber}</li>
       <li><strong>Check-In Date:</strong> ${checkInDate}</li>
       <li><strong>Check-Out Date:</strong> ${checkOutDate}</li>
-      <li><strong>Total Price:</strong> Rs ${totalPrice}</li>
+      <li><strong>Total Price:</strong> LKR ${totalPrice}</li>
     </ul>
 
     <p style="font-family: Arial, sans-serif;">

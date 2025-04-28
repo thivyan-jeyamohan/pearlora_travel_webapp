@@ -1,9 +1,10 @@
+// HotelDetail.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import API from './services/api.js'; 
+import API from './services/api.js';
 import moment from 'moment-timezone';
 import Footer from '../../components/Footer';
-import HotelInfo from './HotelInfo'; 
+import HotelInfo from './HotelInfo';
 import HotelCheck from './HotelCheck';
 
 const HotelDetail = () => {
@@ -19,14 +20,13 @@ const HotelDetail = () => {
     const [checkInDateError, setCheckInDateError] = useState('');
     const [checkOutDateError, setCheckOutDateError] = useState('');
 
-    //Date Constraints
     const minCheckInDate = moment().format('YYYY-MM-DD');
     const minCheckOutDate = checkInDate ? moment(checkInDate).add(1, 'day').format('YYYY-MM-DD') : '';
 
     useEffect(() => {
         const fetchHotel = async () => {
             setIsHotelLoading(true);
-            setHotel(null); 
+            setHotel(null);
             try {
                 const { data } = await API.get(`/hotels/${hotelId}`);
                 setHotel(data);
@@ -38,14 +38,13 @@ const HotelDetail = () => {
             }
         };
         fetchHotel();
-    }, [hotelId]); 
+    }, [hotelId]);
 
-    //Date Validation 
     useEffect(() => {
         if (!checkInDate) {
             setCheckInDateError("");
-            setCheckOutDate(""); 
-            setAvailableRooms([]); 
+            setCheckOutDate("");
+            setAvailableRooms([]);
             setAvailabilityMessage('');
             setSelectedRooms([]);
             return;
@@ -61,23 +60,23 @@ const HotelDetail = () => {
                 setCheckOutDateError("Check-out date must be after check-in date.");
                 setAvailableRooms([]);
                 setAvailabilityMessage('');
-                setSelectedRooms([]); 
+                setSelectedRooms([]);
             } else {
-                 setCheckOutDateError(""); 
+                 setCheckOutDateError("");
             }
         }
          setAvailableRooms([]);
          setAvailabilityMessage('');
          setSelectedRooms([]);
 
-    }, [checkInDate, minCheckInDate, checkOutDate]); 
+    }, [checkInDate, minCheckInDate, checkOutDate]);
 
     useEffect(() => {
         if (!checkOutDate) {
             setCheckOutDateError("");
-            setAvailableRooms([]); 
+            setAvailableRooms([]);
             setAvailabilityMessage('');
-            setSelectedRooms([]); 
+            setSelectedRooms([]);
             return;
         }
 
@@ -97,9 +96,8 @@ const HotelDetail = () => {
             setCheckOutDateError("");
         }
 
-    }, [checkOutDate, checkInDate, checkInDateError]); 
+    }, [checkOutDate, checkInDate, checkInDateError]);
 
-    //Check Room Availability
     const checkRoomAvailability = useCallback(async () => {
         if (!hotelId || !checkInDate || !checkOutDate || checkInDateError || checkOutDateError || !hotel) {
              setAvailabilityMessage("Please select valid check-in and check-out dates.");
@@ -107,8 +105,8 @@ const HotelDetail = () => {
         }
         setIsLoading(true);
         setAvailabilityMessage('');
-        setAvailableRooms([]); 
-        setSelectedRooms([]); 
+        setAvailableRooms([]);
+        setSelectedRooms([]);
         try {
             const response = await API.post('/rooms/check-availability', {
                 hotelId: hotelId,
@@ -119,7 +117,7 @@ const HotelDetail = () => {
             if (response.data && response.data.availableRooms) {
                 setAvailableRooms(response.data.availableRooms);
                 if (response.data.availableRooms.length > 0) {
-                    setAvailabilityMessage(`${response.data.availableRooms.length} room(s) available! Select rooms below.`);
+                    setAvailabilityMessage(`${response.data.availableRooms.length} room type(s) available! Select rooms below.`);
                 } else {
                     setAvailabilityMessage("No rooms available for the selected dates.");
                 }
@@ -137,8 +135,6 @@ const HotelDetail = () => {
         }
     }, [hotelId, checkInDate, checkOutDate, checkInDateError, checkOutDateError, hotel]);
 
-
-    //Handle Room Selection
     const handleRoomToggle = (roomId) => {
         setSelectedRooms(prev => {
             return prev.includes(roomId)
@@ -147,38 +143,47 @@ const HotelDetail = () => {
         });
     };
 
-    //Handle Button Click
     const handleCheckAvailabilityClick = () => {
         checkRoomAvailability();
     };
 
 
     return (
-        <div className="font-sans bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen font-['Inter'] flex flex-col mt-20"> 
-            <div className="container mx-auto px-4 py-8 flex-grow"> 
+        <div className="font-sans bg-gradient-to-br from-purple-400 via-blue-300 to-purple-200 min-h-screen flex flex-col pt-16 md:pt-20">
+            <div className="container mx-auto px-4 sm:px-6 md:px-6 lg:px-16 xl:px-20 py-8 flex-grow">
                 {isHotelLoading ? (
-                    <div className="text-center text-gray-600 py-10">Loading hotel details...</div>
+                    <div className="flex justify-center items-center h-64">
+                        <div className="text-center text-gray-600 text-xl">Loading hotel details...</div>
+                    </div>
                 ) : hotel ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ml-14 mr-44 "> 
-                        {/* Hotel Info  */}
-                        <div className="md:col-span-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 xl:gap-10">
+                        <div className="lg:col-span-3">
                              <HotelInfo hotel={hotel} />
                         </div>
-
-                        {/* Hotel Check form*/}
-                        <div className="md:col-span-1">
-                            <HotelCheck
-                                hotelId={hotelId}  checkInDate={checkInDate}   setCheckInDate={setCheckInDate} 
-                                checkOutDate={checkOutDate}  setCheckOutDate={setCheckOutDate}  isLoading={isLoading}
-                                handleCheckAvailability={handleCheckAvailabilityClick}  availabilityMessage={availabilityMessage}
-                                availableRooms={availableRooms}  selectedRooms={selectedRooms}  handleRoomToggle={handleRoomToggle}
-                                checkInDateError={checkInDateError} checkOutDateError={checkOutDateError} minCheckInDate={minCheckInDate} 
-                                minCheckOutDate={minCheckOutDate}
-                            />
+                        <div className="lg:col-span-2">
+                           <div className="sticky top-24">
+                                <HotelCheck
+                                    hotelId={hotelId}
+                                    checkInDate={checkInDate}
+                                    setCheckInDate={setCheckInDate}
+                                    checkOutDate={checkOutDate}
+                                    setCheckOutDate={setCheckOutDate}
+                                    isLoading={isLoading}
+                                    handleCheckAvailability={handleCheckAvailabilityClick}
+                                    availabilityMessage={availabilityMessage}
+                                    availableRooms={availableRooms}
+                                    selectedRooms={selectedRooms}
+                                    handleRoomToggle={handleRoomToggle}
+                                    checkInDateError={checkInDateError}
+                                    checkOutDateError={checkOutDateError}
+                                    minCheckInDate={minCheckInDate}
+                                    minCheckOutDate={minCheckOutDate}
+                                />
+                           </div>
                         </div>
                     </div>
                 ) : (
-                    <div className="text-center text-red-600 py-10">Could not load hotel details. Please try again later.</div>
+                    <div className="text-center text-red-600 text-xl py-10">Could not load hotel details. Please try again later.</div>
                 )}
             </div>
             <Footer />

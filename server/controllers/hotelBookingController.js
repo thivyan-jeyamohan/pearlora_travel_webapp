@@ -16,8 +16,9 @@ export const bookRoom = async (req, res) => {
 
         const sriLankaTimezone = 'Asia/Colombo';
 
-        const checkIn = moment.tz(checkInDate,sriLankaTimezone).toDate();
-        const checkOut = moment.tz(checkOutDate,sriLankaTimezone).toDate();
+        const checkIn = moment.tz(checkInDate, sriLankaTimezone).set({ hour: 14, minute: 0, second: 0, millisecond: 0 }).toDate();
+        const checkOut = moment.tz(checkOutDate, sriLankaTimezone).set({ hour: 12, minute: 0, second: 0, millisecond: 0 }).toDate();
+
 
         const rooms = await Room.find({ _id: { $in: roomIds } });
         if (rooms.length !== roomIds.length) {
@@ -86,8 +87,8 @@ export const bookRoom = async (req, res) => {
             lastName,
             hotel.name,
             roomNumbers,
-            moment(checkIn).tz(sriLankaTimezone).format('YYYY-MM-DD'),
-            moment(checkOut).tz(sriLankaTimezone).format('YYYY-MM-DD'),
+            moment(checkIn).tz(sriLankaTimezone).format('YYYY-MM-DD [at] hh:mm A'),
+            moment(checkOut).tz(sriLankaTimezone).format('YYYY-MM-DD [at] hh:mm A'),
             totalPrice,
             placeholderBooking.bookingId
         );

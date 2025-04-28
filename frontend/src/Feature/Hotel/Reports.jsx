@@ -152,7 +152,7 @@ const Reports = () => {
             moment(item.checkInDate).format("YYYY-MM-DD"),
             moment(item.checkOutDate).format("YYYY-MM-DD"),
             item.daysStayed,
-            `Rs ${item.totalPrice}`
+            `LKR ${item.totalPrice}`
             ]);
     
             // Draw Table
