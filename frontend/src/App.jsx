@@ -16,6 +16,7 @@ import TransportDashboard from "./Feature/Transport/Dashboard/Dashboard";
 import SeatBook from "./Feature/Transport/Dashboard/SeatBook";
 import UserDashboard from "./Pages/User/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AboutUsSection from "./components/AboutUs"
 
 function App() {
   const { isAuthenticated } = useAuth(); // Access the authentication state
@@ -46,6 +47,7 @@ function App() {
         <Route path="/Financial" element={<Financial />} />
         <Route path="/hotel" element={<Hotel />} />
         <Route path="/express-ride" element={<ExpressRide />} />
+        <Route path="/about-us" element={<AboutUsSection />} />
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />

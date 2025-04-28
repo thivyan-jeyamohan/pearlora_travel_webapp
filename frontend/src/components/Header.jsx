@@ -30,7 +30,7 @@ function Header() {
 
           <SimpleDropdown />
 
-          <Link to="/destination" className="hover:text-gray-700 font-poppins">About Us</Link>   
+          <Link to="/about-us" className="hover:text-gray-700 font-poppins">About Us</Link>   
         </div>
 
         {/* Auth Section */}

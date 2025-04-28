@@ -18,9 +18,11 @@ const vehicleImages = {
   AirTaxi: AirtaxiImg,
 };
 
+//google map api
 const GOOGLE_MAPS_API_KEY = 'AIzaSyCH4lsu_OdnUIyGdYX-yz5qQIZLS7KvFdI';
 const LIBRARIES = ['places'];
 
+//set values
 const BasicRide = () => {
   const [pickupLocation, setPickupLocation] = useState('');
   const [passengerCount, setPassengerCount] = useState(1);
@@ -32,29 +34,26 @@ const BasicRide = () => {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [bookingData, setBookingData] = useState(null);
   const [qrValue, setQrValue] = useState('');
-
   const [vehiclePrices, setVehiclePrices] = useState({});
 
-
+  //get vehicle price from vehicles db
   useEffect(() => {
     const fetchVehiclePrices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/vehicles');
         const pricesMap = {};
         response.data.forEach(vehicle => {
-          pricesMap[vehicle.vehicleName] = vehicle.price; // Adjust key if different
+          pricesMap[vehicle.vehicleName] = vehicle.price; 
         });
         setVehiclePrices(pricesMap);
       } catch (error) {
         console.error('Failed to fetch vehicle prices:', error);
       }
     };
-  
     fetchVehiclePrices();
   }, []);
 
-
-
+  //place select
   const handlePlaceSelect = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
@@ -64,8 +63,10 @@ const BasicRide = () => {
     }
   };
 
+  //email validation
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  // vehicle restriction by persons count
   const isVehicleDisabled = (vehicle) => {
     if (passengerCount >= 8) return ['Bike', 'ThreeWheeler', 'Car', 'Van', 'AirTaxi'].includes(vehicle);
     if (passengerCount >= 6) return ['Bike', 'ThreeWheeler', 'Car', 'AirTaxi'].includes(vehicle);
