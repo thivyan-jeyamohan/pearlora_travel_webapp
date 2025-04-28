@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable"; // Import the jsPDF AutoTable plugin
-import logo from "../../../assets/logo.png"; // Import the logo image
+import "jspdf-autotable";
+import logo from "../../../assets/logo.png"; 
 
 const RAirtaxitravelList = ({ filters }) => {
   const [travels, setTravels] = useState([]);
@@ -30,6 +30,7 @@ const RAirtaxitravelList = ({ filters }) => {
 
   // Generate PDF 
   const generatePDF = async () => {
+    console.log(jsPDF);
     const doc = new jsPDF();
 
     doc.setFont("helvetica", "bold");
