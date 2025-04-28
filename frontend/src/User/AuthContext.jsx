@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -8,33 +9,45 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-
-    if (token && userData) {
-      setUser(JSON.parse(userData));
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser({
+          id: decoded.id,
+          email: decoded.email,
+          name: decoded.name,
+          role: decoded.role,
+        });
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem("token");
+      }
     }
-
     setLoading(false);
   }, []);
 
   const login = (token, userData) => {
     localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setUser(userData);
+    const decoded = jwtDecode(token);
+    const user = {
+      id: decoded.id,
+      email: decoded.email,
+      name: userData.name,
+      role: decoded.role,
+    };
+    setUser(user);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
     setUser(null);
-    navigate("/");
   };
 
   const value = {
     user,
     login,
     logout,
-    isAuthenticated: !!user, // Ensure dynamic authentication state
+    isAuthenticated: !!user,
   };
 
   return (

@@ -1,6 +1,4 @@
-// authRoutes.js
 import express from "express";
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -9,17 +7,13 @@ import User from "./User.js";
 
 const router = express.Router();
 const SECRET_KEY = "your-secret-key"; // Change this in production!
-const SECRET_SIGNUP_KEY = "123p"; // Secret key for signup
 
 // Password validation regex
-const passwordRegex =
-  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-// User Signup
-router.post("/signup", registerUser); // Use controller directly
-router.post("/login", loginUser); // Use controller directly
+router.post("/signup", registerUser);
+router.post("/login", loginUser);
 
-// Forgot Password
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -29,14 +23,12 @@ router.post("/forgot-password", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Generate reset token
     const resetToken = crypto.randomBytes(20).toString("hex");
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
     await user.save();
 
-    // In a real app, you would send an email here with the reset link
     res.json({
       message: "Password reset link sent",
       resetToken, // For testing purposes only
@@ -46,7 +38,6 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// Reset Password
 router.post("/reset-password", async (req, res) => {
   try {
     const { token, newPassword, confirmPassword } = req.body;

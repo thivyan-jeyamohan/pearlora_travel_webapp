@@ -1,11 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../User/User.js";
 
-// Middleware to protect routes
 const protect = async (req, res, next) => {
   let token;
 
-  // 1. Get token from different sources
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -15,7 +13,6 @@ const protect = async (req, res, next) => {
     token = req.cookies.token;
   }
 
-  // 2. Check if token exists
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -24,10 +21,7 @@ const protect = async (req, res, next) => {
   }
 
   try {
-    // 3. Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // 4. Get user from database
     req.user = await User.findById(decoded.id).select("-password");
 
     if (!req.user) {
@@ -47,7 +41,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Middleware to authorize specific roles
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

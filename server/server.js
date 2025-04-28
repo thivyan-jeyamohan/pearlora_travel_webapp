@@ -15,13 +15,11 @@ import flightBookingRoutes from './Transport/User/FlightBooking/FlightBookingRou
 // Load env variables
 dotenv.config();
 
-
 // Initialize app
 const app = express();
 
 // Connect to MongoDB
 connectDB();
-
 
 // Middleware
 app.use((req, res, next) => {
@@ -31,7 +29,7 @@ app.use((req, res, next) => {
   });
   req.on("end", () => {
     console.log("Raw request body:", rawBody);
-    req.rawBody = rawBody; 
+    req.rawBody = rawBody;
   });
   next();
 });
@@ -39,17 +37,14 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/rides", rideBookingRoutes);
 app.use("/api/airtaxitravels", airTaxiTravelRoutes);
 app.use("/api/airseats", airSeatRoutes);
 app.use("/api/users", userRoutes);
-
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/flightbooking', flightBookingRoutes);
-
 
 // Error handler
 app.use((err, req, res, next) => {

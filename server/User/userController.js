@@ -11,16 +11,10 @@ const sendError = (res, status, message) => {
   });
 };
 
-// Add this to your existing userController.js
 export const deleteUser = async (req, res) => {
   try {
-    // 1. Find and delete user
     await User.findByIdAndDelete(req.user.id);
-
-    // 2. Clear the token cookie
     res.clearCookie("token");
-
-    // 3. Send success response
     res.status(200).json({
       success: true,
       message: "User account deleted successfully",
@@ -50,27 +44,20 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// Add this function to your existing userController.js
 export const updateUserProfile = async (req, res) => {
   try {
     const { name, email } = req.body;
-
-    // 1. Validate inputs
     if (!name || !email) {
       return res.status(400).json({
         success: false,
         error: "Name and email are required",
       });
     }
-
-    // 2. Find and update user
     const user = await User.findByIdAndUpdate(
       req.user.id,
       { name, email },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     ).select("-password");
-
-    // 3. Return updated user
     res.status(200).json({
       success: true,
       user,
@@ -84,13 +71,11 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
-// 📌 Register User
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, secretKey } = req.body;
+    const { name, email, password, role } = req.body;
 
-    // Validate inputs
-    if (!name || !email || !password || !secretKey) {
+    if (!name || !email || !password || !role) {
       return sendError(res, 400, "All fields are required");
     }
 
@@ -98,18 +83,25 @@ export const registerUser = async (req, res) => {
       return sendError(res, 400, "Invalid email format");
     }
 
-    if (secretKey !== process.env.SECRET_SIGNUP_KEY) {
-      return sendError(res, 403, "Invalid secret key");
-    }
-
-    const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return sendError(
         res,
         400,
-        "Password must be at least 8 characters with one letter, one number, and one special character",
+        "Password must be at least 8 characters with one letter, one number, and one special character"
       );
+    }
+
+    const validRoles = [
+      "user",
+      "transport-management",
+      "hotel-management",
+      "event-management",
+      "financial-management",
+      "destination-management",
+    ];
+    if (!validRoles.includes(role)) {
+      return sendError(res, 400, "Invalid role");
     }
 
     const existingUser = await User.findOne({ email });
@@ -117,18 +109,20 @@ export const registerUser = async (req, res) => {
       return sendError(res, 409, "User already exists");
     }
 
-    // Remove explicit hashing; let the model handle it
     const newUser = new User({
       name,
       email,
-      password, // Pass plain-text password
+      password,
+      role,
     });
 
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE || "1h",
-    });
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRE || "1h" }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -144,6 +138,7 @@ export const registerUser = async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -152,36 +147,30 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// 📌 Login User
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Login attempt with:", { email, password });
 
     if (!email || !password) {
       return sendError(res, 400, "Email and password are required");
     }
 
     const user = await User.findOne({ email }).select("+password");
-    console.log(
-      "Found user:",
-      user
-        ? { email: user.email, passwordHash: user.password }
-        : "No user found",
-    );
     if (!user) {
       return sendError(res, 401, "Invalid credentials");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log("Password match:", isMatch);
     if (!isMatch) {
       return sendError(res, 401, "Invalid credentials");
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE || "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRE || "1h" }
+    );
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -193,7 +182,7 @@ export const loginUser = async (req, res) => {
     return res.status(200).json({
       success: true,
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -201,7 +190,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// 📌 Logout User
 export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("token");
