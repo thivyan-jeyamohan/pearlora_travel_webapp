@@ -208,156 +208,160 @@ const BookingForm = () => {
     };
 
     return (
-        <div className="font-sans bg-gradient-to-br from-blue-500 via-purple-300 to-blue-300 min-h-screen flex flex-col font-['Inter'] pt-16">
-          <div className="container mx-auto px-4 py-6 md:py-8 flex-grow flex flex-col items-center justify-center">
+      <div className="font-sans bg-gradient-to-br from-blue-500 via-purple-300 to-blue-300 min-h-screen flex flex-col font-['Inter'] pt-16">
+        <div className="container mx-auto px-4 py-6 md:py-8 flex-grow flex flex-col items-center justify-center">
+          
+          {/* Main Card */}
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden">
+            
+            {/* Left Side - Form */}
+            <div className="w-full md:w-7/12 p-5 sm:p-6 md:p-8 flex flex-col">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-5 text-center">
+                Enter Your Details
+              </h2>
     
-           
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl flex flex-col md:flex-row overflow-hidden max-h-[calc(100vh-140px)]">
-    
-              {/* Left Side  */}
-              <div className="w-full md:w-7/12 p-5 sm:p-6 md:p-8 flex flex-col overflow-y-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-5 text-center">Enter Your Details</h2>
-    
-                {/* Selected Rooms */}
-                {selectedRoomDetails && selectedRoomDetails.length > 0 && (
-                  <div className="mb-6 pb-4">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-3">Selected Rooms:</h3>
-                    <div className="flex overflow-x-auto space-x-4 pb-2 pr-2 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-500">
-                      {selectedRoomDetails.map(room => (
-                        <div key={room._id} className="flex-none w-40 sm:w-48 bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
-                          <img
-                            src={room.photo || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Room'}
-                            alt={`Room ${room.roomNumber}`}
-                            className="w-full h-24 object-cover rounded-md mb-2"
-                            onError={(e) => (e.target.src = 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=No+Image')}
-                          />
-                          <p className="text-sm font-medium text-gray-800">
-                            {room.roomNumber} ({room.roomCategory || 'N/A'})
-                          </p>
-                          <p className="text-xs text-gray-600">
-                            LKR {typeof room.price === 'number' ? room.price.toLocaleString() : 'N/A'} / night
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-center mt-4">
-                      <span className="font-bold text-gray-800">Total Price: </span>
-                      <span className="text-purple-600 font-bold">
-                        LKR {typeof totalPrice === 'number' ? totalPrice.toLocaleString() : '0'}
-                      </span>
-                    </p>
-                    <div className="w-full h-1 bg-gray-500 mt-3"></div>
+              {/* Selected Rooms */}
+              {selectedRoomDetails && selectedRoomDetails.length > 0 ? (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-700 mb-3">Selected Rooms:</h3>
+                  <div className="flex overflow-x-auto space-x-4 pb-2 pr-2 scrollbar-thin scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-500">
+                    {selectedRoomDetails.map(room => (
+                      <div key={room._id} className="flex-none w-40 sm:w-48 bg-gray-50 p-3 rounded-lg shadow-sm border border-gray-200">
+                        <img
+                          src={room.photo || 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=Room'}
+                          alt={`Room ${room.roomNumber}`}
+                          className="w-full h-24 object-cover rounded-md mb-2"
+                          onError={(e) => (e.target.src = 'https://via.placeholder.com/150/CCCCCC/FFFFFF?text=No+Image')}
+                        />
+                        <p className="text-sm font-medium text-gray-800">
+                          {room.roomNumber} ({room.roomCategory || 'N/A'})
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          LKR {typeof room.price === 'number' ? room.price.toLocaleString() : 'N/A'} / night
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                )}
+                  <p className="text-center mt-4">
+                    <span className="font-bold text-gray-800">Total Price: </span>
+                    <span className="text-purple-600 font-bold">
+                      LKR {typeof totalPrice === 'number' ? totalPrice.toLocaleString() : '0'}
+                    </span>
+                  </p>
+                  <div className="w-full h-1 bg-gray-500 mt-3"></div>
+                </div>
+              ) : (
+                <p className="text-center text-gray-500 mb-4">Loading room details or no rooms selected...</p>
+              )}
     
-                
-                {selectedRoomDetails.length === 0 && (
-                  <p className="text-center text-gray-500 mb-4">Loading room details or no rooms selected...</p>
-                )}
-    
-                {/* Form Section */}
-                <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
-                      <input
-                        type="text"
-                        id="firstName"
-                        value={firstName}
-                        onChange={handleFirstNameChange}
-                        className={`shadow-sm appearance-none border ${firstNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                        required
-                      />
-                      {firstNameError && <p className="text-red-500 text-xs italic mt-1">{firstNameError}</p>}
-                    </div>
-                    <div className="flex-1">
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
-                      <input
-                        type="text"
-                        id="lastName"
-                        value={lastName}
-                        onChange={handleLastNameChange}
-                        className={`shadow-sm appearance-none border ${lastNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                        required
-                      />
-                      {lastNameError && <p className="text-red-500 text-xs italic mt-1">{lastNameError}</p>}
-                    </div>
-                  </div>
-    
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
-                      <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        className={`shadow-sm appearance-none border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                        required
-                      />
-                      {emailError && <p className="text-red-500 text-xs italic mt-1">{emailError}</p>}
-                    </div>
-                    <div className="flex-1">
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number:</label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        value={phone}
-                        onChange={handlePhoneChange}
-                        className={`shadow-sm appearance-none border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-                        required
-                      />
-                      {phoneError && <p className="text-red-500 text-xs italic mt-1">{phoneError}</p>}
-                    </div>
-                  </div>
-    
-                  <div>
-                    <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700 mb-1">Special Requests:</label>
-                    <textarea
-                      id="specialRequests"
-                      value={specialRequests}
-                      onChange={(e) => setSpecialRequests(e.target.value)}
-                      className="shadow-sm appearance-none border border-gray-300 rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      rows="3"
+              {/* Booking Form */}
+              <form onSubmit={handleBookingSubmit} className="flex flex-col gap-4">
+                {/* First Name & Last Name */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name:</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      value={firstName}
+                      onChange={handleFirstNameChange}
+                      className={`shadow-sm appearance-none border ${firstNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                      required
                     />
+                    {firstNameError && <p className="text-red-500 text-xs italic mt-1">{firstNameError}</p>}
                   </div>
-    
-                  <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
-                    <button
-                      type="button"
-                      onClick={handleCancelBooking}
-                      className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 w-full sm:w-auto"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full sm:w-auto"
-                    >
-                      Confirm Booking
-                    </button>
+                  <div className="flex-1">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name:</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      value={lastName}
+                      onChange={handleLastNameChange}
+                      className={`shadow-sm appearance-none border ${lastNameError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                      required
+                    />
+                    {lastNameError && <p className="text-red-500 text-xs italic mt-1">{lastNameError}</p>}
                   </div>
-                </form>
-              </div>
+                </div>
     
-              {/* Right Side (Image) */}
-              <div className="hidden md:block w-full md:w-5/12">
-                <div
-                  className="h-full w-full bg-cover bg-center rounded-r-lg"
-                  style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')`,
-                  }}
-                />
-              </div>
+                {/* Email & Phone */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      className={`shadow-sm appearance-none border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                      required
+                    />
+                    {emailError && <p className="text-red-500 text-xs italic mt-1">{emailError}</p>}
+                  </div>
+                  <div className="flex-1">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number:</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      className={`shadow-sm appearance-none border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                      required
+                    />
+                    {phoneError && <p className="text-red-500 text-xs italic mt-1">{phoneError}</p>}
+                  </div>
+                </div>
     
+                {/* Special Requests */}
+                <div>
+                  <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700 mb-1">Special Requests:</label>
+                  <textarea
+                    id="specialRequests"
+                    value={specialRequests}
+                    onChange={(e) => setSpecialRequests(e.target.value)}
+                    className="shadow-sm appearance-none border border-gray-300 rounded w-full p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    rows="3"
+                  />
+                </div>
+    
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
+                  <button
+                    type="button"
+                    onClick={handleCancelBooking}
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 w-full sm:w-auto"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 w-full sm:w-auto"
+                  >
+                    Confirm Booking
+                  </button>
+                </div>
+              </form>
+            </div>
+    
+            {/* Right Side - Image */}
+            <div className="hidden md:block w-full md:w-5/12">
+              <div
+                className="h-full w-full bg-cover bg-center rounded-r-lg"
+                style={{
+                  backgroundImage: `url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')`,
+                }}
+              />
             </div>
     
           </div>
     
-          {/* Footer */}
-          <Footer />
         </div>
+    
+        {/* Footer */}
+        <Footer />
+      </div>
     );
+    
     
 };
 
