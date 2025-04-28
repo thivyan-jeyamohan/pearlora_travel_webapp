@@ -8,161 +8,125 @@ const Report = () => {
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch bookings and destinations from API
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/bookings/');
-        const data = await response.json();
+        const [bookingsRes, destinationsRes] = await Promise.all([
+          fetch('http://localhost:5000/api/bookings/'),
+          fetch('http://localhost:5000/api/admin-destinations'),
+        ]);
 
-        if (response.ok) {
-          setBookings(data.data);
-          console.log('Bookings Data:', data.data);  // Log the bookings data
-        } else {
-          throw new Error(data.message || 'Failed to fetch bookings');
+        const bookingsData = await bookingsRes.json();
+        const destinationsData = await destinationsRes.json();
+
+        if (!bookingsRes.ok || !destinationsRes.ok) {
+          throw new Error('Failed to fetch data');
         }
+
+        setBookings(bookingsData.data);
+        setDestinations(destinationsData);
       } catch (err) {
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchDestinations = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/admin-destinations');
-        const data = await response.json();
-
-        if (response.ok) {
-          setDestinations(data);
-          console.log('Destinations Data:', data);  // Log the destinations data
-        } else {
-          throw new Error(data.message || 'Failed to fetch destinations');
-        }
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
-    fetchBookings();
-    fetchDestinations();
+    fetchData();
   }, []);
 
-  // Handle filtering
   const handleFilter = () => {
-    console.log('Filter Values:', destination, date);  // Log filter values
-  
     let filteredData = bookings;
-  
-    // Filter by destination if provided
+
     if (destination) {
-      filteredData = filteredData.filter((booking) => {
-        // Check if the booking.destination is a valid string before calling .toLowerCase() and .trim()
-        const cleanedDestination = (booking.destination && typeof booking.destination === 'string') 
-          ? booking.destination.toLowerCase().trim() 
-          : '';
-
-        const cleanedInput = destination.toLowerCase().trim();
-
-        console.log('Comparing:', cleanedDestination, cleanedInput);  // Log both for debugging
-
-        // Check if the cleaned destination matches the cleaned input
-        return cleanedDestination.includes(cleanedInput);
-      });
+      filteredData = filteredData.filter((booking) =>
+        booking.destination?.toLowerCase().includes(destination.toLowerCase())
+      );
     }
-  
-    // Filter by date if provided
+
     if (date) {
-      const filterDate = new Date(date);
-      console.log('Filter Date:', filterDate);  // Log the filter date
-  
-      filteredData = filteredData.filter((booking) => {
-        const bookingDate = new Date(booking.date);
-        console.log('Booking Date:', bookingDate);  // Log the booking date
-  
-        return bookingDate.toLocaleDateString() === filterDate.toLocaleDateString();
-      });
+      const selectedDate = new Date(date).toLocaleDateString();
+      filteredData = filteredData.filter((booking) => 
+        new Date(booking.date).toLocaleDateString() === selectedDate
+      );
     }
-  
-    console.log('Filtered Data:', filteredData);  // Log the filtered data
-  
+
     setFilteredBookings(filteredData);
   };
 
-  // Download PDF
   const downloadPDF = () => {
     const doc = new jsPDF();
 
-    // Add Title
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('Booking Report', 105, 20, { align: 'center' });
 
-    // Add Table headers with bold and color
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(255, 255, 255);
-    doc.setFillColor(56, 189, 248);  // Tailwind blue-500
-    doc.rect(14, 30, 190, 10, 'F'); // Header background
+    doc.setFillColor(59, 130, 246);
+    doc.rect(10, 30, 190, 10, 'F');
 
-    doc.setTextColor(255, 255, 255);
-    doc.text('Name', 14, 35);
-    doc.text('Email', 60, 35);
-    doc.text('Destination', 120, 35);
-    doc.text('Date', 170, 35);
-    doc.text('People', 210, 35);
-    doc.text('Price', 250, 35);
+    doc.text('Name', 15, 37);
+    doc.text('Destination', 60, 37);
+    doc.text('Date', 120, 37);
+    doc.text('People', 160, 37);
+    doc.text('Price', 180, 37);
 
-    // Add Table rows with alternating colors
-    let yPosition = 40; // Start adding data from this vertical position
-    let rowIndex = 0;
-
-    filteredBookings.forEach((booking) => {
-      // Alternate row colors for better readability
-      if (rowIndex % 2 === 0) {
-        doc.setFillColor(249, 250, 251); // Light gray (tailwind bg-gray-100)
+    let y = 45;
+    filteredBookings.forEach((booking, index) => {
+      doc.setTextColor(0, 0, 0);
+      if (index % 2 === 0) {
+        doc.setFillColor(240, 240, 240);
       } else {
-        doc.setFillColor(255, 255, 255); // White
+        doc.setFillColor(255, 255, 255);
       }
+      doc.rect(10, y - 5, 190, 8, 'F');
 
-      // Add row background color
-      doc.rect(14, yPosition, 190, 10, 'F');
+      doc.text(booking.name, 15, y);
+      doc.text(booking.destination, 60, y);
+      doc.text(new Date(booking.date).toLocaleDateString(), 120, y);
+      doc.text(booking.people.toString(), 160, y);
+      doc.text(`$${booking.price}`, 180, y);
 
-      // Add text for the row
-      doc.setTextColor(0, 0, 0); // Black text
-      doc.text(booking.name, 14, yPosition + 6);
-      doc.text(booking.email, 60, yPosition + 6);
-      doc.text(booking.destination, 120, yPosition + 6);
-      doc.text(new Date(booking.date).toLocaleDateString(), 170, yPosition + 6);
-      doc.text(booking.people.toString(), 210, yPosition + 6);
-      doc.text(`$${booking.price.toFixed(2)}`, 250, yPosition + 6);
-
-      yPosition += 10; // Move to the next line
-      rowIndex++;
+      y += 10;
     });
 
-    // Save the document as a PDF
-    doc.save('bookings_report.pdf');
+    doc.save('Booking_Report.pdf');
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="text-xl font-semibold text-gray-600">Loading...</div>
+      </div>
+    );
+  }
+
   if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-red-100">
+        <div className="text-xl font-semibold text-red-600">{error}</div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 p-8">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Booking Report</h1>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Booking Report</h1>
 
-        <form className="space-y-6">
-          {/* Destination Selection */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-600">Select Destination</label>
+            <label className="block text-gray-700 font-medium mb-2">Select Destination</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              className="mt-2 w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 p-3 rounded-md focus:ring-2 focus:ring-blue-400"
             >
-              <option value="">Select Destination</option>
+              <option value="">All Destinations</option>
               {destinations.map((dest) => (
                 <option key={dest._id} value={dest.name}>
                   {dest.name}
@@ -171,52 +135,62 @@ const Report = () => {
             </select>
           </div>
 
-          {/* Date Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-600">Select Date</label>
+            <label className="block text-gray-700 font-medium mb-2">Select Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="mt-2 w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 p-3 rounded-md focus:ring-2 focus:ring-blue-400"
             />
           </div>
+        </div>
 
-          {/* Buttons */}
-          <div className="flex justify-between items-center">
-            <button
-              type="button"
-              onClick={handleFilter}
-              className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300 mt-2"
-            >
-              Apply Filters
-            </button>
+        <div className="flex gap-4 mb-8">
+          <button
+            onClick={handleFilter}
+            className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md transition"
+          >
+            Apply Filters
+          </button>
+
+          {filteredBookings.length > 0 && (
             <button
               onClick={downloadPDF}
-              className="w-full py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-300 mt-2"
+              className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md transition"
             >
               Download PDF
             </button>
-          </div>
-        </form>
+          )}
+        </div>
 
-        {/* Display Bookings */}
-        {filteredBookings.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Booking Details</h3>
-            <div className="space-y-4">
-              {filteredBookings.map((booking) => (
-                <div key={booking._id} className="border-b py-4">
-                  <p className="text-gray-800"><strong>Name:</strong> {booking.name}</p>
-                  <p className="text-gray-600"><strong>Email:</strong> {booking.email}</p>
-                  <p className="text-gray-600"><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
-                  <p className="text-gray-600"><strong>People:</strong> {booking.people}</p>
-                  <p className="text-gray-600"><strong>Destination:</strong> {booking.destination}</p>
-                  <p className="text-gray-600"><strong>Price:</strong> ${booking.price}</p>
-                </div>
-              ))}
-            </div>
+        {filteredBookings.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border rounded-md">
+              <thead>
+                <tr className="bg-blue-500 text-white">
+                  <th className="py-3 px-4 text-left">Name</th>
+                  <th className="py-3 px-4 text-left">Destination</th>
+                  <th className="py-3 px-4 text-left">Date</th>
+                  <th className="py-3 px-4 text-left">People</th>
+                  <th className="py-3 px-4 text-left">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredBookings.map((booking) => (
+                  <tr key={booking._id} className="border-t hover:bg-gray-100">
+                    <td className="py-3 px-4">{booking.name}</td>
+                    <td className="py-3 px-4">{booking.destination}</td>
+                    <td className="py-3 px-4">{new Date(booking.date).toLocaleDateString()}</td>
+                    <td className="py-3 px-4">{booking.people}</td>
+                    <td className="py-3 px-4">${booking.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+        ) : (
+          <div className="text-center text-gray-500 mt-8">No bookings found for the selected filters.</div>
         )}
       </div>
     </div>

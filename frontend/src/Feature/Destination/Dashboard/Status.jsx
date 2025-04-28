@@ -4,7 +4,6 @@ const AdminDestination = () => {
   const [destinations, setDestinations] = useState([]);
   const [statusFilter, setStatusFilter] = useState("");
 
-  // Fetch destinations whenever the status filter changes
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
@@ -12,10 +11,8 @@ const AdminDestination = () => {
           ? `http://localhost:5000/api/admin-destinations?status=${statusFilter}`
           : `http://localhost:5000/api/admin-destinations`;
 
-        console.log("Fetching with URL:", url); // Debugging log
         const response = await fetch(url);
         const data = await response.json();
-        console.log("Fetched destinations:", data); // Debugging log
         setDestinations(data);
       } catch (error) {
         console.error("Error fetching destinations:", error);
@@ -23,9 +20,8 @@ const AdminDestination = () => {
     };
 
     fetchDestinations();
-  }, [statusFilter]); // This hook triggers when `statusFilter` changes
+  }, [statusFilter]);
 
-  // Toggle status button logic
   const handleToggleStatus = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/admin-destinations/toggle-status/${id}`, {
@@ -33,88 +29,89 @@ const AdminDestination = () => {
       });
 
       const result = await response.json();
-      alert(result.message); // Show the status update result
+      alert(result.message);
 
-      // After toggling, re-fetch the destinations (with or without filter)
       const updated = await fetch(statusFilter
         ? `http://localhost:5000/api/admin-destinations?status=${statusFilter}`
         : `http://localhost:5000/api/admin-destinations`);
       const data = await updated.json();
-      setDestinations(data); // Update the state with fetched destinations
+      setDestinations(data);
     } catch (error) {
       console.error("Error toggling status:", error);
     }
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">All Destinations</h2>
+    <div className="p-8 bg-gray-100 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-indigo-600">Manage Destinations</h2>
 
-      {/* Filter by Status */}
-      <div className="mb-4">
-        <label className="block mb-2 font-semibold text-gray-700">Filter by Status:</label>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="p-2 border rounded-md"
-        >
-          <option value="">All</option>
-          <option value="Published">Published</option>
-          <option value="Draft">Draft</option>
-        </select>
-      </div>
+        {/* Filter by Status */}
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <label className="text-lg font-semibold text-gray-700">Filter by Status:</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            <option value="">All</option>
+            <option value="Published">Published</option>
+            <option value="Draft">Draft</option>
+          </select>
+        </div>
 
-      {/* Destinations Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-4">Name</th>
-              <th className="p-4">Location</th>
-              <th className="p-4">Category</th>
-              <th className="p-4">Price</th>
-              <th className="p-4">Status</th>
-              <th className="p-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {destinations.length === 0 ? (
+        {/* Destinations Table */}
+        <div className="overflow-x-auto bg-white rounded-xl shadow-md">
+          <table className="min-w-full text-sm text-gray-700">
+            <thead className="bg-indigo-500 text-white">
               <tr>
-                <td className="p-4 text-center text-gray-500" colSpan="6">
-                  No destinations found.
-                </td>
+                <th className="p-4 text-left">Name</th>
+                <th className="p-4 text-left">Location</th>
+                <th className="p-4 text-left">Category</th>
+                <th className="p-4 text-left">Price</th>
+                <th className="p-4 text-left">Status</th>
+                <th className="p-4 text-center">Action</th>
               </tr>
-            ) : (
-              destinations.map((destination) => (
-                <tr key={destination._id} className="border-t">
-                  <td className="p-4">{destination.name}</td>
-                  <td className="p-4">{destination.location}</td>
-                  <td className="p-4">{destination.category}</td>
-                  <td className="p-4">${destination.price}</td>
-                  <td className="p-4">
-                    <span
-                      className={`inline-block px-2 py-1 text-xs rounded-full ${
-                        destination.status === "Published"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {destination.status}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => handleToggleStatus(destination._id)}
-                      className="px-3 py-1 bg-indigo-500 text-white text-sm rounded hover:bg-indigo-600"
-                    >
-                      Toggle Status
-                    </button>
+            </thead>
+            <tbody>
+              {destinations.length === 0 ? (
+                <tr>
+                  <td className="p-6 text-center text-gray-500" colSpan="6">
+                    No destinations found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                destinations.map((destination) => (
+                  <tr key={destination._id} className="hover:bg-gray-100 transition-colors">
+                    <td className="p-4">{destination.name}</td>
+                    <td className="p-4">{destination.location}</td>
+                    <td className="p-4">{destination.category}</td>
+                    <td className="p-4 font-semibold">${destination.price}</td>
+                    <td className="p-4">
+                      <span
+                        className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
+                          destination.status === "Published"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {destination.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-center">
+                      <button
+                        onClick={() => handleToggleStatus(destination._id)}
+                        className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-md shadow-md transition-all text-sm"
+                      >
+                        Toggle Status
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

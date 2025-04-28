@@ -24,51 +24,63 @@ const Dashboard = () => {
       case "gpsTracking":
         return <Status />;
       case "report":
-        return <Report className />; // Correct rendering for the Report component
+        return <Report />;
       default:
         return <AddDestination />;
     }
   };
+
+  const menuItems = [
+    { id: "add", icon: <FaPlus />, label: "Add Destination" },
+    { id: "edit", icon: <FaEdit />, label: "Edit Destination" },
+    { id: "remove", icon: <FaTrash />, label: "Remove Destination" },
+    { id: "bookingList", icon: <FaList />, label: "Booking List" },
+    { id: "gpsTracking", icon: <FaMapMarkerAlt />, label: "Status" },
+    { id: "report", icon: <FaFileAlt />, label: "Report Generate" },
+  ];
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <div 
-        className={`fixed h-full p-4 transition-all duration-300 shadow-lg ${isExpanded ? "w-64 bg-white" : "w-20 bg-white"}`} 
-        onMouseEnter={() => setIsExpanded(true)} 
+      <div
+        className={`fixed top-0 left-0 h-full p-4 transition-all duration-300 shadow-lg border-r border-gray-200 ${isExpanded ? "w-64" : "w-20"} bg-white`}
+        onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        <h2 className={`text-xl font-semibold text-center mb-6 transition-opacity duration-300 ${isExpanded ? "opacity-100" : "opacity-0"}`}>Admin Panel</h2>
-        <ul className="space-y-6">
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "add" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("add")}>
-            <FaPlus className="text-lg" />
-            {isExpanded && <span className="ml-4">Add Destination</span>}
-          </li>
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "edit" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("edit")}>
-            <FaEdit className="text-lg" />
-            {isExpanded && <span className="ml-4">Edit Destination</span>}
-          </li>
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "remove" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("remove")}>
-            <FaTrash className="text-lg" />
-            {isExpanded && <span className="ml-4">Remove Destination</span>}
-          </li>
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "bookingList" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("bookingList")}>
-            <FaList className="text-lg" />
-            {isExpanded && <span className="ml-4">Booking List</span>}
-          </li>
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "gpsTracking" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("gpsTracking")}>
-            <FaMapMarkerAlt className="text-lg" />
-            {isExpanded && <span className="ml-4">Status</span>}
-          </li>
-          <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "report" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("report")}>
-            <FaFileAlt className="text-lg" />
-            {isExpanded && <span className="ml-4">Report Generate</span>}
-          </li>
+        <h2
+          className={`text-2xl font-bold text-blue-600 text-center mb-8 transition-opacity duration-300 ${
+            isExpanded ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          Admin
+        </h2>
+
+        <ul className="space-y-4">
+          {menuItems.map((item) => (
+            <li
+              key={item.id}
+              onClick={() => setSelectedOption(item.id)}
+              className={`group flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-300 relative ${
+                selectedOption === item.id
+                  ? "bg-blue-100 text-blue-700"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {selectedOption === item.id && (
+                <span className="absolute left-0 top-0 h-full w-1 bg-blue-500 rounded-r-lg"></span>
+              )}
+              <div className="text-lg">{item.icon}</div>
+              {isExpanded && <span className="ml-4 font-medium">{item.label}</span>}
+            </li>
+          ))}
         </ul>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8 ml-20 md:ml-64">
-        <div className="bg-white p-8 rounded-lg shadow-lg">{renderComponent()}</div>
+      <div className={`flex-1 transition-all duration-300 p-6 ${isExpanded ? "ml-64" : "ml-20"}`}>
+        <div className="bg-white rounded-2xl shadow-xl p-8 min-h-[80vh] flex flex-col">
+          {renderComponent()}
+        </div>
       </div>
     </div>
   );
