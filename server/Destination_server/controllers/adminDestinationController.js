@@ -1,16 +1,19 @@
+const fs = require("fs");
+const path = require("path");
 const AdminDestination = require("../models/AdminDestination");
 const mongoose = require("mongoose");
 
+// ➕ Add Destination
 exports.addDestination = async (req, res) => {
   try {
-    console.log("Received Data:", req.body);
-    console.log("Received Files:", req.files);
-
     const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
 
     const newDestination = new AdminDestination({
       ...req.body,
       images: imagePaths,
+      category: req.body.category,
+      tags: req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : [],
+      status: req.body.status || 'Draft', // ⭐ Added
     });
 
     await newDestination.save();
@@ -21,19 +24,27 @@ exports.addDestination = async (req, res) => {
   }
 };
 
+// 📄 Get All Destinations (with optional filter)
 exports.getDestinations = async (req, res) => {
   try {
-    const destinations = await AdminDestination.find();
+    const { status } = req.query;
+
+    let filter = {};
+    if (status) {
+      filter.status = status;
+    }
+
+    const destinations = await AdminDestination.find(filter);
     res.status(200).json(destinations);
   } catch (error) {
     res.status(500).json({ message: "Error fetching destinations", error });
   }
 };
 
+// 📄 Get Destination By ID
 exports.getDestinationById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Processing getDestinationById with id:", id); // Debug
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid ObjectId format" });
@@ -50,6 +61,7 @@ exports.getDestinationById = async (req, res) => {
   }
 };
 
+// ✏️ Update Destination
 exports.updateDestination = async (req, res) => {
   try {
     const { id } = req.params;
@@ -63,10 +75,12 @@ exports.updateDestination = async (req, res) => {
     const updatedData = {
       ...req.body,
       images: newImagePaths.length > 0 ? newImagePaths : existingDestination.images,
+      category: req.body.category || existingDestination.category,
+      tags: req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : existingDestination.tags,
+      status: req.body.status || existingDestination.status, // ⭐ Added
     };
 
     const updatedDestination = await AdminDestination.findByIdAndUpdate(id, updatedData, { new: true });
-    console.log("success");
     res.status(200).json({ message: "Destination updated successfully", updatedDestination });
   } catch (error) {
     console.error("❌ Error updating destination:", error);
@@ -74,6 +88,7 @@ exports.updateDestination = async (req, res) => {
   }
 };
 
+// ❌ Delete Destination
 exports.deleteDestination = async (req, res) => {
   try {
     const { id } = req.params;
@@ -83,9 +98,10 @@ exports.deleteDestination = async (req, res) => {
     res.status(500).json({ message: "Error deleting destination", error });
   }
 };
+
+// 🔍 Search Destinations
 exports.searchDestinations = async (req, res) => {
   try {
-    console.log("Processing searchDestinations with query:", req.query); // Debug
     const { location } = req.query;
 
     if (!location) {
@@ -104,5 +120,54 @@ exports.searchDestinations = async (req, res) => {
   } catch (error) {
     console.error("Error searching destinations:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// 🔄 Toggle Destination Status
+exports.toggleDestinationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const destination = await AdminDestination.findById(id);
+    if (!destination) {
+      return res.status(404).json({ message: "Destination not found" });
+    }
+
+    const newStatus = destination.status === "Published" ? "Draft" : "Published";
+    destination.status = newStatus;
+    await destination.save();
+
+    res.status(200).json({ message: `Status changed to ${newStatus}`, destination });
+  } catch (error) {
+    res.status(500).json({ message: "Error toggling status", error });
+  }
+};
+
+// 📸 Delete Image from Destination
+exports.deleteImage = async (req, res) => {
+  try {
+    const { destinationId, imagePath } = req.body;
+
+    // Validate the destination ID
+    const destination = await AdminDestination.findById(destinationId);
+    if (!destination) {
+      return res.status(404).json({ message: "Destination not found" });
+    }
+
+    // Remove the image from the database
+    const updatedImages = destination.images.filter(image => image !== imagePath);
+    destination.images = updatedImages;
+
+    // Remove the image from the file system
+    const filePath = path.join(__dirname, "..", imagePath);
+    fs.unlinkSync(filePath);
+
+    // Save the updated destination
+    await destination.save();
+
+    res.status(200).json({ message: "Image deleted successfully", destination });
+  } catch (error) {
+    console.error("❌ Error deleting image:", error);
+    res.status(500).json({ message: "Error deleting image", error });
   }
 };

@@ -3,6 +3,9 @@ import Head from './Head';
 import TourCardSlider from './TourCardSlider/TourCardSlider';
 import DesList from './retrive/desList';
 import MyComponent from "./MyComponent"; // ✅ Use MyComponent instead of SearchBar
+import WeatherBox from './WeatherBox';
+import Footer  from "../../components/Footer"
+
 
 function Destination() {
   return (
@@ -16,13 +19,16 @@ function Destination() {
         <MyComponent />  
       </div>
 
-      <div>  
-        <TourCardSlider />
-      </div>
+     
+
+      
 
       <div>
-        <DesList />
+        <WeatherBox/>
       </div>
+
+      <div className='mt-15'></div>
+      <Footer />
     </div>
   );
 }

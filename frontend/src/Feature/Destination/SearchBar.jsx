@@ -26,14 +26,20 @@ const SearchBar = ({ onResults }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex items-center justify-center space-x-4 p-4 bg-gray-100 rounded-lg shadow-lg max-w-3xl mx-auto">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search destinations..."
+        className="px-4 py-2 w-full md:w-2/3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
-      <button type="submit">Search</button>
+      <button
+        type="submit"
+        className="px-6 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        Search
+      </button>
     </form>
   );
 };

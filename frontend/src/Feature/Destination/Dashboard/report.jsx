@@ -4,10 +4,12 @@ import { jsPDF } from 'jspdf';
 const Report = () => {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
+  const [destinations, setDestinations] = useState([]);
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
   const [error, setError] = useState(null);
 
+  // Fetch bookings and destinations from API
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -16,6 +18,7 @@ const Report = () => {
 
         if (response.ok) {
           setBookings(data.data);
+          console.log('Bookings Data:', data.data);  // Log the bookings data
         } else {
           throw new Error(data.message || 'Failed to fetch bookings');
         }
@@ -24,59 +27,117 @@ const Report = () => {
       }
     };
 
+    const fetchDestinations = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/admin-destinations');
+        const data = await response.json();
+
+        if (response.ok) {
+          setDestinations(data);
+          console.log('Destinations Data:', data);  // Log the destinations data
+        } else {
+          throw new Error(data.message || 'Failed to fetch destinations');
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     fetchBookings();
+    fetchDestinations();
   }, []);
 
-  // Get unique destinations from the bookings
-  const destinations = [...new Set(bookings.map((booking) => booking.destination))];
-
+  // Handle filtering
   const handleFilter = () => {
+    console.log('Filter Values:', destination, date);  // Log filter values
+  
     let filteredData = bookings;
-
+  
+    // Filter by destination if provided
     if (destination) {
-      filteredData = filteredData.filter((booking) =>
-        booking.destination.toLowerCase().includes(destination.toLowerCase())
-      );
-    }
+      filteredData = filteredData.filter((booking) => {
+        // Check if the booking.destination is a valid string before calling .toLowerCase() and .trim()
+        const cleanedDestination = (booking.destination && typeof booking.destination === 'string') 
+          ? booking.destination.toLowerCase().trim() 
+          : '';
 
+        const cleanedInput = destination.toLowerCase().trim();
+
+        console.log('Comparing:', cleanedDestination, cleanedInput);  // Log both for debugging
+
+        // Check if the cleaned destination matches the cleaned input
+        return cleanedDestination.includes(cleanedInput);
+      });
+    }
+  
+    // Filter by date if provided
     if (date) {
       const filterDate = new Date(date);
-      filteredData = filteredData.filter((booking) =>
-        new Date(booking.date).toLocaleDateString() === filterDate.toLocaleDateString()
-      );
+      console.log('Filter Date:', filterDate);  // Log the filter date
+  
+      filteredData = filteredData.filter((booking) => {
+        const bookingDate = new Date(booking.date);
+        console.log('Booking Date:', bookingDate);  // Log the booking date
+  
+        return bookingDate.toLocaleDateString() === filterDate.toLocaleDateString();
+      });
     }
-
+  
+    console.log('Filtered Data:', filteredData);  // Log the filtered data
+  
     setFilteredBookings(filteredData);
   };
 
+  // Download PDF
   const downloadPDF = () => {
     const doc = new jsPDF();
 
     // Add Title
     doc.setFontSize(18);
-    doc.text('Booking Report', 14, 20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Booking Report', 105, 20, { align: 'center' });
 
-    // Add Table headers
+    // Add Table headers with bold and color
     doc.setFontSize(12);
-    doc.text('Name', 14, 30);
-    doc.text('Email', 60, 30);
-    doc.text('Destination', 120, 30);
-    doc.text('Date', 170, 30);
-    doc.text('People', 210, 30);
-    doc.text('Price', 250, 30);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(255, 255, 255);
+    doc.setFillColor(56, 189, 248);  // Tailwind blue-500
+    doc.rect(14, 30, 190, 10, 'F'); // Header background
 
-    // Add Table rows
+    doc.setTextColor(255, 255, 255);
+    doc.text('Name', 14, 35);
+    doc.text('Email', 60, 35);
+    doc.text('Destination', 120, 35);
+    doc.text('Date', 170, 35);
+    doc.text('People', 210, 35);
+    doc.text('Price', 250, 35);
+
+    // Add Table rows with alternating colors
     let yPosition = 40; // Start adding data from this vertical position
+    let rowIndex = 0;
 
     filteredBookings.forEach((booking) => {
-      doc.text(booking.name, 14, yPosition);
-      doc.text(booking.email, 60, yPosition);
-      doc.text(booking.destination, 120, yPosition);
-      doc.text(new Date(booking.date).toLocaleDateString(), 170, yPosition);
-      doc.text(booking.people.toString(), 210, yPosition);
-      doc.text(`$${booking.price.toFixed(2)}`, 250, yPosition);
+      // Alternate row colors for better readability
+      if (rowIndex % 2 === 0) {
+        doc.setFillColor(249, 250, 251); // Light gray (tailwind bg-gray-100)
+      } else {
+        doc.setFillColor(255, 255, 255); // White
+      }
+
+      // Add row background color
+      doc.rect(14, yPosition, 190, 10, 'F');
+
+      // Add text for the row
+      doc.setTextColor(0, 0, 0); // Black text
+      doc.text(booking.name, 14, yPosition + 6);
+      doc.text(booking.email, 60, yPosition + 6);
+      doc.text(booking.destination, 120, yPosition + 6);
+      doc.text(new Date(booking.date).toLocaleDateString(), 170, yPosition + 6);
+      doc.text(booking.people.toString(), 210, yPosition + 6);
+      doc.text(`$${booking.price.toFixed(2)}`, 250, yPosition + 6);
 
       yPosition += 10; // Move to the next line
+      rowIndex++;
     });
 
     // Save the document as a PDF
@@ -103,8 +164,8 @@ const Report = () => {
             >
               <option value="">Select Destination</option>
               {destinations.map((dest) => (
-                <option key={dest} value={dest}>
-                  {dest}
+                <option key={dest._id} value={dest.name}>
+                  {dest.name}
                 </option>
               ))}
             </select>
@@ -120,9 +181,6 @@ const Report = () => {
               className="mt-2 w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-
-          {/* Error Message */}
-          {error && <div className="text-red-500 text-center">{error}</div>}
 
           {/* Buttons */}
           <div className="flex justify-between items-center">

@@ -4,7 +4,7 @@ import AddDestination from "../../Feature/Destination/Dashboard/AddDestination";
 import EditDestination from "../../Feature/Destination/Dashboard/EditDestination";
 import RemoveDestination from "../../Feature/Destination/Dashboard/RemoveDestination";
 import BookingList from "../../Feature/Destination/Dashboard/userList";
-import GPSTracking from "../../Feature/Destination/Dashboard/GPSTracking";
+import Status from "./Dashboard/Status";
 import Report from "../../Feature/Destination/Dashboard/report"; // Correct import
 
 const Dashboard = () => {
@@ -22,7 +22,7 @@ const Dashboard = () => {
       case "bookingList":
         return <BookingList />;
       case "gpsTracking":
-        return <GPSTracking />;
+        return <Status />;
       case "report":
         return <Report className />; // Correct rendering for the Report component
       default:
@@ -57,7 +57,7 @@ const Dashboard = () => {
           </li>
           <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "gpsTracking" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("gpsTracking")}>
             <FaMapMarkerAlt className="text-lg" />
-            {isExpanded && <span className="ml-4">GPS Tracking</span>}
+            {isExpanded && <span className="ml-4">Status</span>}
           </li>
           <li className={`cursor-pointer flex items-center p-3 rounded-md hover:bg-gray-200 ${selectedOption === "report" ? "bg-gray-300" : ""}`} onClick={() => setSelectedOption("report")}>
             <FaFileAlt className="text-lg" />
