@@ -24,6 +24,11 @@ const BillSchema = new Schema({
       'Travel Consultation'
     ]
   },
+  bookingId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    refPath: 'category', // Dynamically refer to the correct booking model
+  },
   amount: {
     type: Number,
     required: true
@@ -46,6 +51,16 @@ const BillSchema = new Schema({
     type: Date,
     default: Date.now
   }
+});
+
+// Dynamic refPath for bookings
+BillSchema.virtual('booking', {
+  ref: function () {
+    return this.category; // This will dynamically choose the correct model based on category
+  },
+  localField: 'bookingId',
+  foreignField: '_id',
+  justOne: true,
 });
 
 const Bill = model('Bill', BillSchema);

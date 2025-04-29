@@ -4,22 +4,21 @@ import Bill from '../models/Bill.js';
 // @route   GET /api/bills
 export const getBills = async (req, res) => {
   try {
-    const bills = await Bill.find().populate('userId', 'name email');
+    const bills = await Bill.find().populate('userId', 'name email')
+      .populate('booking'); // Populating dynamic booking reference
     res.status(200).json({ success: true, data: bills });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Server Error' });
   }
 };
 
-// @desc    Get single bill
+// @desc    Get a single bill
 // @route   GET /api/bills/:id
 export const getBill = async (req, res) => {
   try {
     const bill = await Bill.findById(req.params.id)
-      .populate({
-        path: 'userId',
-        select: 'name email phoneNumber',
-      });
+      .populate('userId', 'name email phoneNumber')
+      .populate('booking'); // Populating dynamic booking reference
 
     if (!bill) {
       return res.status(404).json({ success: false, error: 'Bill not found' });
@@ -34,10 +33,9 @@ export const getBill = async (req, res) => {
 // @route   GET /api/bills/user/:userId
 export const getUserBills = async (req, res) => {
   try {
-    const bills = await Bill.find({ userId: req.params.userId }).populate(
-      'userId',
-      'name email'
-    );
+    const bills = await Bill.find({ userId: req.params.userId })
+      .populate('userId', 'name email')
+      .populate('booking'); // Populating dynamic booking reference
     res.status(200).json({ success: true, data: bills });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Server Error' });
@@ -99,10 +97,9 @@ export const deleteBill = async (req, res) => {
 // @route   GET /api/bills/category/:category
 export const getBillsByCategory = async (req, res) => {
   try {
-    const bills = await Bill.find({ category: req.params.category }).populate(
-      'userId',
-      'name email'
-    );
+    const bills = await Bill.find({ category: req.params.category })
+      .populate('userId', 'name email')
+      .populate('booking'); // Populating dynamic booking reference
     res.status(200).json({ success: true, data: bills });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Server Error' });
