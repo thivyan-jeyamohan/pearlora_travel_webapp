@@ -1,0 +1,148 @@
+{
+  "users": [
+    {
+      "name": "John Smith",
+      "email": "john.smith@example.com",
+      "phoneNumber": "+94771234567",
+      "role": "user"
+    },
+    {
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "phoneNumber": "+94777654321",
+      "role": "user"
+    },
+    {
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "phoneNumber": "+94761234567",
+      "role": "admin"
+    }
+  ],
+  "paymentMethods": [
+    {
+      "name": "Credit Card",
+      "description": "Visa and Mastercard payments",
+      "isActive": true
+    },
+    {
+      "name": "Bank Transfer",
+      "description": "Direct bank transfer payments",
+      "isActive": true
+    },
+    {
+      "name": "Cash",
+      "description": "Cash payments at office",
+      "isActive": true
+    }
+  ],
+  "bills": [
+    {
+      "category": "Flight Booking",
+      "amount": 150000,
+      "description": "Round-trip flight booking to Singapore",
+      "status": "Pending",
+      "dueDate": "2025-04-15T00:00:00.000Z"
+    },
+    {
+      "category": "Hotel Reservation",
+      "amount": 75000,
+      "description": "3 nights hotel stay in Marina Bay Sands",
+      "status": "Pending",
+      "dueDate": "2025-04-20T00:00:00.000Z"
+    },
+    {
+      "category": "Package Tour",
+      "amount": 250000,
+      "description": "7-day tour package including flights and accommodation",
+      "status": "Pending",
+      "dueDate": "2025-05-01T00:00:00.000Z"
+    },
+    {
+      "category": "Travel Insurance",
+      "amount": 15000,
+      "description": "Comprehensive travel insurance for Asia trip",
+      "status": "Pending",
+      "dueDate": "2025-04-10T00:00:00.000Z"
+    },
+    {
+      "category": "Visa Services",
+      "amount": 25000,
+      "description": "Tourist visa processing for Australia",
+      "status": "Paid",
+      "dueDate": "2025-05-15T00:00:00.000Z"
+    },
+    {
+      "category": "Transportation",
+      "amount": 12000,
+      "description": "Airport transfer service in Bangkok",
+      "status": "Pending",
+      "dueDate": "2025-06-01T00:00:00.000Z"
+    },
+    {
+      "category": "Excursions",
+      "amount": 45000,
+      "description": "Full-day island hopping tour in Phuket",
+      "status": "Pending",
+      "dueDate": "2025-06-10T00:00:00.000Z"
+    },
+    {
+      "category": "Cruise Booking",
+      "amount": 180000,
+      "description": "5-day Mediterranean cruise package",
+      "status": "Overdue",
+      "dueDate": "2025-03-30T00:00:00.000Z"
+    },
+    {
+      "category": "Car Rental",
+      "amount": 35000,
+      "description": "7-day car rental in Dubai",
+      "status": "Cancelled",
+      "dueDate": "2025-07-01T00:00:00.000Z"
+    },
+    {
+      "category": "Travel Consultation",
+      "amount": 5000,
+      "description": "Personal travel planning consultation",
+      "status": "Paid",
+      "dueDate": "2025-04-05T00:00:00.000Z"
+    }
+  ],
+  "payments": [
+    {
+      "amount": 150000,
+      "description": "Payment for Singapore flight booking",
+      "status": "completed",
+      "billingAddress": {
+        "street": "123 Main Street",
+        "city": "Colombo",
+        "zipCode": "10100",
+        "country": "Sri Lanka"
+      },
+      "cardHolderName": "John Smith",
+      "email": "john.smith@example.com",
+      "phoneNumber": "+94771234567"
+    },
+    {
+      "amount": 75000,
+      "description": "Payment for Marina Bay Sands hotel reservation",
+      "status": "pending",
+      "billingAddress": {
+        "street": "456 Park Avenue",
+        "city": "Colombo",
+        "zipCode": "10200",
+        "country": "Sri Lanka"
+      },
+      "cardHolderName": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "phoneNumber": "+94777654321"
+    }
+  ],
+  "usage_instructions": {
+    "step1": "First create users using POST /api/users",
+    "step2": "Create payment methods using POST /api/payment-methods",
+    "step3": "When creating bills, use the user IDs from step 1 in the userId field",
+    "step4": "When creating payments, use the bill IDs from step 3 and payment method IDs from step 2",
+    "note": "The IDs in this file are placeholders. You'll need to use the actual IDs created by MongoDB when testing the API endpoints."
+  }
+}

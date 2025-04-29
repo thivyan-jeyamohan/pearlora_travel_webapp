@@ -18,6 +18,13 @@ import destinationRoutes from "./routes/destinationRoutes.js";  // Added .js ext
 import adminDestinationRoutes from "./routes/adminDestinationRoutes.js";  // Added .js extension
 import weatherRoutes from "./routes/weatherRoutes.js";  // Added .js extension
 
+import paymentRoutes from './routes/paymentRoutes.js';
+import paymentMethodRoutes from './routes/paymentMethodRoutes.js';
+import billRoutes from './routes/billRoutes.js';
+import userRoutesfin from './routes/userRoutes.js';
+
+
+
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +69,13 @@ app.use("/api/users", userRoutes);
 
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/flightbooking', flightBookingRoutes);
+
+
+app.use('/api/payments', paymentRoutes);
+app.use('/api/payment-methods', paymentMethodRoutes);
+app.use('/api/bills', billRoutes);
+app.use('/api/userRoutesfin', userRoutesfin);
+
 
 
 // Error handler
