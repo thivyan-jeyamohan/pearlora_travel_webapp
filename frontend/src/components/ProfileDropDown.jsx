@@ -31,11 +31,11 @@ function ProfileDropdown() {
       case 'transport-management':
         return { path: '/transport-admin-dashboard', label: 'Transport Dashboard' };
       case 'hotel-management':
-        return { path: '/hotel', label: 'Hotel Dashboard' };
+        return { path: '/hotel-admin-dashboard', label: 'Hotel Dashboard' };
       case 'event-management':
         return { path: '/event', label: 'Event Dashboard' };
       case 'financial-management':
-        return { path: '/Financial', label: 'Financial Dashboard' };
+        return { path: '/admin-dashboard', label: 'Financial Dashboard' };
       case 'destination-management':
         return { path: '/destination-dashboard', label: 'Destination Dashboard' };
       default:
@@ -64,11 +64,11 @@ function ProfileDropdown() {
                 </Link>
               )}
               <Link
-                to="/profile"
+                to="/payment-history"
                 onClick={closeDropdown}
                 className="block py-2 px-4 text-white hover:bg-purple-700 font-poppins"
               >
-                Financial
+                Payment
               </Link>
             </div>
           )}
