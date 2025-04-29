@@ -38,6 +38,12 @@ import AdminDashboard from './pages/AdminDashboard';
 import PaymentHistory from './pages/PaymentHistory';
 import Bills from './pages/Bills';
 
+import ManagerDashboard from "./Feature/Hotel/ManagerDashboard";
+import HotelDetail from "./Feature/Hotel/HotelDetail";
+import BookingFormPage from './Feature/Hotel/BookingForm';
+import AIChatbot from "./Feature/Hotel/AIChatbot";
+import ScrollToTop from './components/ScrollToTop';
+
 
 function App() {
   const { isAuthenticated } = useAuth(); // Access the authentication state
@@ -55,6 +61,7 @@ function App() {
 
   return (
     <>
+       <ScrollToTop />
       {!shouldHideHeader && (
         <div className="fixed top-0 left-0 w-full shadow-lg z-50">
           <Header />
@@ -87,6 +94,11 @@ function App() {
         <Route path="/payment-history" element={<PaymentHistory />} />
         <Route path="/bills" element={<Bills />} />
 
+        <Route path="/hotel" element={<Hotel />} />
+        <Route path="/hotel/:hotelId" element={<HotelDetail />} />
+        <Route path="/booking/:hotelId" element={<BookingFormPage />} />
+        <Route path="/hotelChatbot" element={<AIChatbot standalone={true} />} />
+
 
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
@@ -114,6 +126,13 @@ function App() {
             isAuthenticated ? <TransportDashboard /> : <Navigate to="/login" />
           }
         />
+
+        <Route 
+          path="/hotel-admin-dashboard" 
+          element={isAuthenticated ? <ManagerDashboard />: <Navigate to="/login" />
+          } 
+        />
+
       </Routes>
     </>
   );

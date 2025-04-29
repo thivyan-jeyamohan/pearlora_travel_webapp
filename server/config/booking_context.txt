@@ -1,0 +1,99 @@
+About The Pearl Hotel Booking Website
+Q: What is The Pearl Hotel Booking website?
+A: The Pearl Hotel Booking website is a user-friendly platform where you can find, explore, and book hotels across popular cities in Sri Lanka such as Kandy, Colombo, and Nuwara Eliya. It offers a smooth, secure, and enjoyable booking experience.
+
+Searching Hotels
+Q: How do I search for hotels?
+A: On the homepage, use the search bar to enter your desired location, check-in and check-out dates, and the number of guests. Click "Search" to view available hotels.
+
+Q: Can I search hotels by city?
+A: Yes! You can find hotels by entering a city name like Kandy, Colombo, or Nuwara Eliya in the search bar.
+
+Viewing Hotel Details
+Q: How can I view more information about a hotel?
+A: Click on the hotel’s listing to open the Hotel Details Page. There you’ll see a full description, a gallery of hotel images, available room categories, prices, and amenities.
+
+Checking Room Availability
+Q: How do I check room availability?
+A: First, select a hotel from the search results. On the Hotel Details Page, select your check-in and check-out dates under the "Check Availability" section. The system will validate your dates and show the available rooms.
+
+Q: What happens if no rooms are available?
+A: If no rooms are available for your selected dates, the system will inform you immediately, and you can either select different dates or another hotel.
+
+Booking a Room
+Q: How do I book a room?
+A: After checking availability, select one or more rooms and click the "Book Now" button. Complete the booking form with your personal details and click "Confirm Booking" to finalize your reservation.
+
+Q: What information do I need to provide during booking?
+A: You must enter your first name, last name (letters only), a valid email address, a 10-digit phone number, and optionally any special requests.
+
+Q: Can I book multiple rooms at once?
+A: Yes, you can select and book multiple rooms at the same time for your chosen dates.
+
+Payment Options
+Q: How can I pay for my booking?
+A: You can choose to pay online via our secure portal during booking or pay directly at the hotel during check-in using cash or major credit cards.
+ 
+ Cancellation and Modifications
+Q: How can I cancel my booking?
+A: To cancel, contact our customer support team via the provided phone number or email address. Cancellations made at least 48 hours before check-in are free or cancel via your dashboard.
+
+Q: Is there a cancellation fee?
+A: There is no fee if you cancel 48 hours before your check-in date. Cancellations within 48 hours may be subject to hotel policies.
+
+Q: Can I modify my booking after confirmation?
+A: Yes, you can contact customer support to request changes to your booking before the check-in date.
+
+Location and Hotels
+Q: What locations do you offer hotels in?
+A: We offer hotels in Kandy, Colombo, Nuwara Eliya, and other beautiful cities across Sri Lanka.
+
+Q: Can I search for hotels near a specific landmark?
+A: Currently, you can search by city. For specific landmarks or recommendations, you can contact customer support.
+
+ Special Features and Policies
+Q: How do I make special requests for my stay?
+A: During the booking process, there is a field for "Special Requests" where you can mention any needs like late check-in, room preferences, etc.
+
+Q: How is my information protected?
+A: We use secure encryption to protect your personal and booking information. Your privacy and security are very important to us.
+
+Q: Can I book a room for someone else?
+A: Yes, simply enter the guest’s details during the booking process.
+
+ Customer Support
+Q: How can I contact customer support?
+A: You can reach our friendly support team via the phone number or email address provided on the website. We're happy to assist you!
+
+ Closing
+Q: Thank you!
+A: You're welcome! Thank you for choosing The Pearl Hotel Booking website. We wish you a wonderful journey and a memorable stay in Sri Lanka! 🌴✨
+
+Q: Goodbye!
+A: Goodbye and have a lovely day! 🌟
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

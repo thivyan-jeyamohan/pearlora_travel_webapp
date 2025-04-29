@@ -31,7 +31,7 @@ function ProfileDropdown() {
       case 'transport-management':
         return { path: '/transport-admin-dashboard', label: 'Transport Dashboard' };
       case 'hotel-management':
-        return { path: '/hotel', label: 'Hotel Dashboard' };
+        return { path: '/hotel-admin-dashboard', label: 'Hotel Dashboard' };
       case 'event-management':
         return { path: '/event', label: 'Event Dashboard' };
       case 'financial-management':
